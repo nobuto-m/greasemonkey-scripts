@@ -150,7 +150,7 @@ function team_handler(xmldoc, person)
         'bugsquad':'',
         'ubuntu-core-dev':'',
         'ubuntu-dev':'',
-        'ubuntu-qa':'',
+        'ubuntu-bugcontrol':'',
         'ubuntumembers':''
     };
     var re = new RegExp("<img[^>]* src=\"(https://launchpadlibrarian.net/[^\"]+)\"[^>]+>[^a]*<a[^>]* href=\"[^~\"]*/~([^\"]+)\"","ig");
