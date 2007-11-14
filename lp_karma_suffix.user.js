@@ -15,8 +15,8 @@
     name: "LP_Karma_Suffix",
     namespace: "https://code.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu",
     description: '(Launchpad) Karma Suffixes',
-    source: "http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu",
-    identifier: "http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/lp_karma_suffix.user.js",
+    source: "http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/files",
+    identifier: "http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/file/lp_karma_suffix.user.js",
     version: "1.0",
     date: (new Date(2007, 10 - 1, 17))// update date
     .valueOf()
