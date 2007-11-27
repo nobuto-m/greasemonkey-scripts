@@ -4,8 +4,8 @@
 // @description    (Launchpad) Stock replies
 // @include        https://*.launchpad.net/*
 // @include        https://launchpad.net/*
-// @version        1.1
-// @date           2007-10-16
+// @version        1.2
+// @date           2007-11-27
 // @creator        Kees Cook <kees@ubuntu.com>
 // ==/UserScript==
 // Based on code originally written by:
@@ -17,10 +17,10 @@
     name: "LP_StockReplies",
     namespace: "http://outflux.net/greasemonkey/",
     description: '(Launchpad) Stock replies',
-    source: "http://outflux.net/greasemonkey/lp_stockreplies.user.js",
-    identifier: "http://outflux.net/greasemonkey/lp_stockreplies.user.js",
-    version: "1.1",
-    date: (new Date(2007, 10 - 1, 16))// update date
+    source: "http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/files",
+    identifier: "http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/file/lp_stockreplies.user.js",
+    version: "1.2",
+    date: (new Date(2007, 11 - 1, 27))// update date
     .valueOf()
   };
 
