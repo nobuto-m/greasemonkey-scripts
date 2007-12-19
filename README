@@ -1,0 +1,68 @@
+                      Ubuntu Greasemonkey Scripts
+                    --============[o]============--
+
+The ubuntu-gm-scripts project collects useful Firefox GreaseMonkey
+scripts that assist Launchpad bug triagers in working more effectively
+and efficiently.
+
+Installation
+============
+GreaseMonkey is a Firefox extension for adding macro-like capabilities
+to do javascript-ish things on top of certain web pages.  To install
+GreaseMonkey, follow these steps:
+
+  * Go to Firefox->Tools->AddOns
+  * Click Get Extensions (or Get Ubuntu AddOns if on Ubuntu)
+  * Select GreaseMonkey, and install
+  * Restart Firefox
+
+Then to install these scripts, run:
+
+  * firefox lp_karma_suffix.user.js
+  * firefox lp_stockreplies.user.js
+
+Or click on the scripts from your file browser.
+
+For the latest updates to the scripts, go to the following link and
+click 'download' for each of them:
+
+  http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/files  
+
+Launchpad Karma Suffix
+======================
+When triaging bugs, it helps to have some way to gauge the relative
+experience of the person reporting or commenting on a given bug.  This
+tool helps by appending the person's karma score after their name.
+
+
+Launchpad Stock Replies
+=======================
+When processing through a lot of bugs, often you wish to make
+essentially the same comment over and over again, such as, "Thanks for
+reporting this blah blah...  Please attach foo.log, so we can..."
+
+This script helps avoid a lot of retyping or manual cut-n-pastes by
+providing a way to store your own canned comments in Firefox itself.  It
+then adds links for each of your canned comments right above the
+"Comment on this change" field, making it convenient to select a stock
+reply to send.
+
+To add new stock replies, click the [+] link, which will bring up
+options to add or save stock replies.
+
+Add New Stock Reply:
+  name        A tag id for the reply.  (Avoid punctuation)
+  comment     Sets the comment field to this value
+  status      Sets the status dropdown to this text key
+  assign      Assigns the bug to this launchpad username
+  importance  Sets the importance dropdown to this text key
+  package     Sets the package field (if it is present) to this text
+
+Save Stock Replies:
+  After making additions or changes to any of the replies, click this to 
+  save the changes.
+
+
+Also See
+========
+* Firefox Launchpad Plugin 
