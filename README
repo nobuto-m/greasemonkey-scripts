@@ -88,11 +88,14 @@ options to add or save stock replies.
 
 Add New Stock Reply:
   name        A tag id for the reply.  (Avoid punctuation)
-  comment     Sets the comment field to this value
-  status      Sets the status dropdown to this text key
-  assign      Assigns the bug to this launchpad username
-  importance  Sets the importance dropdown to this text key
-  package     Sets the package field (if it is present) to this text
+  comment     Sets the comment field to this value.
+  status      Sets the status dropdown to this text key (if present).
+  assign      Assigns the bug to this launchpad username (if present).
+              Special names:
+                -me      To assign to yourself
+                -nobody  To unassign
+  importance  Sets the importance dropdown to this text key (if present).
+  package     Sets the package field to this text (if present).
 
 Save Stock Replies:
   After making additions or changes to any of the replies, click this to 
