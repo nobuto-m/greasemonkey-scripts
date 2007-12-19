@@ -34,6 +34,42 @@ When triaging bugs, it helps to have some way to gauge the relative
 experience of the person reporting or commenting on a given bug.  This
 tool helps by appending the person's karma score after their name.
 
+As well, team membership can denote experience/involved-ness, so this
+tool also appends icons indicating for some teams that the person is
+in.  This is helpful for flagging comments/flags from the bug triaging
+team, core developers, and so on.
+
+As there are a LOT of teams in launchpad, most of which you may not care
+about, only a select number of teams are included by default.  You can
+customize the list by editing the Javascript as follows:
+
+  * In Firefox go to Tools->Greasemonkey->Manage User Scripts
+  * Select LP_Karma_Suffix
+  * Click the Edit button at the bottom, and type in the name of your
+    preferred text editor.  E.g. "/usr/bin/gedit" or
+    "C:\windows\notepad.exe"
+  * Scroll down to the 'team_handler' function and find where the teams
+    variable is defined, then add a line with your new team.  For
+    instance, to add the Inkscape Bug Team to your list, modify teams to
+    look like this:
+
+    var teams = {
+        'inkscape.bugs':'',
+        'motu-swat':'',
+        'bugsquad':'',
+        'ubuntu-core-dev':'',
+        'ubuntu-dev':'',
+        'ubuntu-bugcontrol':'',
+        'ubuntumembers':''
+    };
+
+   * [Note that the team must have a 14x14 icon defined with it in order
+     to see anything.  This can be set by a team admin via the 'Change
+     branding' link on the Launchpad team overview page.]
+   * Save and exit the text editor, then go back to the Manage User
+     Scripts dialog and click OK.
+   * Reload some pages to see the icon.  :-)
+
 
 Launchpad Stock Replies
 =======================
