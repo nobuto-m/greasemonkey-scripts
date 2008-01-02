@@ -102,6 +102,15 @@ Save Stock Replies:
   save the changes.
 
 
+Greasemonkey Settings
+=====================
+It seems that Firefox or Greasemonkey does not atomically save settings
+to disk.  As a result, it is best to close Firefox completely after making
+large changes to the stock replies so that they are saved to disk for sure.
+In the event of a Firefox crash, many people have had issues with stock
+replies disappearing.
+
+
 Also See
 ========
 * Firefox Launchpad Plugin 
