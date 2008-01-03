@@ -93,7 +93,7 @@ function augment_person(person)
         }
         
         // add in karma
-        var karmaNode = document.createTextNode(' ('+people_cache[person]['karma']+') ');
+        var karmaNode = document.createTextNode(' ('+person+": "+people_cache[person]['karma']+') ');
         node.parentNode.insertBefore(karmaNode, node.nextSibling);
     }
 }
