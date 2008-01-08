@@ -16,7 +16,7 @@ var tags = new Array(
 	'likely-dupe',
 	'forward-upstream',
 	'needs-improvement',
-	'verification-needed',
+	'verification-needed'
 );
 
 // ------- End of User settable data -------
@@ -120,10 +120,10 @@ for (var tag in tags) {
 		var bug_title = document.getElementsByTagName('h1')[0].innerHTML;
 		var bug_description;
 		get(document.location + "/+edit", function(responseText) {
-			alert("Received responseText");
+			//alert("Received responseText");
 			var xmlobject = (new DOMParser()).parseFromString(responseText, "text/xml");
 			bug_description = xmlobject.getElementById('field.description').innerHTML;
-			alert("Desc: " + bug_description);
+			//alert("Desc: " + bug_description);
 
 			if (! bug_description || bug_description == "undefined") {
 				alert("Error:  No bug description defined");
