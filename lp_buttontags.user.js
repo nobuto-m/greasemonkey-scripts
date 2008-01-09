@@ -14,7 +14,6 @@ var tags = new Array(
 	'bitesize',
 	'packaging',
 	'likely-dupe',
-	'forward-upstream',
 	'needs-improvement',
 	'verification-needed'
 );
