@@ -127,7 +127,7 @@ for (var tag in tags) {
 			var xmlobject = (new DOMParser()).parseFromString(responseText, "text/xml");
 			bug_description = xmlobject.getElementById('field.description').textContent;
 
-			alert("Desc: " + bug_description);
+			//alert("Desc: " + bug_description);
 
 			if (! bug_description || bug_description == "undefined") {
 				alert("Error:  No bug description defined");
