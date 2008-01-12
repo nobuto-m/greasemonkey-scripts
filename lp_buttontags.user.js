@@ -11,9 +11,13 @@
 
 // List of tags to display in the UI
 var tags = new Array(
+	'crash',
+	'common',
 	'bitesize',
 	'packaging',
+	'backport',
 	'likely-dupe',
+	'needs-testing',
 	'needs-improvement',
 	'verification-needed'
 );
@@ -40,7 +44,7 @@ function post(url, data, cb) {
     method: "POST",
     url: url,
     headers: {'Content-type':'application/x-www-form-urlencoded'},
-    data: encodeURI(data),
+    data: encodeURIComponent(data),
     onload: function(xhr) { cb(xhr.responseText); },
     onerror: function(responseDetails) {
 	alert('Failed to set tags ' + responseDetails.status +
@@ -121,8 +125,9 @@ for (var tag in tags) {
 		get(document.location + "/+edit", function(responseText) {
 			//alert("Received responseText");
 			var xmlobject = (new DOMParser()).parseFromString(responseText, "text/xml");
-			bug_description = xmlobject.getElementById('field.description').innerHTML;
-			//alert("Desc: " + bug_description);
+			bug_description = xmlobject.getElementById('field.description').textContent;
+
+			alert("Desc: " + bug_description);
 
 			if (! bug_description || bug_description == "undefined") {
 				alert("Error:  No bug description defined");
