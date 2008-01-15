@@ -44,7 +44,9 @@ function post(url, data, cb) {
     method: "POST",
     url: url,
     headers: {'Content-type':'application/x-www-form-urlencoded'},
-    data: encodeURIComponent(data),
+//    data: encodeURIComponent(data),
+//    data: encodeURI(data),
+    data: data,
     onload: function(xhr) { cb(xhr.responseText); },
     onerror: function(responseDetails) {
 	alert('Failed to set tags ' + responseDetails.status +
@@ -117,7 +119,8 @@ for (var tag in tags) {
 			return;
 		}
 
-		var tags_new = tags_current_list.join(" ") + " " + this.title;
+		tags_current_list[tags_current_list.length] = this.title;
+		var tags_new = tags_current_list.join("+");
 
 		// Get the bug's title and description
 		var bug_title = document.getElementsByTagName('h1')[0].innerHTML;
@@ -134,11 +137,15 @@ for (var tag in tags) {
 				return;
 			}
 
+//    data: encodeURIComponent(data),
+//    data: encodeURI(data),
 			var form_tag_data = 'field.actions.change=Change&' + 
-				'field.tags=' + tags_new + '&' +
-				'field.title=' + bug_title + '&' +
-				'field.description=' + bug_description + '&' +
-				'field.actions.confirm_tag="Yes, define new tag"';
+				'field.tags=' + encodeURI(tags_new) + '&' +
+				'field.title=' + encodeURIComponent(bug_title) + '&' +
+				'field.description=' + encodeURIComponent(bug_description) + '&' +
+				'field.actions.confirm_tag=' + encodeURIComponent("Yes, define new tag");
+
+			// alert("Data: " + form_tag_data);
 
 			post(document.location + "/+edit", form_tag_data, function(responseText) {
 				// TODO:  Need better parsing of error messages in output
@@ -154,6 +161,7 @@ for (var tag in tags) {
 					alert("Failed to save tags " + tags_new);
 				}
 			});
+
 		});
 
 	}, false);
