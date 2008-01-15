@@ -10,17 +10,15 @@
 // ------  User settable data  -------------
 
 // List of tags to display in the UI
-var tags = new Array(
-	'crash',
-	'common',
-	'bitesize',
-	'packaging',
-	'backport',
-	'likely-dupe',
-	'needs-testing',
-	'needs-improvement',
-	'verification-needed'
-);
+var tags = new Object;
+tags = [
+	{"tag":"ooo-calc", "tip":"Occurs in spreadsheet"},
+	{"tag":"ooo-writer", "tip":"Occurs in word processor"},
+        {"tag":"ooo-impress", "tip":"Occurs in presentation"},
+        {"tag":"ooo-base", "tip":"Occurs in database"},
+        {"tag":"likely-dup", "tip":"Probably a duplicate"},
+        {"tag":"needs-devrelease-testing", "tip":"Should be tested in the development release"}
+];
 
 // ------- End of User settable data -------
 
@@ -101,15 +99,16 @@ tags:
 for (var tag in tags) {
 	// Skip if tag is already listed
 	for (var current_tag in tags_current_list) {
-		if (tags_current_list[current_tag] == tags[tag]) {
+		if (tags_current_list[current_tag] == tags[tag]["tag"]) {
 			continue tags;
 		}
 	}
 
 	var tag_button = document.createElement("a");
-	tag_button.href = "#" + tags[tag];
-	tag_button.title = tags[tag];
-	tag_button.innerHTML = " " + tags[tag] + " ";
+	tag_button.href = "#" + tags[tag]["tag"];
+        tag_button.id = tags[tag]["tag"];
+	tag_button.title = tags[tag]["tip"];
+	tag_button.innerHTML = " " + tags[tag]["tag"] + " ";
 	tag_button.addEventListener('click', function(event) {
 		event.preventDefault();
 //		event.stopPropagation(); // not sure if this is needed
@@ -119,7 +118,7 @@ for (var tag in tags) {
 			return;
 		}
 
-		tags_current_list[tags_current_list.length] = this.title;
+		tags_current_list[tags_current_list.length] = this.id;
 		var tags_new = tags_current_list.join("+");
 
 		// Get the bug's title and description
