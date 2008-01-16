@@ -12,12 +12,12 @@
 // List of tags to display in the UI
 var tags = new Object;
 tags = [
-	{"tag":"ooo-calc", "tip":"Occurs in spreadsheet"},
-	{"tag":"ooo-writer", "tip":"Occurs in word processor"},
-        {"tag":"ooo-impress", "tip":"Occurs in presentation"},
-        {"tag":"ooo-base", "tip":"Occurs in database"},
+	{"tag":"ooo-calc", "tip":"Happens with spreadsheet"},
+	{"tag":"ooo-writer", "tip":"Happens with word processor"},
+        {"tag":"ooo-impress", "tip":"Happens with presentation"},
+        {"tag":"ooo-base", "tip":"Happens with database"},
         {"tag":"likely-dup", "tip":"Probably a duplicate"},
-        {"tag":"needs-devrelease-testing", "tip":"Should be tested in the development release"}
+        {"tag":"needs-devrelease-testing", "tip":"Needs testing in the development release"}
 ];
 
 // ------- End of User settable data -------
@@ -90,10 +90,12 @@ if (tags_current) {
 }
 
 var tag_section = document.createElement("div");
-tag_section.setAttribute('style', "text-align: right; margin-bottom: 1em;");
+tag_section.setAttribute('style', "text-align: left; margin-bottom: 1em;");
 
+var innerTextFormat = document.createElement("b");
 var innerTextElement = document.createTextNode("Add tag: ");
-tag_section.appendChild(innerTextElement);
+innerTextFormat.appendChild(innerTextElement);
+tag_section.appendChild(innerTextFormat);
 
 tags:
 for (var tag in tags) {
