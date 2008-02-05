@@ -10,17 +10,16 @@
 // ------  User settable data  -------------
 
 // List of tags to display in the UI
-var tags = new Array(
-	'crash',
-	'common',
-	'bitesize',
-	'packaging',
-	'backport',
-	'likely-dupe',
-	'needs-testing',
-	'needs-improvement',
-	'verification-needed'
-);
+var tags = new Object;
+tags = [
+	{"tag":"crash", tip:"Results in a crash"},
+        {"tag":'bitesize', tip:"Probably an easy fix, appropriate for newb developers"},
+        {"tag":'packaging', tip:"Strictly a packaging issue, not upstreamable"},
+        {"tag":'backport', tip:"Involves needing a backport to a released version of the distro"},
+        {"tag":'likely-dupe', tip:"Sounds like a dupe of an existing bug; needs further investigation"},
+        {"tag":'needs-testing', tip:"A fix or workaround is proposed, but needs to be evaluated"},
+        {"tag":'needs-improvement', tip:"The bug report needs to be worked on further before it can be upstreamed"}
+];
 
 // ------- End of User settable data -------
 
@@ -101,15 +100,15 @@ tags:
 for (var tag in tags) {
 	// Skip if tag is already listed
 	for (var current_tag in tags_current_list) {
-		if (tags_current_list[current_tag] == tags[tag]) {
+		if (tags_current_list[current_tag] == tags[tag]["tag"]) {
 			continue tags;
 		}
 	}
 
 	var tag_button = document.createElement("a");
-	tag_button.href = "#" + tags[tag];
-	tag_button.title = tags[tag];
-	tag_button.innerHTML = " " + tags[tag] + " ";
+	tag_button.href = "#" + tags[tag]["tag"];
+	tag_button.title = tags[tag]["tip"];
+	tag_button.innerHTML = " " + tags[tag]["tag"] + " ";
 	tag_button.addEventListener('click', function(event) {
 		event.preventDefault();
 //		event.stopPropagation(); // not sure if this is needed
@@ -119,7 +118,7 @@ for (var tag in tags) {
 			return;
 		}
 
-		tags_current_list[tags_current_list.length] = this.title;
+		tags_current_list[tags_current_list.length] = this.id;
 		var tags_new = tags_current_list.join("+");
 
 		// Get the bug's title and description
