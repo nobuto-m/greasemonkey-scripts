@@ -16,7 +16,7 @@ tags = [
         {"tag":'bitesize', tip:"Probably an easy fix, appropriate for newb developers"},
         {"tag":'packaging', tip:"Strictly a packaging issue, not upstreamable"},
         {"tag":'backport', tip:"Involves needing a backport to a released version of the distro"},
-        {"tag":'likely-dupe', tip:"Sounds like a dupe of an existing bug; needs further investigation"},
+        {"tag":'likely-dup', tip:"Sounds like a dupe of an existing bug; needs further investigation"},
         {"tag":'needs-testing', tip:"A fix or workaround is proposed, but needs to be evaluated"},
         {"tag":'needs-improvement', tip:"The bug report needs to be worked on further before it can be upstreamed"}
 ];
