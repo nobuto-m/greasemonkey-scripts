@@ -114,3 +114,8 @@ replies disappearing.
 Also See
 ========
 * Firefox Launchpad Plugin 
+
+Firefox 3
+=========
+Firefox 3 appears to be having problems with performing HTTP requests on
+behalf of GreaseMonkey.
