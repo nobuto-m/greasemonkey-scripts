@@ -18,7 +18,8 @@ var special_subscribers = {
     'ubuntu-release':'<br>This is a workflow report',
     'ubuntu-universe-sponsors':'<br>This is a workflow report',
     'ubuntu-main-sponsors':'<br>This is a workflow report',
-    'motu-release':'<br>This is a workflow report'
+    'motu-release':'<br>This is a workflow report',
+    'ubuntu-mir':'<br>This is a workflow report'
 }
 // ------- End of User settable data -------
 
