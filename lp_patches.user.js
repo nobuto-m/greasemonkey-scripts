@@ -9,6 +9,9 @@
 // @creator     Brian Murray <brian@ubuntu.com>
 // ==/UserScript==
 
+// GM_Log is not available in epiphany, so don't set debug = 1
+var debug = 0;
+
 (function() {
 
 function xpath(query, context) {
@@ -62,21 +65,20 @@ function loadData(URL, response_handler, response_arg)
     httpRequest.send (null);
 }
 
+function patch_handler(xmldoc, edit_link) {
+    var text = xmldoc.responseText.replace(/\n/g," ");
+
+//    if (xpath("//input[contains(@name,'field.patch') and contains(@value,'on')]", xmldoc.responseText)) {
+    var re = new RegExp("checked=\"checked\" id=\"field.patch\"");
+    if ((match = re.exec(text)) != null) {
+        if (debug)
+            GM_log("Patch found " + edit_link);
+        edit_link.parentNode.parentNode.className = "news";
+    }
+}
 
 window.addEventListener("load", function(e) {
 //    GM_log('script running');
-
-    function patch_handler(xmldoc, edit_link) {
-        var text = xmldoc.responseText.replace(/\n/g," ");
-
-//        if (xpath("//input[contains(@name,'field.patch') and contains(@value,'on')]", xmldoc.responseText)) {
-        var re = new RegExp("checked=\"checked\" id=\"field.patch\"");
-        if ((match = re.exec(text)) != null) {
-            if (debug)
-                GM_log("Patch found " + edit_link);
-            edit_link.parentNode.parentNode.className = "news";
-        }
-    }
 
     var edit = xpath("//div[contains(@id,'portlet-attachments')]//li[contains(@class,'download')]/small/a");
     for (var i = 0; i < edit.snapshotLength; i++) {

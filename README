@@ -20,6 +20,7 @@ Then to install these scripts, run:
 
   * firefox lp_karma_suffix.user.js
   * firefox lp_stockreplies.user.js
+  * firefox lp_patches.user.js
 
 Or click on the scripts from your file browser.
 
@@ -109,6 +110,18 @@ to disk.  As a result, it is best to close Firefox completely after making
 large changes to the stock replies so that they are saved to disk for sure.
 In the event of a Firefox crash, many people have had issues with stock
 replies disappearing.
+
+
+Launchpad Patches
+=================
+It is possible to flag an attachment as a patch in Launchpad.  However, from
+the bug's main page one has to click on the "edit" link next to an attachment
+to determine if it is flagged as a patch.  This script removes that extra step
+by identifying which attachments have been marked as patches.
+
+After the script is installed the attachments portlet on the left hand side
+will be modified.  Attachments are normally identified by a green downward
+pointing arrow, now ones flagged as patches will be identified as a star.
 
 
 Also See
