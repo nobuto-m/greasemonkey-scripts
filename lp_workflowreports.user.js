@@ -14,12 +14,12 @@
 
 // List of special teams whose bugs shouldn't be meddled with
 var special_subscribers = {
-    'ubuntu-archive':'<br>This is a workflow report',
-    'ubuntu-release':'<br>This is a workflow report',
-    'ubuntu-universe-sponsors':'<br>This is a workflow report',
-    'ubuntu-main-sponsors':'<br>This is a workflow report',
-    'motu-release':'<br>This is a workflow report',
-    'ubuntu-mir':'<br>This is a workflow report'
+    'ubuntu-archive':'<br>Workflow report',
+    'ubuntu-release':'<br>Workflow report',
+    'ubuntu-universe-sponsors':'<br>Workflow report',
+    'ubuntu-main-sponsors':'<br>Workflow report',
+    'motu-release':'<br>Workflow report',
+    'ubuntu-mir':'<br>Workflow report'
 }
 // ------- End of User settable data -------
 
@@ -54,6 +54,7 @@ window.addEventListener("load", function(e) {
             special_K.sytle = "clear: left;";
             special_K.innerHTML = special_subscribers[person];
             bug_heading.parentNode.insertBefore(special_K, bug_heading.nextSibling); 
+            return;
         }
     }
 
