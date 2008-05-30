@@ -127,3 +127,8 @@ pointing arrow, now ones flagged as patches will be identified as a star.
 Also See
 ========
 * Firefox Launchpad Plugin 
+
+Firefox 3
+=========
+Firefox 3 appears to be having problems with performing HTTP requests on
+behalf of GreaseMonkey.

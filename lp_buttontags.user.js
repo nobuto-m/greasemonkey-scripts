@@ -12,12 +12,13 @@
 // List of tags to display in the UI
 var tags = new Object;
 tags = [
-	{"tag":"ooo-calc", "tip":"Happens with spreadsheet"},
-	{"tag":"ooo-writer", "tip":"Happens with word processor"},
-        {"tag":"ooo-impress", "tip":"Happens with presentation"},
-        {"tag":"ooo-base", "tip":"Happens with database"},
-        {"tag":"likely-dup", "tip":"Probably a duplicate"},
-        {"tag":"needs-devrelease-testing", "tip":"Needs testing in the development release"}
+	{"tag":"crash", tip:"Results in a crash"},
+        {"tag":'bitesize', tip:"Probably an easy fix, appropriate for newb developers"},
+        {"tag":'packaging', tip:"Strictly a packaging issue, not upstreamable"},
+        {"tag":'backport', tip:"Involves needing a backport to a released version of the distro"},
+        {"tag":'likely-dupe', tip:"Sounds like a dupe of an existing bug; needs further investigation"},
+        {"tag":'needs-testing', tip:"A fix or workaround is proposed, but needs to be evaluated"},
+        {"tag":'needs-improvement', tip:"The bug report needs to be worked on further before it can be upstreamed"}
 ];
 
 // ------- End of User settable data -------
@@ -90,12 +91,10 @@ if (tags_current) {
 }
 
 var tag_section = document.createElement("div");
-tag_section.setAttribute('style', "text-align: left; margin-bottom: 1em;");
+tag_section.setAttribute('style', "text-align: right; margin-bottom: 1em;");
 
-var innerTextFormat = document.createElement("b");
 var innerTextElement = document.createTextNode("Add tag: ");
-innerTextFormat.appendChild(innerTextElement);
-tag_section.appendChild(innerTextFormat);
+tag_section.appendChild(innerTextElement);
 
 tags:
 for (var tag in tags) {
@@ -108,7 +107,6 @@ for (var tag in tags) {
 
 	var tag_button = document.createElement("a");
 	tag_button.href = "#" + tags[tag]["tag"];
-        tag_button.id = tags[tag]["tag"];
 	tag_button.title = tags[tag]["tip"];
 	tag_button.innerHTML = " " + tags[tag]["tag"] + " ";
 	tag_button.addEventListener('click', function(event) {
