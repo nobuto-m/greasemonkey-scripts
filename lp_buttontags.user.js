@@ -107,6 +107,7 @@ for (var tag in tags) {
 
 	var tag_button = document.createElement("a");
 	tag_button.href = "#" + tags[tag]["tag"];
+	tag_button.id = tags[tag]["tag"];
 	tag_button.title = tags[tag]["tip"];
 	tag_button.innerHTML = " " + tags[tag]["tag"] + " ";
 	tag_button.addEventListener('click', function(event) {
