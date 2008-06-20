@@ -119,16 +119,11 @@ the bug's main page one has to click on the "edit" link next to an attachment
 to determine if it is flagged as a patch.  This script removes that extra step
 by identifying which attachments have been marked as patches.
 
-After the script is installed the attachments portlet on the left hand side
-will be modified.  Attachments are normally identified by a green downward
-pointing arrow, now ones flagged as patches will be identified as a star.
+Attachments are normally identified by a green downward pointing arrow, now
+ones flagged as patches will be identified as a star.  Patches will be
+identified in both the attachments portlet and in comments.
 
 
 Also See
 ========
 * Firefox Launchpad Plugin 
-
-Firefox 3
-=========
-Firefox 3 appears to be having problems with performing HTTP requests on
-behalf of GreaseMonkey.
