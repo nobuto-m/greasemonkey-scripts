@@ -27,7 +27,7 @@ Or click on the scripts from your file browser.
 For the latest updates to the scripts, go to the following link and
 click 'download' for each of them:
 
-  http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/files  
+  http://bazaar.launchpad.net/~gm-dev-launchpad/launchpad-gm-scripts/master/files
 
 Launchpad Karma Suffix
 ======================
@@ -99,7 +99,7 @@ Add New Stock Reply:
   package     Sets the package field to this text (if present).
 
 Save Stock Replies:
-  After making additions or changes to any of the replies, click this to 
+  After making additions or changes to any of the replies, click this to
   save the changes.
 
 
@@ -124,6 +124,13 @@ ones flagged as patches will be identified as a star.  Patches will be
 identified in both the attachments portlet and in comments.
 
 
+Launchpad Highlight Me
+======================
+This adds a visual highlight to things belonging/assigned to the logged-in
+user. Currently this only highlights rows in +milestone pages, so you can
+quickly see specs and bugs assigned to yourself. No configuration needed.
+
+
 Also See
 ========
-* Firefox Launchpad Plugin 
+* Firefox Launchpad Plugin
