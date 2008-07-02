@@ -18,7 +18,7 @@ tags = [
         {"tag":'backport', tip:"Involves needing a backport to a released version of the distro"},
         {"tag":'likely-dup', tip:"Sounds like a dupe of an existing bug; needs further investigation"},
         {"tag":'needs-testing', tip:"A fix or workaround is proposed, but needs to be evaluated"},
-        {"tag":'needs-improvement', tip:"The bug report needs to be worked on further before it can be upstreamed"}
+        {"tag":'triage-mentoring-available', tip:"The bug report needs additional info and another triager is offering mentoring for getting it"}
 ];
 
 // ------- End of User settable data -------
