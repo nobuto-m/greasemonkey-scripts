@@ -123,7 +123,7 @@ for (var tag in tags) {
 		var tags_new = tags_current_list.join("+");
 
 		// Get the bug's title and description
-		var bug_title = document.getElementsByTagName('h1')[0].innerHTML;
+                var bug_title = document.getElementsByTagName('h1')[0].textContent.replace(/^\s+|\s+$/g, '');
 		var bug_description;
 		get(document.location + "/+edit", function(responseText) {
 			//alert("Received responseText");
@@ -131,6 +131,7 @@ for (var tag in tags) {
 			bug_description = xmlobject.getElementById('field.description').textContent;
 
 			//alert("Desc: " + bug_description);
+			//alert("Title: " + bug_title);
 
 			if (! bug_description || bug_description == "undefined") {
 				alert("Error:  No bug description defined");
@@ -143,9 +144,10 @@ for (var tag in tags) {
 				'field.tags=' + encodeURI(tags_new) + '&' +
 				'field.title=' + encodeURIComponent(bug_title) + '&' +
 				'field.description=' + encodeURIComponent(bug_description) + '&' +
+				'field.actions.change=' + encodeURIComponent("Change") + '&' +
 				'field.actions.confirm_tag=' + encodeURIComponent("Yes, define new tag");
 
-			// alert("Data: " + form_tag_data);
+			//alert("Data: " + form_tag_data);
 
 			post(document.location + "/+edit", form_tag_data, function(responseText) {
 				// TODO:  Need better parsing of error messages in output
