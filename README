@@ -29,7 +29,8 @@ Or click on the individual scripts from your file browser.
 
 Here's a way to install from the command line:
   * Copy *.js to ~/.mozilla/firefox/<your-profile>/gm_scripts/
-  * 
+  * Modify your ~/.mozilla/firefox/<your-profile>/gm_scripts/config.xml
+    like in the included example.
 
 For the latest updates to the scripts, go to the following link and
 click 'download' for each of them:
