@@ -29,10 +29,12 @@ A.  lp_buttontags.user.js
 2.  Check that there is a line 'Add tag' with several links listed after
     it.
 
-3.  Click on one of the tags, and verify that it gets added to the bug
-    report.
+3.  Hover mouse over a tag.  A description should pop up.
 
-4.  Click on Edit Description and delete the tag(s) you added.
+4.  Click on one of the tags, and verify that it gets added to the bug
+    report, and that this tag no longer is shown in the Add tag list.
+
+5.  Click on Edit Description and delete the tag(s) you added.
 
 
 B.  lp_highlight_me.user.js
