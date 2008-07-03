@@ -30,10 +30,15 @@
   PROBLEM: Currently users have to install scripts manually, one at a
     time.  It would be nice to have a script that installs all the
     scripts automatically, or at least makes the operation a one-shot
-    deal.
-  + Can we just copy them directly into this dir?
+    deal.  I found if I manually copied the contents of gm_scripts/ and
+    restart firefox, the scripts get installed properly.
+  + Provide an 'export' script which copies the contents from here:
+    ~/.mozilla/firefox<random>.<profile>/gm_scripts/
+  + Provide an 'import' script which copies the contents into here:
     ~/.mozilla/firefox<random>.<profile>/gm_scripts/
   + The profiles can be figured out from the profiles.ini file.
+  + With these basics in place, could we then distribute the scripts as
+    a .deb?
 
 * Permanently saving changes:
   PROBLEM:  Currently, scripts that allow the user to change
@@ -48,9 +53,14 @@
     http://wiki.greasespot.net/Security_tips#Use_data:URIs.2C_not_remote_resources
   + Dumping an object's contents:
     http://wiki.greasespot.net/Code_snippets#Dump_the_properties_of_an_object
-  + An issue to consider is that all prefs are kept in FF memory
-    always.  See:
+
+* Add check/prompt about space limitations
+  PROBLEM:  All prefs are kept in Firefox memory (including
+    stockreplies), and there is a max limitation of how much can be
+    stored.  See:
     http://groups.google.com/group/greasemonkey-users/browse_thread/thread/ca5a0dfac5c5998b
+  + The user should be warned if they enter too many stockreplies, that
+    the excess will not be kept.
 
 * Copying/sharing settings to different machines:
   PROBLEM:  If you make some changes, such as defining several stock
@@ -58,7 +68,8 @@
     machines.  One idea is to script the copying of these changes from
     the command line.  Another idea would be to modify each script to
     allow publishing of customizations to a central website.
-  + Greasemonkey scripts are always installed to:
+  + The preferences data with the gm settings is not stored in
+    gm_scripts, but with the global firefox config data.
     ~/.mozilla/firefox<random>.<profile>/gm_scripts/
   + Presumably, a script could copy the contents of this dir from one
     machine to another.
