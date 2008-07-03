@@ -1,0 +1,82 @@
+                 TESTING LAUNCHPAD  GREASEMONKEY SCRIPTS
+                 --------========= [o] =========--------
+
+I.  Reporting Problems:
+------------------------------------------------------------------------
+File bugs and test failures at the following URL.  Please also indicate
+the version of Firefox, GreaseMonkey, and launchpad-gm-scripts you're
+using:
+
+  https://bugs.launchpad.net/launchpad-gm-scripts/+filebug
+
+
+II.  General Testing
+------------------------------------------------------------------------
+A.  Load the Error Console in Firefox.  Click the Clear button to clear
+    all old messages
+B.  Install each script by loading in firefox (see README)
+C.  Review Error Console for errors and warnings
+
+
+III.  Individual Script Testing
+------------------------------------------------------------------------
+
+A.  lp_buttontags.user.js
+=========================
+1.  Navigate to our test bug report:
+    https://bugs.launchpad.net/launchpad-gm-scripts/+bug/245043
+
+2.  Check that there is a line 'Add tag' with several links listed after
+    it.
+
+3.  Click on one of the tags, and verify that it gets added to the bug
+    report.
+
+4.  Click on Edit Description and delete the tag(s) you added.
+
+
+B.  lp_highlight_me.user.js
+===========================
+1.  Navigate to a milestones page that have tasks you are/were
+    assigned.  For instance:
+    https://launchpad.net/ubuntu/+milestone/ubuntu-8.04
+
+2.  Check that the rows with your name have a different color than the
+    other rows
+
+
+C.  lp_karma_suffix.user.js
+===========================
+1.  Navigate to our test bug report:
+    https://bugs.launchpad.net/launchpad-gm-scripts/+bug/245043
+
+2.  Check that the Assigned To person lists in parenthesis the username
+    and karma level.
+
+
+D.  lp_patches.user.js
+======================
+1.  Navigate to our test bug report:
+    https://bugs.launchpad.net/launchpad-gm-scripts/+bug/245043
+
+2.  Check the attachments and verify there is a star beside the item
+    marked "this is a patch", but not against the one "this is not a
+    patch".
+
+
+E.  lp_stockreplies.user.js
+===========================
+1.  Navigate to our test bug report:
+    https://bugs.launchpad.net/launchpad-gm-scripts/+bug/245043
+
+2.  Doublecheck that there is a link for adding stock replies
+
+3.  Add a stock reply
+
+4.  Use a stock reply
+
+
+F.  lp_workflowreports.user.js
+==============================
+1.  Navigate to our test bug report:
+    https://bugs.launchpad.net/launchpad-gm-scripts/+bug/245043

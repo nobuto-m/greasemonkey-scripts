@@ -1,11 +1,11 @@
-* Add a TESTING file
+* (DONE) Add a TESTING file
   PROBLEM:  When Launchpad changes its layout, it may or may not break
     some of these lp greasemonkey scripts.  We need a procedural way for
     someone to quickly walk through each script in turn to doublecheck
     that it is still behaving appropriately.
-  + Make a TESTING file, with a section for each greasemonkey script
-  + Create/identify a dummy Launchpad bug to run the scripts against
-  + For each script, outline a procedure for what to look for to check
+  + (DONE) Make a TESTING file, with a section for each greasemonkey script
+  + (DONE) Create/identify a dummy Launchpad bug to run the scripts against
+  + (DONE) For each script, outline a procedure for what to look for to check
     that the script is installed, altering the page render correctly,
     and that its buttons and added links are working correctly.
 
