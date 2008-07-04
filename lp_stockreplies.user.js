@@ -2,8 +2,9 @@
 // @name           LP_StockReplies
 // @namespace      http://outflux.net/greasemonkey/
 // @description    (Launchpad) Stock replies
-// @include        https://*.launchpad.net/*
 // @include        https://launchpad.net/*
+// @include        https://*.launchpad.net/*
+// @include        https://*.edge.launchpad.net/*
 // @version        1.2
 // @date           2007-11-27
 // @creator        Kees Cook <kees@ubuntu.com>

@@ -2,9 +2,9 @@
 // @name        LP_Patches
 // @namespace   http://murraytwins.com/greasemonkey/
 // @description Identify attachments flagged as patches
+// @include     https://launchpad.net/*
 // @include     https://*.launchpad.net/*
 // @include     https://*.edge.launchpad.net/*
-// @include     https://launchpad.net/*
 // @version     0.99
 // @creator     Brian Murray <brian@ubuntu.com>
 // ==/UserScript==

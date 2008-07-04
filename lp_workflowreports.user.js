@@ -2,6 +2,7 @@
 // @name           LP_Workflow
 // @namespace      http://murraytwins.com/greasemonkey/
 // @description    (Launchpad) Identify workflow reports
+// @include        https://launchpad.net/*
 // @include        https://*.launchpad.net/*
 // @include        https://*.edge.launchpad.net/*
 // @include        https://launchpad.net/*

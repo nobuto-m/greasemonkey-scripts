@@ -2,7 +2,9 @@
 // @name           LP_Highlight_Me
 // @namespace      https://launchpad.net/launchpad-gm-scripts
 // @description    Highlight the logged in user in various listings.
+// @include        https://launchpad.net/*/+milestone/*
 // @include        https://*.launchpad.net/*/+milestone/*
+// @include        https://*.edge.launchpad.net/*/+milestone/*
 // @version        0.1.2
 // @date           2008-01-25
 // @creator        Gavin Panella <gavin@gromper.net>

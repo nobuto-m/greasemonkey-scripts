@@ -2,9 +2,9 @@
 // @name           LP_ButtonTags
 // @namespace      http://bryceharrington.org/greasemonkey/
 // @description    (Launchpad) Buttons for adding tags
+// @include        https://launchpad.net/*
 // @include        https://*.launchpad.net/*
 // @include        https://*.edge.launchpad.net/*
-// @include        https://launchpad.net/*
 // ==/UserScript==
 
 // ------  User settable data  -------------
