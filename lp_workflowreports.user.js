@@ -35,9 +35,12 @@ window.addEventListener("load", function(e) {
 
     var debug = 0
 
-    var bug_heading = xpath("//div[contains(@style,'float: left;')]").snapshotItem(0);
+    var bug_heading = xpath("//h1").snapshotItem(0);
+    if (debug) {
+        GM_log( "title " + bug_heading );
+    }
    
-    var current_subscribers = xpath("//div[contains(@id,'portlet-subscribers')]//ul[contains(@class,'person')]/li/a")
+    var current_subscribers = xpath("//section[contains(@id,'subscribers-direct')]/div/a")
     for ( var i = 0; i < current_subscribers.snapshotLength; i++ ) {
         var node = current_subscribers.snapshotItem(i);
         var link = "" + node;
@@ -54,7 +57,7 @@ window.addEventListener("load", function(e) {
             var special_K = document.createElement("h1");
             special_K.sytle = "clear: left;";
             special_K.innerHTML = special_subscribers[person];
-            bug_heading.parentNode.insertBefore(special_K, bug_heading.nextSibling); 
+            bug_heading.parentNode.insertBefore(special_K, bug_heading); 
             return;
         }
     }
