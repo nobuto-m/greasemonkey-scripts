@@ -116,11 +116,11 @@ function karma_handler(xmldoc, person)
     //}
 
     // screen-scraping method...
-    var span = '<span id="karma-total">';
+    var span = '/+karma">';
     var karma_at = text.indexOf(span);
     if (karma_at>0) {
         var karma_all = text.substr(karma_at+span.length);
-        karma = karma_all.substr(0,karma_all.indexOf("<"));
+        karma = karma_all.substr(0,karma_all.indexOf("</a>"));
         if (debug)
             alert("Karma for "+person+": "+karma);
     }
