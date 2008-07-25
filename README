@@ -24,6 +24,7 @@ Then to install these scripts, run:
   * firefox lp_buttontags.user.js
   * firefox lp_highlight_me.user.js
   * firefox lp_workflowreports.user.js
+  * firefox lp_hide_tags.user.js
 
 Or click on the individual scripts from your file browser.
 
@@ -146,6 +147,13 @@ quickly see specs and bugs assigned to yourself. No configuration needed.
 lp_workflowreports.user.js:  Workflow Reports
 =============================================
 TBD
+
+
+lp_hide_tags.user.js:  Hide and sort tags in tags portlet
+=========================================================
+This script reduces the number of tags show in the tags portlet on the
+bugs landing pages for projects. It also orders the show tags by appearence
+instead of alphabetically.
 
 
 Also See

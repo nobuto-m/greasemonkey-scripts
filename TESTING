@@ -82,3 +82,12 @@ F.  lp_workflowreports.user.js
 ==============================
 1.  Navigate to our test bug report:
     https://bugs.launchpad.net/launchpad-gm-scripts/+bug/245043
+
+
+G.  lp_hide_tags.user.js
+==============================
+1.  Navigate to the ubuntu landing page:
+    https://bugs.launchpad.net/ubuntu
+    
+2.  Elements in the tags portlet should be ordered by appearence and
+    the list should be significantly shorter (depending on the settings)

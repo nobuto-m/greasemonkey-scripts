@@ -23,4 +23,9 @@
 		<Include>https://*.edge.launchpad.net/*</Include>
 		<Include>https://launchpad.net/*</Include>
 	</Script>
+	<Script filename="lp_hide_tags.user.js" name="LP_HideTags" namespace="http://thekorn.com/greasemonkey/" description="(Launchpad) Hide and sort elements in tags portlet" enabled="true" basedir="lp_hidetags">
+		<Include>https://*.launchpad.net/*</Include>
+		<Include>https://*.edge.launchpad.net/*</Include>
+		<Include>https://launchpad.net/*</Include>
+	</Script>
 </UserScriptConfig>
