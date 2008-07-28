@@ -12,13 +12,13 @@
 
 (function() {
 
-// threshold: min. number of tag appearance for a project
+// threshold: min. number of tag appearances for a project
 var threshold = 10;
 // max_tags: max. number of shown tags, if this is -1 all tags fitting the threshold criteria will be shown
 var max_tags = 15;
 // min_tags: if the number of tags for a project is smaller than this show a sorted list of all tags
 var min_tags = 30;
-// whitelist: always show tags in this list, ignore other setting for this tags
+// whitelist: always show tags in this list, ignore other setting for these tags
 var whitelist = ["bitesize"];
 // blacklist: do not show tags in this list
 var blacklist = ["apport-crash", "apport-bug"];

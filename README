@@ -152,7 +152,7 @@ TBD
 lp_hide_tags.user.js:  Hide and sort tags in tags portlet
 =========================================================
 This script reduces the number of tags show in the tags portlet on the
-bugs landing pages for projects. It also orders the show tags by appearence
+bugs landing pages for projects. It also orders the shown tags by count 
 instead of alphabetically.
 
 
