@@ -155,6 +155,11 @@ This script reduces the number of tags show in the tags portlet on the
 bugs landing pages for projects. It also orders the shown tags by count 
 instead of alphabetically.
 
+lp_question_comment.user.js: Prefill comment field
+==================================================
+This script will prefill the comment field with Ubuntu's stock reply when
+converting a bug to a question.  One could change the comment variable
+for other project's. 
 
 Also See
 ========
