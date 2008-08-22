@@ -150,6 +150,7 @@ function team_handler(xmldoc, person)
         'bugsquad':'',
         'ubuntu-core-dev':'',
         'ubuntu-dev':'',
+        'universe-contributors':'',
         'ubuntu-bugcontrol':'',
         'ubuntumembers':''
     };
@@ -218,10 +219,10 @@ window.addEventListener("load", function(e) {
     add_people(xpath("//div[contains(@id,'maincontent')]//"+a_clean_match));
 
     // Bug reporter
-    add_people(xpath("//div[contains(@class,'portlet')]/h2[.='Bug details']/..//"+a_clean_match));
+    add_people(xpath("//span[@class='object timestamp']/"+a_clean_match));
 
     // Assignees
-    add_people(xpath("//div[contains(@id,'maincontent')]//table[contains(@class,'listing')]//td/"+a_messy_match));
+    add_people(xpath("//table[contains(@id,'affected-software')]//td/"+a_messy_match));
 
     // Everyone!  (this is totally insane for bugs with large dups)
     //add_people(xpath("//"+a_match));
