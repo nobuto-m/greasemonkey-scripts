@@ -25,6 +25,8 @@ Then to install these scripts, run:
   * firefox lp_highlight_me.user.js
   * firefox lp_workflowreports.user.js
   * firefox lp_hide_tags.user.js
+  * firefox lp_question_comment.user.js
+  * firefox lp_reporter_comments.user.js 
 
 Or click on the individual scripts from your file browser.
 
@@ -160,6 +162,13 @@ lp_question_comment.user.js: Prefill comment field
 This script will prefill the comment field with Ubuntu's stock reply when
 converting a bug to a question.  One could change the comment variable
 for other project's. 
+
+lp_reporter_comments.user.js: Identiy comments from bug reporter
+================================================================
+Sometimes bug reports can have multiple people commenting on the bug
+and lots of comments.  This script will modify the comment header color,
+to a user defined color, making the original reporter's comments easier
+to identify in a long bug report.
 
 Also See
 ========
