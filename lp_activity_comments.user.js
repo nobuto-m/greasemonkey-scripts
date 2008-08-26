@@ -96,7 +96,11 @@ function create_commentbody(elements) {
         } else if (entry_what_lst[1] == "status") {
             special_K.innerHTML += "<i>changed status for " + entry_what_lst[0] + ":</i> ";
             special_K.innerHTML += entry.old + " --> " + entry.new
-            special_K.innerHTML += "<br>";  
+            special_K.innerHTML += "<br>";
+        } else if (entry_what_lst[1] == "bugtargetdisplayname") {
+            special_K.innerHTML += "<i>changed package assignment:</i> ";
+            special_K.innerHTML += entry.old + " --> " + entry.new
+            special_K.innerHTML += "<br>";            
         } else {
             GM_log("cannot show " + entry.date + "//" + entry.what);
             //~ special_K.innerHTML += "<b>" + entry.user + " --> "+ entry.message + "</b>";
