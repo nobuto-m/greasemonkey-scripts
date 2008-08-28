@@ -110,12 +110,34 @@ function create_commentbody(elements) {
     return special_K;    
 }
 
+var DIFF_HOURS = 0;
+function getTimeOffset(timezone) {
+    x = new Date("Wed, 18 Oct 2000 13:00:00 " + timezone);
+    y = new Date("Wed, 18 Oct 2000 13:00:00");
+    if (x == "Invalid Date") {
+        // unable to parse string
+        switch (timezone) {
+            case "CET": return 1
+            case "CEST": return 2
+            default: return DIFF_HOURS
+        }
+    }
+    local = new Date();
+    return -((x - y) / 3600000 + (local.getTimezoneOffset() / 60))
+}
+//~ alert("CET (+1): " + getTimeOffset("CET"));
+//~ alert("CEST (+2): " + getTimeOffset("CEST"));
+//~ alert("EST (-5): " + getTimeOffset("EST"));
+//~ alert("UTC (0): " + getTimeOffset("UTC"));
+//~ alert("booo (0): " + getTimeOffset("booo"));
+
 function create_comment(elements) {
+    var date = new Date(elements[0].date);
     var boardComment = document.createElement("div");
     boardComment.setAttribute("class", "boardComment ");
     var boardCommentDetails = document.createElement("div");
     boardCommentDetails.setAttribute("class", "boardCommentDetails");
-    boardCommentDetails.innerHTML = "<a href='/~" + elements[0].user["nickname"] + "'><img width='14' height='14' src='/@@/person' alt=''/> " + elements[0].user["fullname"] +"</a> changed<span> on " + elements[0].date.toDateString() + "</span>:";
+    boardCommentDetails.innerHTML = "<a href='/~" + elements[0].user["nickname"] + "'><img width='14' height='14' src='/@@/person' alt=''/> " + elements[0].user["fullname"] +"</a> changed<span> on " + date.toDateString() + "</span>:";
     boardComment.appendChild(boardCommentDetails);
     var boardCommentBody = document.createElement("div");
     boardCommentBody.setAttribute("class", "boardCommentBody");
@@ -136,7 +158,6 @@ function log_handler(xmldoc, args) {
      *  * support changes after last comment
      *  * content of box
      *  * EQ: group items
-     *  * use .getTime() to compare dates
      */
     var entries = [];
     var text = xmldoc.responseText.replace(/\n/g," ");
@@ -149,7 +170,7 @@ function log_handler(xmldoc, args) {
         var v = act_log[i].split(/<\/?td>/g);
         var d = v[1].split(" ");
         var t = d[3].split(":");
-        var date = new Date(Number(d[2]) + 2000, month.indexOf(d[1]), d[0], t[0], t[1]);
+        var date = new Date(Number(d[2]) + 2000, month.indexOf(d[1]), d[0], t[0], t[1]).getTime();
         //~ GM_log(date);
         change["date"] = date;
         var user = {};
@@ -159,7 +180,11 @@ function log_handler(xmldoc, args) {
         change["user"] = user;
         change["what"] = v[5];
         if (change["what"] == "bug") {
-            /** ignore 'added bug' **/
+            /** ignore 'added bug' but use it to calculate the timedifferenz caused by timezones**/
+            d = date - DATEREPORTED;
+            DIFF_HOURS = d / 3600000;
+            //~ alert(date + " || " + DATEREPORTED);
+            //~ alert((d / 3600000) + " >>> " + DIFF_HOURS);
             continue;
         }
         change["old"] = v[7] ? v[7] : "None";
@@ -187,12 +212,16 @@ function log_handler(xmldoc, args) {
         d = d.snapshotItem(0).title.split(" ");
         var date = d[0].split("-");
         var time = d[1].split(":");
-        var x = new Date(date[0], Number(date[1]) -1, date[2], Number(time[0]) - 2, time[1]);
-        //~ GM_log(x +"/"+cur.date);
-        if (cur.date > x){
-            //~ GM_log("GT");
+        var diff = getTimeOffset(d[2]);
+        var x = new Date(date[0], date[1] -1, date[2], Number(time[0]) - diff, time[1]).getTime();
+        if (debug) {
+            GM_log("diff: " + diff + "||" + d[2]);
+            GM_log("date_tuple: " + [date[0], date[1] -1, date[2], Number(time[0]) + Number(diff), time[1]]);
+            comment_date = new Date(x);
+            activity_date = new Date(cur.date);
+            GM_log("date values: " + comment_date + " || " + activity_date);
         }
-        else if (cur.date < x){
+        if (cur.date < x){
             var tmp_array = new Array();
             while (cur.date < x) {
                 tmp_array.push(cur);
@@ -203,11 +232,10 @@ function log_handler(xmldoc, args) {
             }
             var boardComment = create_comment(tmp_array);
             comments.snapshotItem(i).parentNode.insertBefore(boardComment, comments.snapshotItem(i));
-        }
-        else{
+        } else if (cur.date == x) {
             //~ GM_log("EQ");
             var tmp_array = new Array();
-            while (!(cur.date > x) && !(cur.date < x)) {
+            while (cur.date == x) {
                 tmp_array.push(cur);
                 cur = entries.shift();
                 if (!cur) {
@@ -231,7 +259,7 @@ function log_handler(xmldoc, args) {
     if (cur) {      
         while (entries) {
             x = cur.date;  
-            while (!(cur.date > x) && !(cur.date < x) && entries) {
+            while (cur.date == x) {
                 tmp_array.push(cur);
                 cur = entries.shift();
                 if (!cur) {
@@ -249,13 +277,22 @@ function log_handler(xmldoc, args) {
     }
 }
 
+var DATEREPORTED;
+
 window.addEventListener("load", function(e) {
 //    GM_log('script running');
-
     var activity_url = xpath("//a[@class='menu-link-activitylog']").snapshotItem(0);
     var description = xpath("//div[@id='bug-description']/p").snapshotItem(0);
     var comments = xpath("//div[@class='boardComment']");
     var args = [description, comments];
+    var d = xpath("//*[@class='object timestamp']/span").snapshotItem(0);
+    d = d.title.split(" ");
+    date = d[0].split("-");
+    time = d[1].split(":");
+    //~ alert(date);
+    //~ alert(time);
+    DATEREPORTED = new Date(date[0], date[1] - 1, date[2], time[0], time[1]).getTime();
+    //~ alert(DATEREPORTED);
     loadData(activity_url, log_handler, args);
 }, false);
     
