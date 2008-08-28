@@ -18,8 +18,8 @@
 
 var teams = {
     'motu-swat':'',
-    'motu-release':'',
-    'motu-sru':'',
+//    'motu-release':'',
+//    'motu-sru':'',
     'bugsquad':'',
     'ubuntu-core-dev':'',
     'ubuntu-dev':'',
