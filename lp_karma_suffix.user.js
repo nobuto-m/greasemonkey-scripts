@@ -163,7 +163,6 @@ function team_handler(xmldoc, person)
         return;
     }
 
-    // show developer team logos last, so process them first
     var re = new RegExp("<img[^>]* src=\"(https://launchpadlibrarian.net/[^\"]+)\"[^>]+>[^a]*<a[^>]* href=\"[^~\"]*/~([^\"]+)\"","ig");
     while ((match = re.exec(text)) != null) {
         title = match[2];
