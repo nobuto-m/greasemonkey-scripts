@@ -10,6 +10,26 @@
 // @creator        Kees Cook <kees@ubuntu.com>
 // ==/UserScript==
 
+// ------  User settable data  -------------
+//
+// Teams to display emblems for
+
+// show developer team logos last, so process them first
+
+var teams = {
+    'motu-swat':'',
+    'motu-release':'',
+    'motu-sru':'',
+    'bugsquad':'',
+    'ubuntu-core-dev':'',
+    'ubuntu-dev':'',
+    'universe-contributors':'',
+    'ubuntu-bugcontrol':'',
+    'ubuntumembers':''
+};
+
+// ------- End of User settable data -------
+
 (function () {
   var SCRIPT = {
     name: "LP_Karma_Suffix",
@@ -84,7 +104,6 @@ function augment_person(person)
     for (var idx in people_cache[person]['nodes']) {
          var node = people_cache[person]['nodes'][idx];
 
-        // show developer team logos last, so process them first
         for (var title in people_cache[person]['team']) {
             var logoNode = document.createElement('img');
             logoNode.title = title;
@@ -145,15 +164,6 @@ function team_handler(xmldoc, person)
     }
 
     // show developer team logos last, so process them first
-    var teams = {
-        'motu-swat':'',
-        'bugsquad':'',
-        'ubuntu-core-dev':'',
-        'ubuntu-dev':'',
-        'universe-contributors':'',
-        'ubuntu-bugcontrol':'',
-        'ubuntumembers':''
-    };
     var re = new RegExp("<img[^>]* src=\"(https://launchpadlibrarian.net/[^\"]+)\"[^>]+>[^a]*<a[^>]* href=\"[^~\"]*/~([^\"]+)\"","ig");
     while ((match = re.exec(text)) != null) {
         title = match[2];
