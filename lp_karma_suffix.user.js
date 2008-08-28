@@ -141,7 +141,7 @@ function karma_handler(xmldoc, person)
         var karma_all = text.substr(karma_at+span.length);
         karma = karma_all.substr(0,karma_all.indexOf("</a>"));
         if (debug)
-            alert("Karma for "+person+": "+karma);
+            GM_log("Karma for "+person+": "+karma);
     }
 
     // store for later
@@ -171,7 +171,7 @@ function team_handler(xmldoc, person)
         if (title in teams) {
             people_cache[person]['team'][title] = src;
             if (debug)
-                alert(title+' has URL '+src+' for '+person);
+                GM_log(title+' has URL '+src+' for '+person);
         }
     }
 
@@ -204,7 +204,7 @@ function add_people(people)
         people_cache[person]['nodes'] = new Array();
         people_cache[person]['team'] = new Array();
         if (debug)
-            alert(person);
+            GM_log(person);
     }
     people_cache[person]['nodes'].push(node);
   }
