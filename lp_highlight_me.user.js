@@ -60,6 +60,7 @@ function highlightMilestoneRows() {
     var highlight = function(table) {
         if (table == null) return;
         var links = table.getElementsByTagName('a');
+        var count = 0;
         for (var i = 0; i < links.length; i++) {
             var link = links[i];
             if (link.href == user_href) {
@@ -75,31 +76,16 @@ function highlightMilestoneRows() {
                 }
             }
         }
+        return count;
     };
 
-    var count = 0;
-
-    highlight(document.getElementById('milestone_specs'));
-    var spec_count = count; count = 0;
-    highlight(document.getElementById('milestone_bugtasks'));
-
-    //Display spec/bug counts. Im sure there must be an easier way to do this
-    //but this works and looks good on the page
+    var spec_count = highlight(document.getElementById('milestone_specs'));
     var spec_header = document.getElementById("specification-count");
-    var new_header = document.createElement('a');
-    new_header.setAttribute('class', 'portletBody portletContent');
-    var head_text = document.createTextNode(" - " + spec_count + " assigned to you");
-    new_header.appendChild(head_text);
-    spec_header.appendChild(new_header);
+    spec_header.innerHTML += ' - ' + spec_count + ' assigned to you';
 
+    var bug_count = highlight(document.getElementById('milestone_bugtasks'));
     var bug_header = document.getElementById("bug-count");
-    var new_header = document.createElement('a');
-    new_header.setAttribute('class', 'portletBody portletContent');
-    var head_text = document.createTextNode(" - " + count + " assigned to you");
-    new_header.appendChild(head_text);
-    bug_header.appendChild(new_header);
-
-
+    bug_header.innerHTML += ' - ' + bug_count + ' assigned to you';
 }
 
 
