@@ -131,13 +131,37 @@ function getTimeOffset(timezone) {
 //~ alert("UTC (0): " + getTimeOffset("UTC"));
 //~ alert("booo (0): " + getTimeOffset("booo"));
 
+function createDate(date) {
+    d = new Date();
+    diff = (d - date) / 3600000;
+    if (diff < 24) {
+        diff = Math.round(diff);
+        if (diff == 1) {
+            return diff + " hour ago"
+        } else {
+            return diff + " hours ago"
+        }
+    } else {
+        year = date.getFullYear();
+        month = date.getMonth();
+        if (month < 9) {
+            month = "0" + (month + 1);
+        }
+        day = date.getDate();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        return "on " + year + "-" + month + "-" + day
+    }
+}
+
 function create_comment(elements) {
     var date = new Date(elements[0].date);
     var boardComment = document.createElement("div");
     boardComment.setAttribute("class", "boardComment ");
     var boardCommentDetails = document.createElement("div");
     boardCommentDetails.setAttribute("class", "boardCommentDetails");
-    boardCommentDetails.innerHTML = "<a href='/~" + elements[0].user["nickname"] + "'><img width='14' height='14' src='/@@/person' alt=''/> " + elements[0].user["fullname"] +"</a> changed<span> on " + date.toDateString() + "</span>:";
+    boardCommentDetails.innerHTML = "<a href='/~" + elements[0].user["nickname"] + "'><img width='14' height='14' src='/@@/person' alt=''/> " + elements[0].user["fullname"] +"</a> changed<span> " + createDate(date) + "</span>:";
     boardComment.appendChild(boardCommentDetails);
     var boardCommentBody = document.createElement("div");
     boardCommentBody.setAttribute("class", "boardCommentBody");
