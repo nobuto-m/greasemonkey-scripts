@@ -71,13 +71,35 @@ function highlightMilestoneRows() {
                     else {
                         row.className = 'highlight-for-user';
                     }
+                    count += 1;
                 }
             }
         }
     };
 
+    var count = 0;
+
     highlight(document.getElementById('milestone_specs'));
+    var spec_count = count; count = 0;
     highlight(document.getElementById('milestone_bugtasks'));
+
+    //Display spec/bug counts. Im sure there must be an easier way to do this
+    //but this works and looks good on the page
+    var spec_header = document.getElementById("specification-count");
+    var new_header = document.createElement('a');
+    new_header.setAttribute('class', 'portletBody portletContent');
+    var head_text = document.createTextNode(" - " + spec_count + " assigned to you");
+    new_header.appendChild(head_text);
+    spec_header.appendChild(new_header);
+
+    var bug_header = document.getElementById("bug-count");
+    var new_header = document.createElement('a');
+    new_header.setAttribute('class', 'portletBody portletContent');
+    var head_text = document.createTextNode(" - " + count + " assigned to you");
+    new_header.appendChild(head_text);
+    bug_header.appendChild(new_header);
+
+
 }
 
 
