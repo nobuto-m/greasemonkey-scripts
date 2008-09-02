@@ -60,6 +60,7 @@ function highlightMilestoneRows() {
     var highlight = function(table) {
         if (table == null) return;
         var links = table.getElementsByTagName('a');
+        var count = 0;
         for (var i = 0; i < links.length; i++) {
             var link = links[i];
             if (link.href == user_href) {
@@ -71,13 +72,20 @@ function highlightMilestoneRows() {
                     else {
                         row.className = 'highlight-for-user';
                     }
+                    count += 1;
                 }
             }
         }
+        return count;
     };
 
-    highlight(document.getElementById('milestone_specs'));
-    highlight(document.getElementById('milestone_bugtasks'));
+    var spec_count = highlight(document.getElementById('milestone_specs'));
+    var spec_header = document.getElementById("specification-count");
+    spec_header.innerHTML += ' - ' + spec_count + ' assigned to you';
+
+    var bug_count = highlight(document.getElementById('milestone_bugtasks'));
+    var bug_header = document.getElementById("bug-count");
+    bug_header.innerHTML += ' - ' + bug_count + ' assigned to you';
 }
 
 
