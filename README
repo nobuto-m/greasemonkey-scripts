@@ -170,6 +170,12 @@ and lots of comments.  This script will modify the comment header color,
 to a user defined color, making the original reporter's comments easier
 to identify in a long bug report.
 
+lp_activity_comments.user.js: Show ActivityLog as comments on the bug-page
+==========================================================================
+This script shows each entry of the activity log of a bugreport as a comment
+on the main bug page. This is an easy way to show changes to a bug within
+the bugreport.
+
 Also See
 ========
 * Firefox Launchpad Plugin
