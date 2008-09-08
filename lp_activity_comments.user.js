@@ -259,6 +259,7 @@ function log_handler(xmldoc, args) {
             GM_log("date values: " + comment_date + " || " + activity_date);
         }
         if (cur.date < x){
+            //~ GM_log("less");
             var tmp_array = new Array();
             while (cur.date < x) {
                 tmp_array.push(cur);
@@ -291,7 +292,7 @@ function log_handler(xmldoc, args) {
     var tmp_array = new Array();
     var eof_comments = comments.snapshotItem(comments.snapshotLength - 1);
     //~ alert(eof_comments);
-    eof_comments = eof_comments ? eof_comments.nextSibling : description.nextSibling;
+    eof_comments = eof_comments ? eof_comments.nextSibling : description.parentNode.nextSibling;
     //~ alert(eof_comments);
     if (cur) {
         while (entries) {
