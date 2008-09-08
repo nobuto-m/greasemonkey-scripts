@@ -4,17 +4,17 @@
 // @description    (Launchpad) Show bug timeline
 // @include        https://bugs.launchpad.net/*
 // @include        https://bugs.edge.launchpad.net/*
-// @date           2008-05-30
+// @version        0.2
+// @date           2008-09-08
 // @creator        Markus Korn <thekorn@gmx.de>
 // ==/UserScript==
- 
- 
+
 var debug = 1;
 var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 // Anonymous function wrapper
 (function() {
-    
+
 function xpath(query, context) {
   context = context ? context : document;
   return document.evaluate(query, context, null,
@@ -72,27 +72,36 @@ function create_commentbody(elements) {
         entry_what_lst = entry.what.split(": ")
         if (entry_what_lst.length == 1) {
             entry_what_lst.push("")
-        }        
+        }
         if (entry.what == "title") {
             special_K.innerHTML += "<i>changed summary</i>";
-            special_K.innerHTML += "<br>";            
+            special_K.innerHTML += "<br>";
         } else if (entry.what == "description") {
             special_K.innerHTML += "<i>changed description</i>";
-            special_K.innerHTML += "<br>";            
-        } else if (entry.what == "bug" && entry.message.match(/added subscriber/g)) {
+            special_K.innerHTML += "<br>";
+        } else if (entry.what == "bug" && entry.message.match(/^added subscriber/g)) {
             special_K.innerHTML += "<i>added subscriber: </i>" + entry.message.replace(/added subscriber /g,"");
-            special_K.innerHTML += "<br>";            
+            special_K.innerHTML += "<br>";
+        } else if (entry.what == "bug" && entry.message.match(/^added attachment/g)) {
+            // attachments already appear in the comments
+            continue
         } else if (entry.what == "marked as duplicate") {
             special_K.innerHTML += "<i>marked as duplicate</i>";
-            special_K.innerHTML += "<br>";             
+            special_K.innerHTML += "<br>";
+        } else if (entry.what == "who_made_private") {
+            special_K.innerHTML += "<i>made public (was originally made private by: " + entry.old + ")</i>";
+            special_K.innerHTML += "<br>";
         } else if (entry_what_lst[1] == "assignee") {
             special_K.innerHTML += "<i>changed assignee for " + entry_what_lst[0] + ":</i> ";
             special_K.innerHTML += entry.old + " --> " + entry.new
-            special_K.innerHTML += "<br>";            
+            special_K.innerHTML += "<br>";
         } else if (entry_what_lst[1] == "importance") {
             special_K.innerHTML += "<i>changed importance for " + entry_what_lst[0] + ":</i> ";
             special_K.innerHTML += entry.old + " --> " + entry.new
-            special_K.innerHTML += "<br>";            
+            special_K.innerHTML += "<br>";
+        } else if (entry_what_lst[1] == "statusexplanation") {
+            // this is a comment, and already appears
+            continue
         } else if (entry_what_lst[1] == "status") {
             special_K.innerHTML += "<i>changed status for " + entry_what_lst[0] + ":</i> ";
             special_K.innerHTML += entry.old + " --> " + entry.new
@@ -100,14 +109,14 @@ function create_commentbody(elements) {
         } else if (entry_what_lst[1] == "bugtargetdisplayname") {
             special_K.innerHTML += "<i>changed package assignment:</i> ";
             special_K.innerHTML += entry.old + " --> " + entry.new
-            special_K.innerHTML += "<br>";            
+            special_K.innerHTML += "<br>";
         } else {
             GM_log("cannot show " + entry.date + "//" + entry.what);
             //~ special_K.innerHTML += "<b>" + entry.user + " --> "+ entry.message + "</b>";
             //~ special_K.innerHTML += "<br>";
         }
     }
-    return special_K;    
+    return special_K;
 }
 
 var DIFF_HOURS = 0;
@@ -116,6 +125,7 @@ function getTimeOffset(timezone) {
     y = new Date("Wed, 18 Oct 2000 13:00:00");
     if (x == "Invalid Date") {
         // unable to parse string
+        GM_log("unable to parse timezone: " + timezone);
         switch (timezone) {
             case "CET": return 1
             case "CEST": return 2
@@ -133,7 +143,7 @@ function getTimeOffset(timezone) {
 
 function createDate(date) {
     d = new Date();
-    diff = (d - date) / 3600000;
+    diff = (date - d) / 3600000;
     if (diff < 24) {
         diff = Math.round(diff);
         if (diff == 1) {
@@ -167,13 +177,13 @@ function create_comment(elements) {
     boardCommentBody.setAttribute("class", "boardCommentBody");
     var content = document.createElement("div");
     content.setAttribute("style","font-family: monospace;");
-    
+
     var special_K = create_commentbody(elements);
     content.appendChild(special_K);
-    
+
     boardCommentBody.appendChild(content);
     boardComment.appendChild(boardCommentBody);
-    return boardComment;    
+    return boardComment;
 }
 
 function log_handler(xmldoc, args) {
@@ -203,7 +213,10 @@ function log_handler(xmldoc, args) {
         user["fullname"] = t[2].replace(/(>|<\/a>)/g,"");
         change["user"] = user;
         change["what"] = v[5];
-        if (change["what"] == "bug") {
+        change["old"] = v[7] ? v[7] : "None";
+        change["new"] = v[9] ? v[9] : "None";
+        change["message"] = v[11];
+        if (change["what"] == "bug" && change["message"] == "added bug") {
             /** ignore 'added bug' but use it to calculate the timedifferenz caused by timezones**/
             d = date - DATEREPORTED;
             DIFF_HOURS = d / 3600000;
@@ -211,15 +224,12 @@ function log_handler(xmldoc, args) {
             //~ alert((d / 3600000) + " >>> " + DIFF_HOURS);
             continue;
         }
-        change["old"] = v[7] ? v[7] : "None";
-        change["new"] = v[9] ? v[9] : "None";
-        change["message"] = v[11];
         //~ GM_log("-->" + change.date + "//" + change.what);
         entries.push(change);
     }
     var description = args[0];
     var comments = args[1];
-    
+
     /** ignore 'added bug' **/
     /**
     var special_K = document.createElement("p");
@@ -227,7 +237,7 @@ function log_handler(xmldoc, args) {
     special_K.innerHTML = "<b>" + x.user + " --> "+ x.message + "</b>";
     description.parentNode.insertBefore(special_K, description);
     **/
-    
+
     cur = entries.shift();
     var all_comments = xpath("div[@class='boardCommentBody']", comments.snapshotItem(i)).snapshotItem(0);
     for (var i = 0; i < comments.snapshotLength; i++) {
@@ -273,16 +283,16 @@ function log_handler(xmldoc, args) {
             }else{
                 desc_body.appendChild(special_K);
             }
-        }        
+        }
     }
     var tmp_array = new Array();
     var eof_comments = comments.snapshotItem(comments.snapshotLength - 1);
     //~ alert(eof_comments);
     eof_comments = eof_comments ? eof_comments.nextSibling : description.nextSibling;
     //~ alert(eof_comments);
-    if (cur) {      
+    if (cur) {
         while (entries) {
-            x = cur.date;  
+            x = cur.date;
             while (cur.date == x) {
                 tmp_array.push(cur);
                 cur = entries.shift();
@@ -296,7 +306,6 @@ function log_handler(xmldoc, args) {
             if (!cur) {
                 break;
             }
-            
         }
     }
 }
@@ -319,5 +328,5 @@ window.addEventListener("load", function(e) {
     //~ alert(DATEREPORTED);
     loadData(activity_url, log_handler, args);
 }, false);
-    
+
 })(); // end anonymous function wrapper
