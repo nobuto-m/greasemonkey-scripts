@@ -143,8 +143,11 @@ function getTimeOffset(timezone) {
 
 function createDate(date) {
     d = new Date();
-    diff = (date - d) / 3600000;
+    diff = (d - date) / 3600000;
     if (diff < 24) {
+        if (diff < 0) {
+            diff = 0 - diff;
+        }
         diff = Math.round(diff);
         if (diff == 1) {
             return diff + " hour ago"
