@@ -9,7 +9,7 @@
 // @creator        Markus Korn <thekorn@gmx.de>
 // ==/UserScript==
 
-var debug = 1;
+var debug = 0;
 var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 // Anonymous function wrapper
