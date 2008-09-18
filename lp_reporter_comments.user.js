@@ -31,7 +31,7 @@ window.addEventListener("load", function(e) {
 
     var debug = 0
 
-    var reporter = xpath("//p[@class='object timestamp']/a").snapshotItem(0);
+    var reporter = xpath("//*[@class='object timestamp']/a").snapshotItem(0);
 
     if (debug) {
         GM_log( "reporter href " + reporter );

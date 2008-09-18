@@ -228,7 +228,7 @@ window.addEventListener("load", function(e) {
     add_people(xpath("//div[contains(@id,'maincontent')]//"+a_clean_match));
 
     // Bug reporter
-    add_people(xpath("//span[@class='object timestamp']/"+a_clean_match));
+    add_people(xpath("//*[@class='object timestamp']/"+a_clean_match));
 
     // Assignees
     add_people(xpath("//table[contains(@id,'affected-software')]//td/"+a_messy_match));
