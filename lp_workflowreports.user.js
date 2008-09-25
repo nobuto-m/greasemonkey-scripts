@@ -40,7 +40,7 @@ window.addEventListener("load", function(e) {
         GM_log( "title " + bug_heading );
     }
    
-    var current_subscribers = xpath("//section[contains(@id,'subscribers-direct')]/div/a")
+    var current_subscribers = xpath("//div[contains(@id,'subscribers-direct')]/div/a")
     for ( var i = 0; i < current_subscribers.snapshotLength; i++ ) {
         var node = current_subscribers.snapshotItem(i);
         var link = "" + node;
