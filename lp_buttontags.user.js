@@ -2,9 +2,9 @@
 // @name           LP_ButtonTags
 // @namespace      http://bryceharrington.org/greasemonkey/
 // @description    (Launchpad) Buttons for adding tags
-// @include        https://launchpad.net/*
-// @include        https://*.launchpad.net/*
-// @include        https://*.edge.launchpad.net/*
+// @include        https://bugs.launchpad.net/*
+// @include        https://bugs.edge.launchpad.net/*
+// @include        https://bugs.staging.launchpad.net/*
 // ==/UserScript==
 
 // ------  User settable data  -------------
@@ -12,13 +12,42 @@
 // List of tags to display in the UI
 var tags = new Object;
 tags = [
-	{"tag":"crash", tip:"Results in a crash"},
-        {"tag":'bitesize', tip:"Probably an easy fix, appropriate for newb developers"},
-        {"tag":'packaging', tip:"Strictly a packaging issue, not upstreamable"},
-        {"tag":'backport', tip:"Involves needing a backport to a released version of the distro"},
-        {"tag":'likely-dup', tip:"Sounds like a dupe of an existing bug; needs further investigation"},
-        {"tag":'needs-testing', tip:"A fix or workaround is proposed, but needs to be evaluated"},
-        {"tag":'triage-mentoring-available', tip:"The bug report needs additional info and another triager is offering mentoring for getting it"}
+        // --- Ubuntu Section ---
+        // ubuntu template
+        // {"tag":'', tip:"", "project":"ubuntu", "package":""},
+        //
+        // any package - source https://wiki.ubuntu.com/Bugs/Tags
+        {"tag":'bitesize', tip:"Probably an easy fix, appropriate for new developers", "project":"ubuntu", "package":"any"},
+        {"tag":'likely-dup', tip:"Sounds like a dupe of an existing bug; needs further investigation", "project":"ubuntu", "package":"any"},
+        {"tag":'metabug', tip:"High probability of duplicate reports", "project":"ubuntu", "package":"any"},
+        {"tag":'packaging', tip:"Strictly a packaging issue", "project":"ubuntu", "package":"any"},
+        {"tag":'screencast', tip:"Screencast of the bug is attached", "project":"ubuntu", "package":"any"},
+        // package openoffice - source https://wiki.ubuntu.com/DebuggingOpenOffice
+        {"tag":'ooo-base', tip:"Bug report about database program", "project":"ubuntu", "package":"openoffice"},
+        {"tag":'ooo-calc', tip:"Bug report about spreadsheet application", "project":"ubuntu", "package":"openoffice"},
+        {"tag":'ooo-impress', tip:"Bug report about presentation application", "project":"ubuntu", "package":"openoffice"},
+	{"tag":"ooo-writer", tip:"Bug report about word processor", "project":"ubuntu", "package":"openoffice"},
+        // package update-manager - source https://wiki.ubuntu.com/DebuggingUpdateManager
+	{"tag":"cdrom-upgrade", tip:"Related to an upgrade from CD-ROM or DVD media", "project":"ubuntu", "package":"update-manager"},
+        {"tag":'dapper2hardy', tip:"Related to an upgrade from Dapper to Hardy", "project":"ubuntu", "package":"update-manager"},
+        {"tag":'edgy2feisty', tip:"Related to an upgrade from Edgy to Feisty", "project":"ubuntu", "package":"update-manager"},
+        {"tag":'feisty2gutsy', tip:"Related to an upgrade from Feisty to Gutsy", "project":"ubuntu", "package":"update-manager"},
+        {"tag":'gutsy2hardy', tip:"Related to an upgrade from Gutsy to Hardy", "project":"ubuntu", "package":"update-manager"},
+        {"tag":'hardy2intrepid', tip:"Related to an upgrade from Hardy to Intrepid", "project":"ubuntu", "package":"update-manager"},
+        {"tag":'intrepid2jaunty', tip:"Related to an upgrade from Intrepid to Jaunty", "project":"ubuntu", "package":"update-manager"},
+        // package linux - source https://wiki.ubuntu.com/Bugs/Tags 
+        // it'd be neat if they applied to other kernel packages too...
+	{"tag":"cherry-pick", tip:"Has a git commit SHA from upstream", "project":"ubuntu", "package":"linux"},
+        {"tag":"kernel-bug", tip:"BUG: message appears in logs", "project":"ubuntu", "package":"linux"},
+        {"tag":"kernel-oops", tip:"Causes a kernel Oops", "project":"ubuntu", "package":"linux"},
+
+        // --- Projects Section ---
+        // project template
+        // {"tag":'', tip:"", "project":""},
+        //
+        // project - malone source https://dev.launchpad.net/LaunchpadBugTags
+        {"tag":"api", tip:"Related to any machine readable output", "project":"malone"},
+        {"tag":"bugwatch", tip:"Related to bug watches", "project":"malone"}
 ];
 
 // ------- End of User settable data -------
@@ -26,7 +55,6 @@ tags = [
 // Feature Wishlist:
 //   * Clean up the code (needs some functions broken out)
 //   * Reliable way for users to add new tags, rather than editing the code above
-//   * project-specific tag lists, so we use one set of tags for ubuntu, another for inkscape, etc.
 //   * Select tags from the N most popular for the project
 //   * Display error messages in-page instead of with alerts()
 //   * Use onreadystatechange() to show the processing progress
@@ -96,6 +124,13 @@ tag_section.setAttribute('style', "text-align: right; margin-bottom: 1em;");
 var innerTextElement = document.createTextNode("Add tag: ");
 tag_section.appendChild(innerTextElement);
 
+// grab the part after bugs.launchpad.net - pathname looks like /ubuntu/+source/pkgname/+bug/1
+var pathname = window.location.pathname;
+// find the project name
+var project_name = pathname.split('/')[1]
+// find the source package name
+var package_name = pathname.split('/')[3]
+
 tags:
 for (var tag in tags) {
 	// Skip if tag is already listed
@@ -104,6 +139,19 @@ for (var tag in tags) {
 			continue tags;
 		}
 	}
+        
+        // Skip if tag is not part of the project 
+        if ( tags[tag]["project"] != project_name ) {
+            continue tags;
+        }
+
+        // if the project is ubuntu check the package name that the tag applies to
+        if ( project_name == 'ubuntu' ) {
+            // Skip if tag isn't for this package or for the catch-all any package
+            if ( (tags[tag]["package"] != pathname.split('/')[3]) && (tags[tag]["package"] != 'any') ) {
+                continue tags;
+            }
+        }
 
 	var tag_button = document.createElement("a");
 	tag_button.href = "#" + tags[tag]["tag"];
