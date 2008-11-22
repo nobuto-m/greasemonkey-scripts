@@ -17,11 +17,15 @@ tags = [
         // {"tag":'', tip:"", "project":"ubuntu", "package":""},
         //
         // any package - source https://wiki.ubuntu.com/Bugs/Tags
+        {"tag":'a11y', tip:"An accessibility problem", "project":"ubuntu", "package":"any"},
         {"tag":'bitesize', tip:"Probably an easy fix, appropriate for new developers", "project":"ubuntu", "package":"any"},
         {"tag":'likely-dup', tip:"Sounds like a dupe of an existing bug; needs further investigation", "project":"ubuntu", "package":"any"},
         {"tag":'metabug', tip:"High probability of duplicate reports", "project":"ubuntu", "package":"any"},
+        {"tag":'needs-packaging', tip:"A request for software to be packaged", "project":"ubuntu", "package":"any"},
         {"tag":'packaging', tip:"Strictly a packaging issue", "project":"ubuntu", "package":"any"},
         {"tag":'screencast', tip:"Screencast of the bug is attached", "project":"ubuntu", "package":"any"},
+        {"tag":'string-fix', tip:"For spelling and grammatic errors", "project":"ubuntu", "package":"any"},
+        {"tag":'usability', tip:"A usability issue with the application", "project":"ubuntu", "package":"any"},
         // package openoffice - source https://wiki.ubuntu.com/DebuggingOpenOffice
         {"tag":'ooo-base', tip:"Bug report about database program", "project":"ubuntu", "package":"openoffice"},
         {"tag":'ooo-calc', tip:"Bug report about spreadsheet application", "project":"ubuntu", "package":"openoffice"},
@@ -40,6 +44,13 @@ tags = [
 	{"tag":"cherry-pick", tip:"Has a git commit SHA from upstream", "project":"ubuntu", "package":"linux"},
         {"tag":"kernel-bug", tip:"BUG: message appears in logs", "project":"ubuntu", "package":"linux"},
         {"tag":"kernel-oops", tip:"Causes a kernel Oops", "project":"ubuntu", "package":"linux"},
+        // package network-manager - source https://wiki.ubuntu.com/DebuggingNetworkManager
+        {"tag":"driver-madwifi", tip:" The madwifi driver is in use", "project":"ubuntu", "package":"network-manager"},
+        {"tag":"driver-ndiswrapper", tip:" The ndiswrapper driver is in use", "project":"ubuntu", "package":"network-manager"},
+        {"tag":"encryption-wep", tip:" WEP encryption is used", "project":"ubuntu", "package":"network-manager"},
+        {"tag":"encryption-wpa", tip:" WPA encryption is used", "project":"ubuntu", "package":"network-manager"},
+        {"tag":"encryption-wpa2", tip:" WPA2 encryption is used", "project":"ubuntu", "package":"network-manager"},
+        {"tag":"vpn", tip:"Related to either openvpn, vpnc or pptp network-manager vpn modules", "project":"ubuntu", "package":"network-manager"},
 
         // --- Projects Section ---
         // project template
