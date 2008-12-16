@@ -19,6 +19,7 @@ tags = [
         // any package - source https://wiki.ubuntu.com/Bugs/Tags
         {"tag":'a11y', tip:"An accessibility problem", "project":"ubuntu", "package":"any"},
         {"tag":'bitesize', tip:"Probably an easy fix, appropriate for new developers", "project":"ubuntu", "package":"any"},
+        {"tag":'hw-specifc', tip:"Requires specfic hardware to recreate", "project":"ubuntu", "package":"any"},
         {"tag":'likely-dup', tip:"Sounds like a dupe of an existing bug; needs further investigation", "project":"ubuntu", "package":"any"},
         {"tag":'metabug', tip:"High probability of duplicate reports", "project":"ubuntu", "package":"any"},
         {"tag":'needs-packaging', tip:"A request for software to be packaged", "project":"ubuntu", "package":"any"},
