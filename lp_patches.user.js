@@ -74,12 +74,12 @@ function patch_handler(xmldoc, librarian_link, comment) {
         if (debug) {
             GM_log("Patch found " + librarian_link);
         }
-        librarian_link.parentNode.className = "news";
+        librarian_link.parentNode.setAttribute("style", "list-style-image: url(/@@/favourite-yes);");
         for (var j = 0; j < comment.snapshotLength; j++) {
             if (debug) 
                 GM_log("Comment url " + comment.snapshotItem(j));
             if ( String(librarian_link) == String(comment.snapshotItem(j))) {
-                comment.snapshotItem(j).parentNode.className = "news";
+                comment.snapshotItem(j).parentNode.setAttribute("style", "list-style-image: url(/@@/favourite-yes);");
             }
         } 
         
