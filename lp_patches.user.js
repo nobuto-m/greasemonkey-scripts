@@ -74,17 +74,19 @@ function patch_handler(xmldoc, librarian_link, comment) {
         if (debug) {
             GM_log("Patch found " + librarian_link);
         }
-        librarian_link.parentNode.setAttribute("style", "list-style-image: url(/@@/favourite-yes);");
+        librarian_link.parentNode.setAttribute("style", "list-style-image: url(" + star + ")");
         for (var j = 0; j < comment.snapshotLength; j++) {
             if (debug) 
                 GM_log("Comment url " + comment.snapshotItem(j));
             if ( String(librarian_link) == String(comment.snapshotItem(j))) {
-                comment.snapshotItem(j).parentNode.setAttribute("style", "list-style-image: url(/@@/favourite-yes);");
+                comment.snapshotItem(j).parentNode.setAttribute("style", "list-style-image: url(" + star + ")");
             }
         } 
         
     }
 }
+
+star = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABmJLR0QA%2FwD%2FAP%2BgvaeTAAAAB3RJTUUH1goWBRUW8tvU3gAAAVxJREFUKJGtkb1OAlEQhc%2Fc3b0QEAFJjGBhYmUiNMbYmdhZYelPzwPoK1j5DGa1s7EyMcbYaovBAgoKg0IhQSHosstyl8u1EaLhJ8Z4ypnzZU7mAP%2BtuonbhomLcXt9AruuJizZyGvHWCbObOLMbphI%2FhqEznZ5Yk7niVldMbYzykIAUDcxlGpqYw%2BQTbTuroegWAakf51dURrd8IVQxL%2BUMsi3BmjzgKwgnOZA9wluseSJZ6tJUm0OokYzyAlXJUXZytvZgqO8GiArQK8FJdqwsyVHlK28cFUymkFuELUvdQ7e%2BEAnsJqCEV8ElAfv5RHOfREz0%2FDRNsTgDd%2FBhoCfiDp6xPZ5lQcFAHqMETRy3yzlA8aA1EGahXnXLVR7otqWABSPBwwtZEh6F1sAzvreH3Uo0JFsdoLeq3spXRWXrkqImnMlmyIIRoejakG%2FlvoJ9ofmpzgYVdmf9Al84I7Jn6sOdQAAAABJRU5ErkJggg%3D%3D" 
 
 window.addEventListener("load", function(e) {
 //    GM_log('script running');
