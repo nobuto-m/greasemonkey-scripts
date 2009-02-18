@@ -8,6 +8,7 @@
 // @version        1.2
 // @date           2007-11-27
 // @creator        Kees Cook <kees@ubuntu.com>
+// @contributor    Brian Murray <brian@ubuntu.com>
 // ==/UserScript==
 // Based on code originally written by:
 //  Tollef Fog Heen <tfheen@err.no>
@@ -40,8 +41,10 @@ var prefsFields = new Array(
                                           // "-me" == assign to self
                                           // "-nobody" == assign to nobody
                             "importance", // "" == leave unchanged
-                            "package"     // "" == leave unchanged
+                            "package",    // "" == leave unchanged
+                            "standard"    // "yes" == is from standard XML?
                            );
+
 
 function injectStockreply(formname, idx) {
 
@@ -54,6 +57,9 @@ function injectStockreply(formname, idx) {
 
     // Set comment
     xpath('//textarea[@id="'+  formname + '.comment_on_change"]').snapshotItem(0).value = prefsData['comment'][idx];
+
+    // Subscribe triager by default
+    xpath('//input[@id="subscribe"]').snapshotItem(0).checked = true;
 
     // Set status
     if (prefsData['status'][idx] != "") {
@@ -89,17 +95,62 @@ function injectStockreply(formname, idx) {
   return element;
 }
 
-function insert_clickable(node, newElement)
+function insert_clickable(node, newElement, tagged)
 {
+    var span = document.createElement("span");
     var leftBrace = document.createTextNode('[');
     var rightBrace = document.createTextNode('] ');
-    node.insertBefore(leftBrace, leftBrace.nextSibling);
-    node.insertBefore(newElement, newElement.nextSibling);
-    node.insertBefore(rightBrace, rightBrace.nextSibling);
+
+    /* mark up for future removal? */
+    if (tagged) {
+        span.setAttribute('class','lp_stockreplies')
+    }
+
+    /* fill span */
+    span.appendChild(leftBrace);
+    span.appendChild(newElement);
+    span.appendChild(rightBrace);
+
+    /* insert span */
+    node.insertBefore(span, span.nextSibling);
+}
+
+function deleteReply(idx)
+{
+    var count = parseInt(GM_getValue('count',0))
+    if (count == 0) return;
+    if (idx >= count) return;
+    if (idx < 0) return;
+    /* move all the prefs up one to wipe out the deleted one */
+    for (var move = idx + 1; move < count; move ++) {
+        for (var field in prefsFields) {
+            GM_setValue(fieldname+(move-1),GM_getValue(fieldname+move,""));
+        }
+    }
+    GM_setValue('count',''+(count-1))
+    /* since we've deleted a reply, we'll need to reload this script's
+       view of the GM prefs */
+    loadPreferences()
+}
+
+function clearStandardReplies()
+{
+    var count = parseInt(GM_getValue('count', 0));
+    for (var idx = 0; idx < count; ) {
+        standard = GM_getValue('standard'+idx,"");
+        if (standard == "yes") {
+            count --;
+            deleteReply(idx);
+        }
+        else {
+            idx ++;
+        }
+    }
 }
 
 function loadPreferences()
 {
+    prefsData.standardSeen = false;
     prefsData.count = parseInt(GM_getValue('count', 0));
     for (var field in prefsFields) {
         var fieldname = prefsFields[field];
@@ -109,15 +160,64 @@ function loadPreferences()
             prefsData[fieldname][idx] = GM_getValue(fieldname+idx,"");
         }
     }
+    for (var idx = 0; idx < prefsData.count; idx ++) {
+        if (prefsData['standard'][idx] == "yes") {
+            prefsData.standardSeen = true;
+        }
+    }
+}
+
+function loadStandardReplies() {
+    GM_xmlhttpRequest
+        (
+          {
+            method: 'GET',
+            url:    'http://people.ubuntu.com/~brian/tmp/stock-replies.xml',
+            headers: {
+                'Accept': 'application/atom+xml,application/xml,text/xml',
+            },
+            onload:  function(results) {
+                var parser = new DOMParser();
+                var dom = parser.parseFromString(results.responseText,"application/xml");
+                var replies = dom.getElementsByTagName('reply');
+                var base = prefsData.count;
+                /* if we actually have some replies, clear the old ones */
+                if (replies.length>0) {
+                    clearStandardReplies();
+                }
+                for (var i=0; i < replies.length; i++) {
+                    var standardReply = new Array;
+                    for (var field in prefsFields) {
+                        var fieldname = prefsFields[field];
+                        var text;
+                        if (fieldname == "standard") {
+                            text = "yes";
+                        }
+                        else {
+                            text = replies[i].getElementsByTagName(fieldname)[0].textContent;
+                        }
+                        prefsData[fieldname][base+idx] = text;
+                    }
+                }
+                prefsData.count += replies.length;
+                savePreferences();
+                remove_replies();
+                show_replies();
+                alert('Standard Replies Loaded');
+            }
+          }
+        )
 }
 
 function addRowPreferences(table,idx)
 {
     var tr = document.createElement('tr');
+    /* TODO: mark this row in some way if it is a standard reply */
     table.appendChild(tr);
 
     for (var field in prefsFields) {
         var fieldname = prefsFields[field];
+        if (fieldname == 'standard') continue;
 
         // set up empty default
         if (!prefsData[fieldname][idx]) {
@@ -136,6 +236,10 @@ function addRowPreferences(table,idx)
                 var obj = e.target;
                 var fieldname = obj.getAttribute('name');
                 //alert('changed ('+fieldname+','+idx+'): '+obj.value);
+                if (prefsData[fieldname][idx] != obj.value) {
+                    /* mark as non-standard if it was changed */
+                    prefsData['standard'][idx] = "";
+                }
                 prefsData[fieldname][idx] = obj.value;
 
                 return false;
@@ -170,24 +274,27 @@ function showPreferences(prefsDiv)
 
             return false;
         }, false);
-    insert_clickable(td, click);
+    insert_clickable(td, click, false);
     tr.appendChild(td);
-    
+
     // Save preferences
     var td = document.createElement('td');
     var click = document.createElement('a');
     click.href = document.location + "#";
     click.appendChild(document.createTextNode("Save Stock Replies"));
-    click.addEventListener('click', function(e) { 
+    click.addEventListener('click', function(e) {
             e.preventDefault(); 
 
             savePreferences();
 
-            alert('Saved (reload for new replies or changed names)');
+            remove_replies();
+            show_replies();
+
+            alert('Replies Saved');
 
             return false;
         }, false);
-    insert_clickable(td, click);
+    insert_clickable(td, click, false);
     tr.appendChild(td);
 
     tr = document.createElement('tr');
@@ -196,10 +303,12 @@ function showPreferences(prefsDiv)
     // get the count and initialize arrays
     var count = prefsData.count;
     for (var field in prefsFields) {
+        var fieldname = prefsFields[field];
+        if (fieldname == 'standard') continue;
 
         var th = document.createElement('th');
         th.setAttribute('align','left');
-        th.appendChild(document.createTextNode(prefsFields[field]));
+        th.appendChild(document.createTextNode(fieldname));
         tr.appendChild(th);
     }
 
@@ -213,7 +322,7 @@ function savePreferences()
 {
     // save the count
     GM_setValue('count', ''+prefsData.count);
-    
+
     // save the preferences
     for (var idx = 0; idx < prefsData.count; idx ++) {
         for (var field in prefsFields) {
@@ -223,14 +332,32 @@ function savePreferences()
     }
 }
 
+/*
+function reloadReplies(title) {
+    var element = document.createElement('a');
+    element.href = document.location + "#";
+    var innerTextElement = document.createTextNode(title);
+    element.appendChild(innerTextElement);
+    element.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            remove_replies();
+            show_replies();
+
+            return false;
+        }, false);
+  return element;
+}
+*/
+
 var prefsDiv = null;
 function popPreferences(title) {
     var element = document.createElement('a');
     element.href = document.location + "#";
     var innerTextElement = document.createTextNode(title);
     element.appendChild(innerTextElement);
-    element.addEventListener('click', function(e) { 
-            e.preventDefault(); 
+    element.addEventListener('click', function(e) {
+            e.preventDefault();
 
             // create the dialog if it doesn't exist yet
             if (prefsDiv === null) {
@@ -265,10 +392,15 @@ function popPreferences(title) {
   return element;
 }
 
-window.addEventListener("load", function(e) {
+function remove_replies() {
+    var allReplies = xpath("//*[@class='lp_stockreplies']");
+    for (var i = 0; i < allReplies.snapshotLength; i++) {
+        var thisReply = allReplies.snapshotItem(i);
+        thisReply.parentNode.removeChild(thisReply);
+    }
+}
 
-  loadPreferences();
-
+function show_replies() {
   var allForms = xpath("//form");
   for (var i = 0; i < allForms.snapshotLength; i++) {
     var thisForm = allForms.snapshotItem(i);
@@ -283,13 +415,26 @@ window.addEventListener("load", function(e) {
     // append all stock replies
     for (var idx = 0; idx < prefsData.count; idx++) {
         insert_clickable(thisSubmit.parentNode,
-                         injectStockreply(formname, idx));
+                         injectStockreply(formname, idx), true);
     }
 
     // Add preferences "button"
-    insert_clickable(thisSubmit.parentNode, popPreferences("+"));
+    insert_clickable(thisSubmit.parentNode, popPreferences("+"), true);
+    //insert_clickable(thisSubmit.parentNode, reloadReplies("*"), true);
 
   }
+}
+
+window.addEventListener("load", function(e) {
+
+    loadPreferences();
+    if (!prefsData.standardSeen) {
+        //alert("would load standard now");
+        // loadStandardReplies();
+    }
+
+    show_replies();
+
 }, false);
 
 })();
