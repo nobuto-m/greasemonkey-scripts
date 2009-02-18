@@ -181,7 +181,7 @@ function loadStandardReplies() {
         (
           {
             method: 'GET',
-            url:    'http://people.ubuntu.com/~brian/tmp/stock-replies.xml',
+            url:    'http://people.ubuntu.com/~brian/greasemonkey/bugsquad-replies.xml',
             headers: {
                 'Accept': 'application/atom+xml,application/xml,text/xml',
             },
