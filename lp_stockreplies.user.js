@@ -286,10 +286,34 @@ function addRowPreferences(table,idx)
 
 function showPreferences(prefsDiv)
 {
+    var tr;
     var table = document.createElement('table');
     prefsDiv.appendChild(table);
 
-    var tr = document.createElement('tr');
+    tr = document.createElement('tr');
+    table.appendChild(tr);
+
+    // get the count and initialize arrays
+    var count = prefsData.count;
+    for (var field in prefsFields) {
+        var fieldname = prefsFields[field];
+        if (fieldname == 'standard') continue;
+        if (fieldname == 'comment') continue;
+
+        var th = document.createElement('th');
+        // why doesn't this alignment work?
+        //th.setAttribute('align','left');
+        th.appendChild(document.createTextNode(fieldname));
+        tr.appendChild(th);
+    }
+
+    // load the preferences
+    for (var idx = 0; idx < count; idx ++) {
+        addRowPreferences(table, idx);
+    }
+
+    // Show pref-control buttons
+    tr = document.createElement('tr');
     table.appendChild(tr);
 
     // Expand list
@@ -324,27 +348,6 @@ function showPreferences(prefsDiv)
     insert_clickable(td, click, false);
     tr.appendChild(td);
 
-    tr = document.createElement('tr');
-    table.appendChild(tr);
-
-    // get the count and initialize arrays
-    var count = prefsData.count;
-    for (var field in prefsFields) {
-        var fieldname = prefsFields[field];
-        if (fieldname == 'standard') continue;
-        if (fieldname == 'comment') continue;
-
-        var th = document.createElement('th');
-        // why doesn't this alignment work?
-        //th.setAttribute('align','left');
-        th.appendChild(document.createTextNode(fieldname));
-        tr.appendChild(th);
-    }
-
-    // load the preferences
-    for (var idx = 0; idx < count; idx ++) {
-        addRowPreferences(table, idx);
-    }
 }
 
 function savePreferences()
