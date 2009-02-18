@@ -97,6 +97,7 @@ function injectStockreply(formname, idx) {
 }
 
 /* TODO: add an ability to have tooltips */
+var reply_class = 'lp_sr';
 function insert_clickable(node, newElement, tagged)
 {
     var span = document.createElement("span");
@@ -105,7 +106,7 @@ function insert_clickable(node, newElement, tagged)
 
     /* mark up for future removal? */
     if (tagged) {
-        span.setAttribute('class','lp_stockreplies')
+        span.setAttribute('class',reply_class)
     }
 
     /* fill span */
@@ -172,6 +173,7 @@ function loadPreferences()
             prefsData.standardSeen = true;
         }
     }
+    prefsData.reloadAt = parseInt(GM_getValue('reload-at', 0));
 }
 
 function loadStandardReplies() {
@@ -209,8 +211,10 @@ function loadStandardReplies() {
                     }
                 }
                 prefsData.count += replies.length;
+                // reload again in 1.5 days
+                var time = new Date();
+                prefsData.reloadAt = time.getUTCMilliseconds() + (1000 * 60 * 60 * 36);
                 savePreferences();
-                alert('Standard Replies Loaded');
             }
           }
         )
@@ -222,7 +226,7 @@ function addColumnPreference(idx,fieldname)
         // why doesn't this alignment work?
         //td.setAttribute('valign','top');
 
-        var id = 'lp_stockreplies.reply.' + idx + '.' + fieldname;
+        var id = reply_class + '.' + idx + '.' + fieldname;
 
         var label = document.createElement('label');
         label.setAttribute('style','font-weight: bold;');
@@ -293,7 +297,7 @@ function addRowPreferences(table,idx)
     // add "comment" input separately since it is a textarea
     var comment_tr = document.createElement('tr');
     var comment_td = addColumnPreference(idx,'comment');
-    comment_td.setAttribute('colspan', 5); // fixme: fieldnames - 2
+    comment_td.setAttribute('colspan', prefsFields.length - 2);
     comment_tr.appendChild( comment_td );
     table.appendChild(comment_tr);
 
@@ -334,7 +338,44 @@ function showPreferences(prefsDiv)
 */
 
     // load the preferences
+    var reload_time_seen = false;
     for (var idx = 0; idx < count; idx ++) {
+
+        if (prefsData['standard'][idx] == 'yes' && !reload_time_seen) {
+            var time = new Date();
+            time.setUTCMilliseconds( prefsData.reloadAt );
+
+            var sep_tr;
+            var sep_td;
+
+            // spacer
+            sep_td = document.createElement('td');
+            sep_tr = document.createElement('tr');
+            sep_td.appendChild(document.createTextNode("\u00A0")); // nbsp
+            sep_tr.appendChild( sep_td );
+            table.appendChild( sep_tr );
+
+            // report auto-reload time
+            sep_tr = document.createElement('tr');
+            sep_td = document.createElement('td');
+            var sep_span = document.createElement('span');
+            sep_td.setAttribute('colspan', prefsFields.length - 2);
+            sep_span.appendChild(document.createTextNode("Standard Replies (next auto-reload at: "+ time.toString() +")"));
+            sep_span.setAttribute('style','font-weight: bold;');
+            sep_td.appendChild( sep_span );
+            sep_tr.appendChild( sep_td );
+            table.appendChild( sep_tr );
+
+            // spacer
+            sep_td = document.createElement('td');
+            sep_tr = document.createElement('tr');
+            sep_td.appendChild(document.createTextNode("\u00A0")); // nbsp
+            sep_tr.appendChild( sep_td );
+            table.appendChild( sep_tr );
+
+            reload_time_seen = true;
+        }
+
         addRowPreferences(table, idx);
     }
 
@@ -380,6 +421,8 @@ function savePreferences()
 {
     // save the count
     GM_setValue('count', ''+prefsData.count);
+    // save standard-reply-reload date
+    GM_setValue('reload-at', ''+prefsData.reloadAt);
 
     // save the preferences
     for (var idx = 0; idx < prefsData.count; idx ++) {
@@ -420,6 +463,7 @@ function reloadStandardReplies(title) {
             e.preventDefault();
 
             loadStandardReplies();
+            alert('Standard Replies Loaded');
 
             return false;
         }, false);
@@ -427,8 +471,9 @@ function reloadStandardReplies(title) {
 }
 
 var prefsDiv = null;
+var prefsId = 'lp_sr_prefs';
 function hidePreferences() {
-    var prefs = document.getElementById("lp_stockreplies_prefs");
+    var prefs = document.getElementById(prefsId);
     if (prefs) {
         prefs.parentNode.removeChild(prefs);
         prefsDiv = null;
@@ -446,13 +491,13 @@ function popPreferences(title) {
             // create the dialog if it doesn't exist yet
             if (prefsDiv === null) {
                 prefsDiv = document.createElement('div');
-                prefsDiv.setAttribute('id','lp_stockreplies_prefs');
+                prefsDiv.setAttribute('id',prefsId);
 
                 showPreferences(prefsDiv);
             }
 
             // locate the prior dialog location
-            var prefs = document.getElementById("lp_stockreplies_prefs");
+            var prefs = document.getElementById(prefsId);
             if (!prefs || (prefs.parentNode != element.parentNode)) {
                 // if prefs already exists in the DOM, drop it from prior
                 // location, so we can attach it to the current element.
@@ -473,7 +518,7 @@ function popPreferences(title) {
 }
 
 function remove_replies() {
-    var allReplies = xpath("//*[@class='lp_stockreplies']");
+    var allReplies = xpath("//*[@class='"+reply_class+"']");
     for (var i = 0; i < allReplies.snapshotLength; i++) {
         var thisReply = allReplies.snapshotItem(i);
         thisReply.parentNode.removeChild(thisReply);
@@ -509,8 +554,11 @@ function show_replies() {
 window.addEventListener("load", function(e) {
 
     loadPreferences();
-    // load standard replies if non already in the preferences
-    if (!prefsData.standardSeen) {
+    // load standard replies if non already in the preferences, or
+    // if the "reloadAt" preference has expired
+    var time = new Date();
+    if (!prefsData.standardSeen ||
+        time.getUTCMilliseconds() > prefsData.reloadAt) {
         loadStandardReplies();
     }
 
