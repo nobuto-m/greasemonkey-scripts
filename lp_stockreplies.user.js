@@ -125,7 +125,10 @@ function deleteReply(idx)
     /* move all the prefs up one to wipe out the deleted one */
     for (var move = idx + 1; move < count; move ++) {
         for (var field in prefsFields) {
-            GM_setValue(fieldname+(move-1),GM_getValue(fieldname+move,""));
+            for (var field in prefsFields) {
+                var fieldname = prefsFields[field];
+                GM_setValue(fieldname+(move-1),GM_getValue(fieldname+move,""));
+            }
         }
     }
     GM_setValue('count',''+(count-1))
@@ -181,11 +184,13 @@ function loadStandardReplies() {
                 var parser = new DOMParser();
                 var dom = parser.parseFromString(results.responseText,"application/xml");
                 var replies = dom.getElementsByTagName('reply');
-                var base = prefsData.count;
+                // destory preferences for possible reload
+                hidePreferences();
                 /* if we actually have some replies, clear the old ones */
                 if (replies.length>0) {
                     clearStandardReplies();
                 }
+                var base = prefsData.count;
                 for (var i=0; i < replies.length; i++) {
                     var standardReply = new Array;
                     for (var field in prefsFields) {
@@ -200,7 +205,6 @@ function loadStandardReplies() {
                         prefsData[fieldname][base+i] = text;
                     }
                 }
-                alert(replies.length);
                 prefsData.count += replies.length;
                 savePreferences();
                 alert('Standard Replies Loaded');
@@ -366,6 +370,14 @@ function reloadStandardReplies(title) {
 }
 
 var prefsDiv = null;
+function hidePreferences() {
+    var prefs = document.getElementById("lp_stockreplies_prefs");
+    if (!prefs) {
+        prefs.parentNode.removeChild(prefs);
+        prefsDiv = null;
+    }
+}
+
 function popPreferences(title) {
     var element = document.createElement('a');
     element.href = document.location + "#";
@@ -393,13 +405,9 @@ function popPreferences(title) {
                 }
                 */
                 element.parentNode.insertBefore(prefsDiv, prefsDiv.nextSibling);
-
-                //innerTextElement.value = "-";
             }
             else {
                 prefs.parentNode.removeChild(prefs);
-
-                //innerTextElement.value = "+";
             }
 
             return false;
@@ -434,7 +442,7 @@ function show_replies() {
     }
 
     // Add preferences "button"
-    insert_clickable(thisSubmit.parentNode, popPreferences("+prefs+"), true);
+    insert_clickable(thisSubmit.parentNode, popPreferences("+edit+"), true);
     //insert_clickable(thisSubmit.parentNode, reloadReplies("*"), true);
     insert_clickable(thisSubmit.parentNode, reloadStandardReplies("+reload+"), true);
 
