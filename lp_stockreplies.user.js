@@ -58,9 +58,6 @@ function injectStockreply(formname, idx) {
     // Set comment
     xpath('//textarea[@id="'+  formname + '.comment_on_change"]').snapshotItem(0).value = prefsData['comment'][idx];
 
-    // Subscribe triager by default
-    xpath('//input[@id="subscribe"]').snapshotItem(0).checked = true;
-
     // Set status
     if (prefsData['status'][idx] != "") {
         xpath('//select[@id="'+  formname + '.status"]/option[.="'+prefsData['status'][idx].replace(/"/,'\\"')+'"]').snapshotItem(0).selected = true;
@@ -90,6 +87,10 @@ function injectStockreply(formname, idx) {
         xpath('//select[@id="'+  formname + '.importance"]/option[.="'+prefsData['importance'][idx].replace(/"/,'\\"')+'"]').snapshotItem(0).selected = true;
     }
 
+    // Subscribe triager by default
+    var sub = xpath('//input[@id="subscribe"]').snapshotItem(0);
+    if (sub) sub.checked = true;
+
     return false;
   }, false);
   return element;
@@ -111,6 +112,8 @@ function insert_clickable(node, newElement, tagged)
     span.appendChild(leftBrace);
     span.appendChild(newElement);
     span.appendChild(rightBrace);
+    // make the source readable
+    span.appendChild(document.createTextNode("\n"));
 
     /* insert span */
     node.insertBefore(span, span.nextSibling);
@@ -218,6 +221,15 @@ function addColumnPreference(idx,fieldname)
         var td = document.createElement('td');
         // why doesn't this alignment work?
         //td.setAttribute('valign','top');
+
+        var id = 'lp_stockreplies.reply.' + idx + '.' + fieldname;
+
+        var label = document.createElement('label');
+        label.setAttribute('style','font-weight: bold;');
+        label.setAttribute('for',id);
+        label.appendChild(document.createTextNode(fieldname));
+        td.appendChild(label);
+
         var input;
         if (fieldname == 'comment') {
             input = document.createElement('textarea');
@@ -232,6 +244,7 @@ function addColumnPreference(idx,fieldname)
         }
         input.value = prefsData[fieldname][idx];
         input.setAttribute('name',fieldname);
+        input.setAttribute('id',id);
         //alert('added ('+fieldname+','+idx+'): '+input.value);
         input.addEventListener('change', function(e) {
                 e.preventDefault();
@@ -248,6 +261,9 @@ function addColumnPreference(idx,fieldname)
                 return false;
             }, false);
         td.appendChild(input);
+
+        // make the source readable
+        td.appendChild(document.createTextNode("\n"));
 
     return td;
 }
@@ -271,12 +287,18 @@ function addRowPreferences(table,idx)
     }
     table.appendChild(tr);
 
+    // make the source readable
+    table.appendChild(document.createTextNode("\n"));
+
     // add "comment" input separately since it is a textarea
     var comment_tr = document.createElement('tr');
     var comment_td = addColumnPreference(idx,'comment');
     comment_td.setAttribute('colspan', 5); // fixme: fieldnames - 2
     comment_tr.appendChild( comment_td );
     table.appendChild(comment_tr);
+
+    // make the source readable
+    table.appendChild(document.createTextNode("\n"));
 
     // did we bump the count higher?
     if (prefsData.count == idx) {
@@ -290,11 +312,14 @@ function showPreferences(prefsDiv)
     var table = document.createElement('table');
     prefsDiv.appendChild(table);
 
+    // get the count and initialize arrays
+    var count = prefsData.count;
+
+/*
+    // table headers
     tr = document.createElement('tr');
     table.appendChild(tr);
 
-    // get the count and initialize arrays
-    var count = prefsData.count;
     for (var field in prefsFields) {
         var fieldname = prefsFields[field];
         if (fieldname == 'standard') continue;
@@ -306,6 +331,7 @@ function showPreferences(prefsDiv)
         th.appendChild(document.createTextNode(fieldname));
         tr.appendChild(th);
     }
+*/
 
     // load the preferences
     for (var idx = 0; idx < count; idx ++) {
