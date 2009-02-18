@@ -223,7 +223,7 @@ window.addEventListener("load", function(e) {
     }
     var a_clean_match = "a["+url_clean_matches.join(" or ")+"]";
     var a_messy_match = "a["+url_messy_matches.join(" or ")+"]";
-    
+
     // All the people links in the main content section (_not_ subscribers!)
     add_people(xpath("//div[contains(@id,'maincontent')]//"+a_clean_match));
 

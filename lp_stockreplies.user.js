@@ -5,8 +5,8 @@
 // @include        https://launchpad.net/*
 // @include        https://*.launchpad.net/*
 // @include        https://*.edge.launchpad.net/*
-// @version        1.2
-// @date           2007-11-27
+// @version        1.3
+// @date           2009-02-17
 // @creator        Kees Cook <kees@ubuntu.com>
 // @contributor    Brian Murray <brian@ubuntu.com>
 // ==/UserScript==
@@ -21,8 +21,8 @@
     description: '(Launchpad) Stock replies',
     source: "http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/files",
     identifier: "http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/file/lp_stockreplies.user.js",
-    version: "1.2",
-    date: (new Date(2007, 11 - 1, 27))// update date
+    version: "1.3",
+    date: (new Date(2009, 2 - 1, 17))// update date
     .valueOf()
   };
 
@@ -95,6 +95,7 @@ function injectStockreply(formname, idx) {
   return element;
 }
 
+/* TODO: add an ability to have tooltips */
 function insert_clickable(node, newElement, tagged)
 {
     var span = document.createElement("span");
@@ -196,13 +197,12 @@ function loadStandardReplies() {
                         else {
                             text = replies[i].getElementsByTagName(fieldname)[0].textContent;
                         }
-                        prefsData[fieldname][base+idx] = text;
+                        prefsData[fieldname][base+i] = text;
                     }
                 }
+                alert(replies.length);
                 prefsData.count += replies.length;
                 savePreferences();
-                remove_replies();
-                show_replies();
                 alert('Standard Replies Loaded');
             }
           }
@@ -287,9 +287,6 @@ function showPreferences(prefsDiv)
 
             savePreferences();
 
-            remove_replies();
-            show_replies();
-
             alert('Replies Saved');
 
             return false;
@@ -330,6 +327,10 @@ function savePreferences()
             GM_setValue(prefsFields[field]+idx, prefsData[prefsFields[field]][idx]);
         }
     }
+
+    // redisplay the prefs!
+    remove_replies();
+    show_replies();
 }
 
 /*
@@ -349,6 +350,20 @@ function reloadReplies(title) {
   return element;
 }
 */
+function reloadStandardReplies(title) {
+    var element = document.createElement('a');
+    element.href = document.location + "#";
+    var innerTextElement = document.createTextNode(title);
+    element.appendChild(innerTextElement);
+    element.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            loadStandardReplies();
+
+            return false;
+        }, false);
+  return element;
+}
 
 var prefsDiv = null;
 function popPreferences(title) {
@@ -419,8 +434,9 @@ function show_replies() {
     }
 
     // Add preferences "button"
-    insert_clickable(thisSubmit.parentNode, popPreferences("+"), true);
+    insert_clickable(thisSubmit.parentNode, popPreferences("+prefs+"), true);
     //insert_clickable(thisSubmit.parentNode, reloadReplies("*"), true);
+    insert_clickable(thisSubmit.parentNode, reloadStandardReplies("+reload+"), true);
 
   }
 }
@@ -428,9 +444,9 @@ function show_replies() {
 window.addEventListener("load", function(e) {
 
     loadPreferences();
+    // load standard replies if non already in the preferences
     if (!prefsData.standardSeen) {
-        //alert("would load standard now");
-        // loadStandardReplies();
+        loadStandardReplies();
     }
 
     show_replies();
