@@ -403,7 +403,7 @@ function reloadStandardReplies(title) {
 var prefsDiv = null;
 function hidePreferences() {
     var prefs = document.getElementById("lp_stockreplies_prefs");
-    if (!prefs) {
+    if (prefs) {
         prefs.parentNode.removeChild(prefs);
         prefsDiv = null;
     }
