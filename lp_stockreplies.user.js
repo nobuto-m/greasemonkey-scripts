@@ -213,26 +213,25 @@ function loadStandardReplies() {
         )
 }
 
-function addRowPreferences(table,idx)
+function addColumnPreference(idx,fieldname)
 {
-    var tr = document.createElement('tr');
-    /* TODO: mark this row in some way if it is a standard reply */
-    table.appendChild(tr);
-
-    for (var field in prefsFields) {
-        var fieldname = prefsFields[field];
-        if (fieldname == 'standard') continue;
-
-        // set up empty default
-        if (!prefsData[fieldname][idx]) {
-            prefsData[fieldname][idx]="";
-        }
-
         var td = document.createElement('td');
-        var input = document.createElement('input');
-        input.setAttribute('type','text');
-        input.setAttribute('name',fieldname);
+        // why doesn't this alignment work?
+        //td.setAttribute('valign','top');
+        var input;
+        if (fieldname == 'comment') {
+            input = document.createElement('textarea');
+            // match current LP comment field size
+            input.setAttribute('cols','62');
+            input.setAttribute('rows','4');
+        }
+        else {
+            input = document.createElement('input');
+            input.setAttribute('type','text');
+            input.setAttribute('size','15');
+        }
         input.value = prefsData[fieldname][idx];
+        input.setAttribute('name',fieldname);
         //alert('added ('+fieldname+','+idx+'): '+input.value);
         input.addEventListener('change', function(e) {
                 e.preventDefault();
@@ -249,8 +248,35 @@ function addRowPreferences(table,idx)
                 return false;
             }, false);
         td.appendChild(input);
+
+    return td;
+}
+
+function addRowPreferences(table,idx)
+{
+    /* TODO: mark this row in some way if it is a standard reply */
+    var tr = document.createElement('tr');
+    for (var field in prefsFields) {
+        var fieldname = prefsFields[field];
+        if (fieldname == 'standard') continue;
+        if (fieldname == 'comment') continue;
+
+        // set up empty default
+        if (!prefsData[fieldname][idx]) {
+            prefsData[fieldname][idx]="";
+        }
+
+        td = addColumnPreference(idx,fieldname);
         tr.appendChild(td);
     }
+    table.appendChild(tr);
+
+    // add "comment" input separately since it is a textarea
+    var comment_tr = document.createElement('tr');
+    var comment_td = addColumnPreference(idx,'comment');
+    comment_td.setAttribute('colspan', 5); // fixme: fieldnames - 2
+    comment_tr.appendChild( comment_td );
+    table.appendChild(comment_tr);
 
     // did we bump the count higher?
     if (prefsData.count == idx) {
@@ -306,9 +332,11 @@ function showPreferences(prefsDiv)
     for (var field in prefsFields) {
         var fieldname = prefsFields[field];
         if (fieldname == 'standard') continue;
+        if (fieldname == 'comment') continue;
 
         var th = document.createElement('th');
-        th.setAttribute('align','left');
+        // why doesn't this alignment work?
+        //th.setAttribute('align','left');
         th.appendChild(document.createTextNode(fieldname));
         tr.appendChild(th);
     }
