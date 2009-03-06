@@ -151,8 +151,8 @@ for (var tag in tags) {
 			continue tags;
 		}
 	}
-        
-        // Skip if tag is not part of the project 
+
+        // Skip if tag is not part of the project
         if ( tags[tag]["project"] != project_name ) {
             continue tags;
         }
@@ -180,31 +180,28 @@ for (var tag in tags) {
 		}
 
 		tags_current_list[tags_current_list.length] = this.id;
-		var tags_new = tags_current_list.join("+");
+		var tags_new = tags_current_list.join(" ");
 
-		// Get the bug's title and description
-                var bug_title = document.getElementsByTagName('h1')[0].textContent.replace(/^\s+|\s+$/g, '');
-		var bug_description;
 		get(document.location + "/+edit", function(responseText) {
 			//alert("Received responseText");
-			var xmlobject = (new DOMParser()).parseFromString(responseText, "text/xml");
-			bug_description = xmlobject.getElementById('field.description').textContent;
 
-			//alert("Desc: " + bug_description);
-			//alert("Title: " + bug_title);
+		    // Get the old details
+			var xmlobject = (new DOMParser()).parseFromString(responseText, "text/xml");
+
+			var bug_description = xmlobject.getElementById('field.description').textContent;
+			var bug_nickname = xmlobject.getElementById('field.name').value;
+			var bug_title = xmlobject.getElementById('field.title').value;
 
 			if (! bug_description || bug_description == "undefined") {
 				alert("Error:  No bug description defined");
 				return;
 			}
 
-//    data: encodeURIComponent(data),
-//    data: encodeURI(data),
-			var form_tag_data = 'field.actions.change=Change&' + 
-				'field.tags=' + encodeURI(tags_new) + '&' +
+			var form_tag_data = 'field.actions.change=Change&' +
+				'field.name=' + encodeURIComponent(bug_nickname) + '&' +
+				'field.tags=' + encodeURIComponent(tags_new) + '&' +
 				'field.title=' + encodeURIComponent(bug_title) + '&' +
 				'field.description=' + encodeURIComponent(bug_description) + '&' +
-				'field.actions.change=' + encodeURIComponent("Change") + '&' +
 				'field.actions.confirm_tag=' + encodeURIComponent("Yes, define new tag");
 
 			//alert("Data: " + form_tag_data);
