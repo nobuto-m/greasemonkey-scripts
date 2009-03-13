@@ -110,10 +110,19 @@ function augment_person(person)
             logoNode.src = people_cache[person]['team'][title];
             node.parentNode.insertBefore(logoNode, node.nextSibling);
         }
-        
-        // add in karma
-        var karmaNode = document.createTextNode(' ('+person+": "+people_cache[person]['karma']+') ');
+       
+        // add in karma value and last paren
+        var karmaNode = document.createTextNode(': '+people_cache[person]['karma']+') ');
         node.parentNode.insertBefore(karmaNode, node.nextSibling);
+        // add in contact user link
+        var contactLink = document.createElement("a");
+        contactLink.href = "https://launchpad.net/~" +person+ "/+contactuser";
+        contactLink.title = "Contact this user";
+        contactLink.innerHTML = person;
+        node.parentNode.insertBefore(contactLink, node.nextSibling);
+        // add in a 1st paren
+        var firstNode = document.createTextNode(' (');
+        node.parentNode.insertBefore(firstNode, node.nextSibling);
     }
 }
 
