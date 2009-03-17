@@ -240,7 +240,7 @@ window.addEventListener("load", function(e) {
     add_people(xpath("//*[@class='object timestamp']/"+a_clean_match));
 
     // Assignees
-    add_people(xpath("//table[contains(@id,'affected-software')]//td/"+a_messy_match));
+    add_people(xpath("//table[contains(@id,'affected-software')]//td/"+a_clean_match));
 
     // Everyone!  (this is totally insane for bugs with large dups)
     //add_people(xpath("//"+a_match));
