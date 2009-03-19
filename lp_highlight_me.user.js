@@ -36,12 +36,16 @@ function findParent(element, tagName) {
 }
 
 function getLoggedInUserLink() {
-    // Returns the href to the page of the logged-in user.
+    // Returns the lp username of the logged-in user.
     var forms = document.getElementsByTagName('form');
     for (var i = 0; i < forms.length; i++) {
         var form = forms[i];
         if (form.action.match(/[/][+]logout$/)) {
-            return form.getElementsByTagName('a')[0].href;
+            href = form.getElementsByTagName('a')[0].href;
+            if (debug) {
+                GM_log("User href: "+href);
+            }
+            return href.split('~')[1];
         }
     }
 }
@@ -49,8 +53,11 @@ function getLoggedInUserLink() {
 function highlightMilestoneRows() {
     // Highlight rows for specs and bugs that are assigned to the
     // logged-in user.
-    var user_href = getLoggedInUserLink()
-    if (user_href == null) {
+    var user = getLoggedInUserLink();
+    if (debug) {
+        GM_log("User: "+user);
+    }
+    if (user == null) {
         return;
     }
 
@@ -63,7 +70,14 @@ function highlightMilestoneRows() {
         var count = 0;
         for (var i = 0; i < links.length; i++) {
             var link = links[i];
-            if (link.href == user_href) {
+            var link_user = link.href.split('~')[1];
+            //if (debug) {
+            //    GM_log("Link found: "+link);
+            //}
+            if ( String(link_user) == String(user) ) {
+                if (debug) {
+                    GM_log("Found a match!")
+                }
                 var row = findParent(link, 'TR');
                 if (row) {
                     if (row.className) {
@@ -88,6 +102,7 @@ function highlightMilestoneRows() {
     bug_header.innerHTML += ' - ' + bug_count + ' assigned to you';
 }
 
+var debug = 0;
 
 var location = document.location.href;
 
