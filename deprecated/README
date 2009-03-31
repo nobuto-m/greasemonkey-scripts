@@ -1,0 +1,12 @@
+==================
+Deprecated scripts
+==================
+
+The scripts in this directory are not maintained anymore and held here
+for futire references:
+
+lp_activity_comments.user.js: Show ActivityLog as comments on the bug-page
+==========================================================================
+This script shows each entry of the activity log of a bugreport as a comment
+on the main bug page. This is an easy way to show changes to a bug within
+the bugreport.
