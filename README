@@ -96,7 +96,13 @@ then adds links for each of your canned comments right above the
 "Comment on this change" field, making it convenient to select a stock
 reply to send.
 
-To add new stock replies, click the [+] link, which will bring up
+The current version of Launchpad Stock Replies also pulls standard respones
+used by the Ubuntu Bug Squad from an xml file at 
+http://people.ubuntu.com/~brian/greasemonkey/bugsquad-replies.xml.  The xml
+file was populated with respones found at http://wiki.ubuntu.com/Bugs/Respones.
+These respones are checked for updates every 36 hours.
+
+To add new stock reply of your own, click the [+] link, which will bring up
 options to add or save stock replies.
 
 Add New Stock Reply:
@@ -153,7 +159,7 @@ TBD
 
 lp_hide_tags.user.js:  Hide and sort tags in tags portlet
 =========================================================
-This script reduces the number of tags show in the tags portlet on the
+This script reduces the number of tags shown in the tags portlet on the
 bugs landing pages for projects. It also orders the shown tags by count 
 instead of alphabetically.
 
@@ -170,12 +176,23 @@ and lots of comments.  This script will modify the comment header color,
 to a user defined color, making the original reporter's comments easier
 to identify in a long bug report.
 
+lp_prefilled_description.js: Prefill bug description
+====================================================
+This script will prefill a bug's description when you reporting a bug 
+about Ubuntu with the following reminders:
+
+Release of Ubuntu:
+Package Version:
+Expected Results:
+Actual Results:
+
+To help you to remember to include this critical information.
 
 Deprecated scripts
 ==================
 Some scripts are not maintained anymore because they are known to be
-broken or their functionality has been implemented in launchpad itself.
-This scripts have been moved to the 'deprecated' directory.
+broken or their functionality has been implemented in Launchpad itself.
+These scripts have been moved to the 'deprecated' directory.
 
 Also See
 ========
