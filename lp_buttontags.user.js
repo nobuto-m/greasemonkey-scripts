@@ -122,7 +122,7 @@ function get(url, cb) {
 }
 
 // Does document already have list of Tags?  If so, snag them.
-var tags_current = document.getElementById('bug-tags');
+var tags_current = document.getElementById('tag-list');
 var tags_current_list = new Array();
 if (tags_current) {
 	var tags_current_anchors = tags_current.getElementsByTagName("a");
