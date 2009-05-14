@@ -15,6 +15,7 @@
 
 (function() {
 
+// ------  User settable data  -------------
 // Description to use
 var description = "Release of Ubuntu:\nPackage Version:\nExpected Results:\nActual Results:\n"
 

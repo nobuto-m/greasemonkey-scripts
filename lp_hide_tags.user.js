@@ -12,6 +12,7 @@
 
 (function() {
 
+// ------  User settable data  -------------
 // threshold: min. number of tag appearances for a project
 var threshold = 10;
 // max_tags: max. number of shown tags, if this is -1 all tags fitting the threshold criteria will be shown

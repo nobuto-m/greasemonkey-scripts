@@ -13,6 +13,7 @@
 
 (function() {
 
+// ------  User settable data  -------------
 // List of special teams whose bugs shouldn't be meddled with
 var special_subscribers = {
     'ubuntu-archive':'<br>Workflow report',
