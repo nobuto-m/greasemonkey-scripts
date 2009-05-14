@@ -36,9 +36,9 @@ window.addEventListener("load", function(e) {
 
     var debug = 0
 
-    var bug_heading = xpath("//h1").snapshotItem(0);
+    var bug_heading = xpath("//h1[contains(@id,'bug-title')]/span").snapshotItem(0);
     if (debug) {
-        GM_log( "title " + bug_heading );
+        GM_log( "title " + bug_heading.innerHTML );
     }
    
     var current_subscribers = xpath("//div[contains(@id,'subscribers-direct')]/div/a")
