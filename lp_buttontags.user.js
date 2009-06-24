@@ -30,6 +30,7 @@ tags = [
         {"tag":'screencast', tip:"Screencast of the bug is attached", "project":"ubuntu", "package":"any"},
         {"tag":'string-fix', tip:"For spelling and grammatic errors", "project":"ubuntu", "package":"any"},
         {"tag":'usability', tip:"A usability issue with the application", "project":"ubuntu", "package":"any"},
+        {"tag":'ubuntu-unr', tip:"Netbook remix issue", "project":"ubuntu", "package":"any"},
         // package openoffice - source https://wiki.ubuntu.com/DebuggingOpenOffice
         {"tag":'ooo-base', tip:"Bug report about database program", "project":"ubuntu", "package":"openoffice"},
         {"tag":'ooo-calc', tip:"Bug report about spreadsheet application", "project":"ubuntu", "package":"openoffice"},

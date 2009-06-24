@@ -74,12 +74,18 @@ function patch_handler(xmldoc, librarian_link, comment) {
         if (debug) {
             GM_log("Patch found " + librarian_link);
         }
-        librarian_link.parentNode.setAttribute("style", "list-style-image: url(" + star + ")");
+        // using list-style-position to keep the star inside the portlet - default for position is outside
+        librarian_link.parentNode.setAttribute("style", "list-style-image: url(" + star + "); list-style-position: inside");
+        // remove the sprite download-icon from the link's class
+        librarian_link.removeAttribute("class");
         for (var j = 0; j < comment.snapshotLength; j++) {
             if (debug) 
                 GM_log("Comment url " + comment.snapshotItem(j));
             if ( String(librarian_link) == String(comment.snapshotItem(j))) {
-                comment.snapshotItem(j).parentNode.setAttribute("style", "list-style-image: url(" + star + ")");
+                // using list-style-position to keep the star inside the portlet - default for position is outside
+                comment.snapshotItem(j).parentNode.setAttribute("style", "list-style-image: url(" + star + "); list-style-position: inside");
+                // remove the sprite download-icon from the link's class
+                comment.snapshotItem(j).removeAttribute("class");
             }
         } 
         
@@ -91,8 +97,8 @@ star = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABm
 window.addEventListener("load", function(e) {
 //    GM_log('script running');
 
-    var librarian = xpath("//div[contains(@id,'portlet-attachments')]//li[contains(@class,'download')]/a");
-    var comment = xpath("//div[contains(@class,'boardCommentBody')]//ul//li[contains(@class,'download')]/a");
+    var librarian = xpath("//div[contains(@id,'portlet-attachments')]//li[contains(@class,'download')]/a[@href]");
+    var comment = xpath("//div[contains(@class,'boardCommentBody')]//ul//li[contains(@class,'download')]/a[@href]");
     if (debug) {
         GM_log("comment is "+comment);
         GM_log("librarian is "+librarian);
