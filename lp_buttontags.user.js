@@ -308,9 +308,13 @@ function displayTags()
 
     tag_section.appendChild(reload_button);
 
-    var bug_desc = document.getElementById('bug-description');
-    if (bug_desc) {
-        bug_desc.parentNode.insertBefore(tag_section, bug_desc);
+    // 2009-07-02 add the tag_section before the existing tags but after the bug description
+    // ideally they'd go after the existing tags and "Update description / tags" link
+    // however those div's and "Link a related branch" have no id
+
+    var bug_tags = document.getElementById('bug-tags');
+    if (bug_tags) {
+        bug_tags.parentNode.insertBefore(tag_section, bug_tags);
     }
     if (debug) {
         alert("displayTags end");
