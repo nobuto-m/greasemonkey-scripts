@@ -140,16 +140,16 @@ function loadPreferences()
         alert("loadPreferences start");
     }
     tags.standardSeen = false;
-    tags.count = parseInt(GM_getValue('count', 0));
+    tags.count = parseInt(GM_getValue('buttontags.count', 0));
     for (var field in tagFields) {
         var fieldname = tagFields[field];
         tags[fieldname] = new Array;
 
         for (var idx = 0; idx < tags.count; idx ++) {
-            tags[fieldname][idx] = GM_getValue(fieldname+idx,"");
+            tags[fieldname][idx] = GM_getValue('buttontags.' + fieldname+idx,"");
         }
     }
-    tags.reloadAt = parseInt(GM_getValue('reload-at', 0));
+    tags.reloadAt = parseInt(GM_getValue('buttontags.reload-at', 0));
     if (debug) {
         alert("loadPreferences finish");
     }
@@ -161,15 +161,15 @@ function savePreferences()
         alert("savePreferences start");
     }
     // save the count
-    GM_setValue('count', ''+tags.count);
+    GM_setValue('buttontags.count', ''+tags.count);
     // save standard-reply-reload date
-    GM_setValue('reload-at', ''+tags.reloadAt);
+    GM_setValue('buttontags.reload-at', ''+tags.reloadAt);
 
     // save the preferences
     for (var idx = 0; idx < tags.count; idx ++) {
         for (var field in tagFields) {
             //alert("Saving "+tagFields[field]+idx);
-            GM_setValue(tagFields[field]+idx, tags[tagFields[field]][idx]);
+            GM_setValue('buttontags.' + tagFields[field]+idx, tags[tagFields[field]][idx]);
         }
     }
 
