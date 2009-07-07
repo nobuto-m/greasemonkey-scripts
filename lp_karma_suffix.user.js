@@ -172,10 +172,10 @@ function team_handler(xmldoc, person)
         return;
     }
 
-    var re = new RegExp("<img[^>]* src=\"(https://launchpadlibrarian.net/[^\"]+)\"[^>]+>[^a]*<a[^>]* href=\"[^~\"]*/~([^\"]+)\"","ig");
+    var re = new RegExp('<a href="[^~"]*/~([^"]+)" class="bg-image" style="background-image: url\\((https://launchpadlibrarian\\.net/[^\\)]+)\\)',"ig");
     while ((match = re.exec(text)) != null) {
-        title = match[2];
-        src = match[1];
+        title = match[1];
+        src = match[2];
         if (title in teams) {
             people_cache[person]['team'][title] = src;
             if (debug)
