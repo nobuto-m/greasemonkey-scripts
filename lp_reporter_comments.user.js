@@ -37,7 +37,11 @@ window.addEventListener("load", function(e) {
         GM_log( "reporter href " + reporter );
     }
 
-    var commenters = xpath("//div[@class='boardCommentDetails']/a");
+    // comments appear differently depending on whether or not they are an action comment or a regular comment
+    // using a separate variable, commenters and actors, for each one to properly set the sytle's color
+    // probably not the most efficient but it works
+
+    var commenters = xpath("//div[@class='boardCommentDetails']/table/tbody/tr/td/a[@class='sprite person']");
      
     for ( var i = 0; i < commenters.snapshotLength; i++ ) {
         var commenter = commenters.snapshotItem(i);
@@ -51,7 +55,27 @@ window.addEventListener("load", function(e) {
             }
 
             var css_style = "background:" + color + ";";
-            commenter.parentNode.setAttribute('style', css_style);
+            commenter.parentNode.parentNode.parentNode.parentNode.parentNode.setAttribute('style', css_style);
+ 
+        }
+    }
+
+
+    var actors = xpath("//div[@class='boardCommentDetails']/a[@class='sprite person']");
+     
+    for ( var i = 0; i < actors.snapshotLength; i++ ) {
+        var actor = actors.snapshotItem(i);
+        if (debug) {
+            GM_log( "actor href " + commenter );
+        } 
+
+        if ( String(actor) == String(reporter) ) {
+            if (debug) {
+                GM_log( "Found a match" );
+            }
+
+            var css_style = "background:" + color + ";";
+            actor.parentNode.setAttribute('style', css_style);
  
         }
     }
