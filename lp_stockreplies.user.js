@@ -9,6 +9,7 @@
 // @date           2009-02-17
 // @creator        Kees Cook <kees@ubuntu.com>
 // @contributor    Brian Murray <brian@ubuntu.com>
+// @contributor    Bryce Harrington <bryce@ubuntu.com>
 // ==/UserScript==
 // Based on code originally written by:
 //  Tollef Fog Heen <tfheen@err.no>
@@ -303,6 +304,13 @@ function addRowPreferences(table,idx)
 
     // make the source readable
     table.appendChild(document.createTextNode("\n"));
+
+    // spacer
+    var sep_td = document.createElement('td');
+    var sep_tr = document.createElement('tr');
+    sep_td.appendChild(document.createTextNode("\u00A0")); // nbsp
+    sep_tr.appendChild( sep_td );
+    table.appendChild( sep_tr );
 
     // did we bump the count higher?
     if (prefsData.count == idx) {
