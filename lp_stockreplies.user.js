@@ -209,7 +209,7 @@ function loadStandardReplies() {
                 var parser = new DOMParser();
                 var dom = parser.parseFromString(results.responseText,"application/xml");
                 var replies = dom.getElementsByTagName('reply');
-                // destory preferences for possible reload
+                // destroy preferences for possible reload
                 hidePreferences();
                 /* if we actually have some replies, clear the old ones */
                 if (replies.length>0) {
@@ -586,7 +586,7 @@ function show_replies() {
 window.addEventListener("load", function(e) {
 
     loadPreferences();
-    // load standard replies if non already in the preferences, or
+    // load standard replies if none are already in the preferences, or
     // if the "reloadAt" preference has expired
     var time = new Date();
     if (!prefsData.standardSeen ||
