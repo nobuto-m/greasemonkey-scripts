@@ -38,6 +38,7 @@ var prefsFields = new Array(
                             "name",       // required -- the clickable name
                             "comment",    // required -- the stock reply!
                             "status",     // "" == leave unchanged
+                            "tip",        // tooltip hint (optional)
                             "assign",     // "" == leave unchanged
                                           // "-me" == assign to self
                                           // "-nobody" == assign to nobody
@@ -52,6 +53,7 @@ function injectStockreply(formname, idx) {
   var element = document.createElement('a');
   element.href = document.location + "#";
   var innerTextElement = document.createTextNode(prefsData['name'][idx]);
+  element.title = prefsData['tip'][idx];
   element.appendChild(innerTextElement);
   element.addEventListener('click', function(e) { 
     e.preventDefault(); 
@@ -97,7 +99,6 @@ function injectStockreply(formname, idx) {
   return element;
 }
 
-/* TODO: add an ability to have tooltips */
 var reply_class = 'lp_sr';
 function insert_clickable(node, newElement, tagged)
 {
@@ -395,6 +396,7 @@ function showPreferences(prefsDiv)
     var td = document.createElement('td');
     var click = document.createElement('a');
     click.href = document.location + "#";
+    click.title = "Expand form with a new blank entry for stock replies (remember to click save!)";
     click.appendChild(document.createTextNode("Add New Stock Reply"));
     click.addEventListener('click', function(e) {
             e.preventDefault();
@@ -409,6 +411,7 @@ function showPreferences(prefsDiv)
     // Save preferences
     var td = document.createElement('td');
     var click = document.createElement('a');
+    click.title = "Save the stock replies to disk (Important Note:  You will need to restart firefox for the replies to save permanently)";
     click.href = document.location + "#";
     click.appendChild(document.createTextNode("Save Stock Replies"));
     click.addEventListener('click', function(e) {
@@ -450,6 +453,7 @@ function reloadReplies(title) {
     var element = document.createElement('a');
     element.href = document.location + "#";
     var innerTextElement = document.createTextNode(title);
+    element.title = "Reload the replies from preferences";
     element.appendChild(innerTextElement);
     element.addEventListener('click', function(e) {
             e.preventDefault();
@@ -467,6 +471,7 @@ function reloadStandardReplies(title) {
     element.href = document.location + "#";
     var innerTextElement = document.createTextNode(title);
     element.appendChild(innerTextElement);
+    element.title = "Reload the standard replies from remote website";
     element.addEventListener('click', function(e) {
             e.preventDefault();
 
@@ -492,6 +497,7 @@ function popPreferences(title) {
     var element = document.createElement('a');
     element.href = document.location + "#";
     var innerTextElement = document.createTextNode(title);
+    element.title = "Display the stock replies preferences form";
     element.appendChild(innerTextElement);
     element.addEventListener('click', function(e) {
             e.preventDefault();
