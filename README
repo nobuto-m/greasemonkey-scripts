@@ -123,6 +123,8 @@ substituted with the appropriate value:
   PKGNAME       - The source package (e.g., "xorg-server"; taken from URL)
   BUGNUMBER     - The bug id number (e.g., "123456"; taken from URL)
   REPORTER      - The bug reporter's name (e.g., "Bryce Harrington")
+  UPSTREAMBUG   - The URL of the remote bug watch (if any; 
+                  e.g. https://bugs.freedesktop.org/show_bug.cgi?id=20477)
 
 Save Stock Replies:
   After making additions or changes to any of the replies, click this to
