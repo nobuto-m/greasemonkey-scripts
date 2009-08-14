@@ -142,7 +142,10 @@ identified in both the attachments portlet and in comments.
 
 lp_buttontags.user.js: Launchpad Button Tags
 ============================================
-TBD
+This script adds several clickable links to the bug report page,
+allowing you to easily add one of a set of stock tags to the bug.
+By default, the standard Ubuntu tags are provided, but these can be
+modified by editing the script's XML file.
 
 
 lp_highlight_me.user.js: Launchpad Highlight Me
