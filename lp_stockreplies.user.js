@@ -33,6 +33,10 @@ function xpath(query, context) {
                            XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
 }
 
+String.prototype.ucFirst = function () {
+    return this.substr(0,1).toUpperCase() + this.substr(1,this.length);
+};
+
 var prefsData = new Object;
 var prefsFields = new Array(
                             "name",       // required -- the clickable name
@@ -58,8 +62,20 @@ function injectStockreply(formname, idx) {
   element.addEventListener('click', function(e) { 
     e.preventDefault(); 
 
+    // Retrieve bug details
+    var pathname = window.location.pathname;
+    var bug_project = pathname.split('/')[1].ucFirst();
+    var bug_package = pathname.split('/')[3];
+    var bug_number = pathname.split('/').pop();
+    var bug_reporter = xpath("//*[@class='object timestamp']/a").snapshotItem(0).firstChild.nodeValue;
+
     // Set comment
-    xpath('//textarea[@id="'+  formname + '.comment_on_change"]').snapshotItem(0).value = prefsData['comment'][idx];
+    var comment_text = prefsData['comment'][idx];
+    comment_text = comment_text.replace("PROJECTNAME", bug_project);
+    comment_text = comment_text.replace("BUGNUMBER", bug_number);
+    comment_text = comment_text.replace("PKGNAME", bug_package);
+    comment_text = comment_text.replace("REPORTER", bug_reporter);
+    xpath('//textarea[@id="'+  formname + '.comment_on_change"]').snapshotItem(0).value = comment_text;
 
     // Set status
     if (prefsData['status'][idx] != "") {

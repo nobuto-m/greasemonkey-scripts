@@ -116,6 +116,14 @@ Add New Stock Reply:
   importance  Sets the importance dropdown to this text key (if present).
   package     Sets the package field to this text (if present).
 
+In the 'comment' field, the following words will be automatically
+substituted with the appropriate value:
+
+  PROJECTNAME   - The launchpad project (e.g., Ubuntu; taken from URL)
+  PKGNAME       - The source package (e.g., "xorg-server"; taken from URL)
+  BUGNUMBER     - The bug id number (e.g., "123456"; taken from URL)
+  REPORTER      - The bug reporter's name (e.g., "Bryce Harrington")
+
 Save Stock Replies:
   After making additions or changes to any of the replies, click this to
   save the changes.
