@@ -68,7 +68,7 @@ function injectStockreply(formname, idx) {
     var bug_package = pathname.split('/')[3];
     var bug_number = pathname.split('/').pop();
     var bug_reporter = xpath("//*[@class='object timestamp']/a").snapshotItem(0).firstChild.nodeValue;
-    var bug_upstream_url = xpath("//*[@class='link-external']").snapshotItem(0).href;
+    var bug_upstream = xpath("//*[@class='link-external']").snapshotItem(0);
 
     // Set comment
     var comment_text = prefsData['comment'][idx];
@@ -76,7 +76,9 @@ function injectStockreply(formname, idx) {
     comment_text = comment_text.replace("BUGNUMBER", bug_number);
     comment_text = comment_text.replace("PKGNAME", bug_package);
     comment_text = comment_text.replace("REPORTER", bug_reporter);
-    comment_text = comment_text.replace("UPSTREAMBUG", bug_upstream_url);
+    if (bug_upstream != null) {
+        comment_text = comment_text.replace("UPSTREAMBUG", bug_upstream.href);
+    }
     xpath('//textarea[@id="'+  formname + '.comment_on_change"]').snapshotItem(0).value = comment_text;
 
     // Set status
