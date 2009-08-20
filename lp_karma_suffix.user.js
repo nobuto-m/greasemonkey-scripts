@@ -5,8 +5,8 @@
 // @include        https://launchpad.net/*
 // @include        https://*.launchpad.net/*
 // @include        https://*.edge.launchpad.net/*
-// @version        1.0
-// @date           2007-10-17
+// @version        1.1
+// @date           2008-08-19
 // @creator        Kees Cook <kees@ubuntu.com>
 // ==/UserScript==
 
@@ -37,10 +37,12 @@ var teams = {
     description: '(Launchpad) Karma Suffixes',
     source: "http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/files",
     identifier: "http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/file/lp_karma_suffix.user.js",
-    version: "1.0",
-    date: (new Date(2007, 10 - 1, 17))// update date
+    version: "1.1",
+    date: (new Date(2009, 8 - 1, 19))// update date
     .valueOf()
   };
+
+var debug = 0;
 
 function xpath(query, context) {
   context = context ? context : document;
@@ -61,6 +63,8 @@ function requestHandler(req, fn, args)
 function loadData(URL, response_handler, response_arg)
 {
     //alert("Fetching " + response_arg + " ("+URL+")");
+    if (debug)
+        GM_log("Fetching '"+URL+"'");
 
     // Create the XML request
     var httpRequest;
@@ -84,7 +88,11 @@ function loadData(URL, response_handler, response_arg)
     }
 
     // Anonymous function to handle changed request states
-    httpRequest.onreadystatechange = function() { requestHandler(httpRequest, response_handler, response_arg); };
+    httpRequest.onreadystatechange = function() {
+        if (debug)
+            GM_log("State is "+httpRequest.readyState+" ("+httpRequest.status+") for '"+URL+"'");
+        requestHandler(httpRequest, response_handler, response_arg);
+    };
 
     // Make the request
     httpRequest.open ('GET', URL);
@@ -94,7 +102,6 @@ function loadData(URL, response_handler, response_arg)
 }
 
 
-var debug = 0;
 var people_cache = new Array();
 
 // Actually populates the visible HTML with fetched information.
@@ -134,6 +141,9 @@ function karma_handler(xmldoc, person)
     // to build a screen-scraper!!  (LP #92853)
     var text = xmldoc.responseText.replace(/\n/g," ");
 
+    if (debug)
+        GM_log("Loaded /@@+portlet-details for '"+person+"'");
+
     var karma = '0';
 
     // XPath method... 
@@ -166,6 +176,9 @@ function team_handler(xmldoc, person)
     // The output of LP can't be used as an XML document, so we're forced
     // to build a screen-scraper!!  (LP #92853)
     var text = xmldoc.responseText.replace(/\n/g," ");
+
+    if (debug)
+        GM_log("Loaded /+participation for '"+person+"'");
 
     // skip non-humans (this will abort the fetching chain)
     if (text.indexOf('Show all members')>=0) {
@@ -208,11 +221,10 @@ function add_people(people)
         people_cache[person] = new Array();
         people_cache[person]['team_link'] = link + "/+participation";
         people_cache[person]['karma_link'] = link + "/@@+portlet-details";
-        people_cache[person]['email_link'] = link + "/@@+portlet-email";
         people_cache[person]['nodes'] = new Array();
         people_cache[person]['team'] = new Array();
         if (debug)
-            GM_log(person);
+            GM_log("Found '"+person+"' ("+link+")");
     }
     people_cache[person]['nodes'].push(node);
   }
