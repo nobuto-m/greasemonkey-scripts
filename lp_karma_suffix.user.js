@@ -51,12 +51,17 @@ function xpath(query, context) {
 }
 
 
-function requestHandler(req, fn, args)
+function requestHandler(req, url, fn, args)
 {
-    if (req.readyState == 4 && req.status == 200) {
-        fn(req, args);
-        //fn(req.responseXML, args);
-        //fn(req.responseXML.documentElement, args);
+    if (req.readyState == 4) {
+        if (req.status == 200) {
+            fn(req, args);
+            //fn(req.responseXML, args);
+            //fn(req.responseXML.documentElement, args);
+        }
+        if (req.status == 0) {
+            alert("Yikes!  Security failure fetching " + url);
+        }
     }
 }
 
@@ -91,7 +96,7 @@ function loadData(URL, response_handler, response_arg)
     httpRequest.onreadystatechange = function() {
         if (debug)
             GM_log("State is "+httpRequest.readyState+" ("+httpRequest.status+") for '"+URL+"'");
-        requestHandler(httpRequest, response_handler, response_arg);
+        requestHandler(httpRequest, URL, response_handler, response_arg);
     };
 
     // Make the request
@@ -213,9 +218,8 @@ function add_people(people)
     if (slash != -1) {
         // fix up person name
         person = person.substr(0,slash);
-        // fix up link
-        link = link.substr(0,link.indexOf("/",link.indexOf("~")));
     }
+    link = document.location.protocol + "//" + document.location.host + "/~" + person
 
     if (!people_cache[person]) {
         people_cache[person] = new Array();
