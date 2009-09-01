@@ -59,9 +59,6 @@ function requestHandler(req, url, fn, args)
             //fn(req.responseXML, args);
             //fn(req.responseXML.documentElement, args);
         }
-        if (req.status == 0) {
-            alert("Yikes!  Security failure fetching " + url);
-        }
     }
 }
 
