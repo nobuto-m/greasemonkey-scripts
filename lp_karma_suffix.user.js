@@ -120,10 +120,25 @@ function augment_person(person)
             node.parentNode.insertBefore(logoNode, node.nextSibling);
         }
        
-        // add in karma value and last paren
-        var karmaNode = document.createTextNode(': '+people_cache[person]['karma']+') ');
-        node.parentNode.insertBefore(karmaNode, node.nextSibling);
-        // add in contact user link
+        // add in karma value and trail link
+        var karmaClose = document.createTextNode(') ');
+        node.parentNode.insertBefore(karmaClose, node.nextSibling);
+        karmaNode = people_cache[person]['karma'];
+        // Bug Trail Link
+        var karmaLink = document.createElement("a");
+        karmaLink.href = "http://search.gmane.org/?query=&author="
+                + people_cache [person]['person_name'].replace (/[ -]/g, "+")
+                + "&group=gmane.linux.ubuntu.bugs.general&sort=date&DEFAULTOP=and";
+//        karmaLink.href = 'http://www.mail-archive.com/search?l=ubuntu-bugs@lists.ubuntu.com&q=from:"'
+//                          + people_cache [person]['person_name']
+//                          + '"';
+        karmaLink.title = "Follow bug trail of this user";
+        karmaLink.innerHTML = karmaNode;
+        node.parentNode.insertBefore(karmaLink, node.nextSibling);
+         // add in a colon
+        var karmaColon = document.createTextNode(': ');
+        node.parentNode.insertBefore(karmaColon, node.nextSibling);
+         // add in contact user link
         var contactLink = document.createElement("a");
         contactLink.href = "https://launchpad.net/~" +person+ "/+contactuser";
         contactLink.title = "Contact this user";
@@ -222,6 +237,7 @@ function add_people(people)
         people_cache[person] = new Array();
         people_cache[person]['team_link'] = link + "/+participation";
         people_cache[person]['karma_link'] = link + "/@@+portlet-details";
+        people_cache[person]['person_name'] = node.text;
         people_cache[person]['nodes'] = new Array();
         people_cache[person]['team'] = new Array();
         if (debug)
