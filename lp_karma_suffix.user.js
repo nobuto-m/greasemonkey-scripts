@@ -5,8 +5,8 @@
 // @include        https://launchpad.net/*
 // @include        https://*.launchpad.net/*
 // @include        https://*.edge.launchpad.net/*
-// @version        1.1
-// @date           2008-08-19
+// @version        1.2
+// @date           2009-09-21
 // @creator        Kees Cook <kees@ubuntu.com>
 // ==/UserScript==
 
@@ -37,8 +37,8 @@ var teams = {
     description: '(Launchpad) Karma Suffixes',
     source: "http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/files",
     identifier: "http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/file/lp_karma_suffix.user.js",
-    version: "1.1",
-    date: (new Date(2009, 8 - 1, 19))// update date
+    version: "1.2",
+    date: (new Date(2009, 9 - 1, 21))// update date
     .valueOf()
   };
 
@@ -159,7 +159,7 @@ function karma_handler(xmldoc, person)
     var text = xmldoc.responseText.replace(/\n/g," ");
 
     if (debug)
-        GM_log("Loaded /@@+portlet-details for '"+person+"'");
+        GM_log("Loaded /+karma for '"+person+"'");
 
     var karma = '0';
 
@@ -171,13 +171,19 @@ function karma_handler(xmldoc, person)
     //}
 
     // screen-scraping method...
-    var span = '/+karma">';
+    var span = 'Total karma:</b>';
     var karma_at = text.indexOf(span);
     if (karma_at>0) {
         var karma_all = text.substr(karma_at+span.length);
-        karma = karma_all.substr(0,karma_all.indexOf("</a>"));
+        karma = karma_all.substr(0,karma_all.indexOf("<p ")).replace(/^\s+|\s+$/g,"");
         if (debug)
             GM_log("Karma for "+person+": "+karma);
+    }
+    else {
+        if (debug) {
+            GM_log("No Karma found for "+person);
+            alert(text);
+        }
     }
 
     // store for later
@@ -236,7 +242,7 @@ function add_people(people)
     if (!people_cache[person]) {
         people_cache[person] = new Array();
         people_cache[person]['team_link'] = link + "/+participation";
-        people_cache[person]['karma_link'] = link + "/@@+portlet-details";
+        people_cache[person]['karma_link'] = link + "/+karma";
         people_cache[person]['person_name'] = node.text;
         people_cache[person]['nodes'] = new Array();
         people_cache[person]['team'] = new Array();
