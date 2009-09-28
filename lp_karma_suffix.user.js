@@ -136,8 +136,10 @@ function augment_person(person)
         karmaLink.innerHTML = karmaNode;
         node.parentNode.insertBefore(karmaLink, node.nextSibling);
          // add in a colon
-        var karmaColon = document.createTextNode(': ');
-        node.parentNode.insertBefore(karmaColon, node.nextSibling);
+        if (karmaNode) {
+            var karmaColon = document.createTextNode(': ');
+            node.parentNode.insertBefore(karmaColon, node.nextSibling);
+        }
          // add in contact user link
         var contactLink = document.createElement("a");
         contactLink.href = "https://launchpad.net/~" +person+ "/+contactuser";
