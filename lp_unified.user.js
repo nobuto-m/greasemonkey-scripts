@@ -116,8 +116,7 @@ function patch_handler(xmldoc, librarian_link, comment) {
 }
 
 function reporter_comments() {
-
-    var reporter = xpath("//*[@class='object timestamp']/a").snapshotItem(0);
+    var reporter = xpath("//*[@class='registering']/a[@class='sprite person']").snapshotItem(0);
 
     if (debug) {
         GM_log( "reporter href " + reporter );
