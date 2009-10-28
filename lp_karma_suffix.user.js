@@ -273,7 +273,6 @@ window.addEventListener("load", function(e) {
 
     // Bug reporter
     add_people(xpath("//*[@class='registering']/a[@class='sprite person']"))
-    add_people(xpath("//*[@class='sprite person']/"+a_clean_match));
 
     // Assignees
     add_people(xpath("//table[contains(@id,'affected-software')]//td/"+a_clean_match));
