@@ -28,10 +28,9 @@ function xpath(query, context) {
 }
 
 window.addEventListener("load", function(e) {
+    var debug = 0;
 
-    var debug = 0
-
-    var reporter = xpath("//*[@class='object timestamp']/a").snapshotItem(0);
+    var reporter = xpath("//*[@class='registering']/a[@class='sprite person']").snapshotItem(0);
 
     if (debug) {
         GM_log( "reporter href " + reporter );
@@ -40,7 +39,6 @@ window.addEventListener("load", function(e) {
     // comments appear differently depending on whether or not they are an action comment or a regular comment
     // using a separate variable, commenters and actors, for each one to properly set the sytle's color
     // probably not the most efficient but it works
-
     var commenters = xpath("//div[@class='boardCommentDetails']/table/tbody/tr/td/a[@class='sprite person']");
      
     for ( var i = 0; i < commenters.snapshotLength; i++ ) {
