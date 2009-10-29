@@ -112,8 +112,8 @@ function injectStockreply(formname, idx) {
     }
 
     // Subscribe triager by default
-    var sub = xpath('//input[@id="subscribe"]').snapshotItem(0);
-    if (sub) sub.checked = true;
+//    var sub = xpath('//input[@id="subscribe"]').snapshotItem(0);
+//    if (sub) sub.checked = true;
 
     return false;
   }, false);
