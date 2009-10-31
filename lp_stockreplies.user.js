@@ -68,7 +68,7 @@ function injectStockreply(formname, idx) {
     var bug_project = pathname.split('/')[1].ucFirst();
     var bug_package = pathname.split('/')[3];
     var bug_number = pathname.split('/').pop();
-    var bug_reporter = xpath("//*[@class='sprite person']").snapshotItem(0).firstChild.nodeValue;
+    var bug_reporter = xpath("//*[@class='registering']/*[@class='sprite person']").snapshotItem(0).firstChild.nodeValue;
     var bug_upstream = xpath("//*[@class='link-external']").snapshotItem(0);
 
     // Set comment
