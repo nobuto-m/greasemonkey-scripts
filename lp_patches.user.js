@@ -97,7 +97,7 @@ star = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABm
 window.addEventListener("load", function(e) {
 //    GM_log('script running');
 
-    var librarian = xpath("//div[contains(@id,'portlet-attachments')]//li[contains(@class,'download')]/a[@href]");
+    var librarian = xpath("//div[contains(@id,'portlet-patches')]//li[contains(@class,'download')]/a[@href]");
     var comment = xpath("//div[contains(@class,'boardCommentBody')]//ul//li[contains(@class,'download')]/a[@href]");
     if (debug) {
         GM_log("comment is "+comment);
@@ -105,7 +105,7 @@ window.addEventListener("load", function(e) {
     }
     for (var i = 0; i < librarian.snapshotLength; i++) {
         var librarian_link = librarian.snapshotItem(i);
-        var edit = xpath("//div[contains(@id,'portlet-attachments')]//li[contains(@class,'download')]/small/a");
+        var edit = xpath("//div[contains(@id,'portlet-patches')]//li[contains(@class,'download')]/small/a");
         if (debug)
             GM_log("edit url "+edit.snapshotItem(i));
         var edit_link = edit.snapshotItem(i);
