@@ -66,6 +66,7 @@ function injectStockreply(formname, idx) {
     // Retrieve bug details
     var pathname = window.location.pathname;
     var bug_project = pathname.split('/')[1].ucFirst();
+    // if the bug has no package this ends up being the bug number
     var bug_package = pathname.split('/')[3];
     var bug_number = pathname.split('/').pop();
     var bug_reporter = xpath("//*[@class='registering']/*[@class='sprite person']").snapshotItem(0).firstChild.nodeValue;
@@ -75,7 +76,10 @@ function injectStockreply(formname, idx) {
     var comment_text = prefsData['comment'][idx];
     comment_text = comment_text.replace("PROJECTNAME", bug_project);
     comment_text = comment_text.replace("BUGNUMBER", bug_number);
-    comment_text = comment_text.replace("PKGNAME", bug_package);
+    // only replace the package name for bugs with a package i.e. don't do it for no package bugs
+    if (bug_number != bug_package) {
+        comment_text = comment_text.replace("PKGNAME", bug_package);
+    }
     comment_text = comment_text.replace("REPORTER", bug_reporter);
     if (bug_upstream != null) {
         comment_text = comment_text.replace("UPSTREAMBUG", bug_upstream.href);
