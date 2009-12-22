@@ -607,11 +607,11 @@ function show_replies() {
   
     // append all stock replies
     for (var idx = 0; idx < prefsData.count; idx++) {
-        var left='[';
-        var right=']';
+        var left='{';
+        var right='}';
         if (prefsData['standard'][idx] == "yes") {
-            left='{';
-            right='}';
+            left='[';
+            right=']';
         }
         insert_clickable(thisSubmit.parentNode,
                          injectStockreply(formname, idx), true, left, right);
