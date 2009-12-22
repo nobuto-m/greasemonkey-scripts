@@ -5,8 +5,8 @@
 // @include        https://launchpad.net/*
 // @include        https://*.launchpad.net/*
 // @include        https://*.edge.launchpad.net/*
-// @version        1.3
-// @date           2009-02-17
+// @version        1.4
+// @date           2009-12-22
 // @creator        Kees Cook <kees@ubuntu.com>
 // @contributor    Brian Murray <brian@ubuntu.com>
 // @contributor    Bryce Harrington <bryce@ubuntu.com>
@@ -22,8 +22,8 @@
     description: '(Launchpad) Stock replies',
     source: "http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/files",
     identifier: "http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/file/lp_stockreplies.user.js",
-    version: "1.3",
-    date: (new Date(2009, 2 - 1, 17))// update date
+    version: "1.4",
+    date: (new Date(2009, 12 - 1, 22))// update date
     .valueOf()
   };
 
@@ -36,6 +36,8 @@ function xpath(query, context) {
 String.prototype.ucFirst = function () {
     return this.substr(0,1).toUpperCase() + this.substr(1,this.length);
 };
+
+var debug = 0;
 
 var prefsData = new Object;
 var prefsFields = new Array(
@@ -58,10 +60,17 @@ function injectStockreply(formname, idx) {
   var element = document.createElement('a');
   element.href = document.location + "#";
   var innerTextElement = document.createTextNode(prefsData['name'][idx]);
-  element.title = prefsData['tip'][idx];
+
+  // Default to using comment as tooltip, when tooltip is missing
+  tip = prefsData['tip'][idx];
+  if (tip == "") {
+    tip = prefsData['comment'][idx];
+  }
+  element.title = tip;
+
   element.appendChild(innerTextElement);
-  element.addEventListener('click', function(e) { 
-    e.preventDefault(); 
+  element.addEventListener('click', function(e) {
+    e.preventDefault();
 
     // Retrieve bug details
     var pathname = window.location.pathname;
@@ -125,11 +134,13 @@ function injectStockreply(formname, idx) {
 }
 
 var reply_class = 'lp_sr';
-function insert_clickable(node, newElement, tagged)
+function insert_clickable(node, newElement, tagged, left, right)
 {
+    if (!left)  { left='['; }
+    if (!right) { right=']'; }
     var span = document.createElement("span");
-    var leftBrace = document.createTextNode('[');
-    var rightBrace = document.createTextNode('] ');
+    var leftBrace = document.createTextNode(left);
+    var rightBrace = document.createTextNode(right+' ');
 
     /* mark up for future removal? */
     if (tagged) {
@@ -163,24 +174,20 @@ function deleteReply(idx)
         }
     }
     GM_setValue('count',''+(count-1))
-    /* since we've deleted a reply, we'll need to reload this script's
-       view of the GM prefs */
-    loadPreferences()
+    /* since we've deleted a reply, caller needs to reload this script's
+       view of the GM prefs via loadPreferences() */
 }
 
 function clearStandardReplies()
 {
     var count = parseInt(GM_getValue('count', 0));
-    for (var idx = 0; idx < count; ) {
+    for (var idx = count - 1; idx >= 0; idx --) {
         standard = GM_getValue('standard'+idx,"");
         if (standard == "yes") {
-            count --;
-            deleteReply(idx);
-        }
-        else {
-            idx ++;
+            deleteReply(idx, false);
         }
     }
+    loadPreferences();
 }
 
 function loadPreferences()
@@ -219,29 +226,51 @@ function loadStandardReplies() {
                 // destroy preferences for possible reload
                 hidePreferences();
                 /* if we actually have some replies, clear the old ones */
+                if (debug) {
+                    alert("Dropping old standard stock replies");
+                }
                 if (replies.length>0) {
                     clearStandardReplies();
+                }
+                if (debug) {
+                    alert("Parsing new standard stock replies");
                 }
                 var base = prefsData.count;
                 for (var i=0; i < replies.length; i++) {
                     var standardReply = new Array;
                     for (var field in prefsFields) {
                         var fieldname = prefsFields[field];
-                        var text;
+                        var text = "";
                         if (fieldname == "standard") {
                             text = "yes";
                         }
                         else {
-                            text = replies[i].getElementsByTagName(fieldname)[0].textContent;
+                            // alert("Want " + fieldname + " (offset " + i + ")");
+                            element = replies[i].getElementsByTagName(fieldname);
+                            if (element.length) {
+                                text = element[0].textContent;
+                            }
                         }
                         prefsData[fieldname][base+i] = text;
+                        // alert(fieldname + " as [" + text + "] at " + (base+i));
+                        if (debug) {
+                            if (fieldname == "name") {
+                                alert("Parsed [" + text + "]");
+                            }
+                        }
                     }
                 }
                 prefsData.count += replies.length;
                 // reload again in 1.5 days
                 var time = new Date();
                 prefsData.reloadAt = time.getUTCMilliseconds() + (1000 * 60 * 60 * 36);
+                if (debug) {
+                    alert("Saving stock replies");
+                }
                 savePreferences();
+                if (debug) {
+                    alert("Finished reloading standard stock replies");
+                }
             }
           }
         )
@@ -501,7 +530,7 @@ function reloadStandardReplies(title) {
             e.preventDefault();
 
             loadStandardReplies();
-            alert('Standard Replies Loaded');
+            alert('Refreshing Standard Replies');
 
             return false;
         }, false);
@@ -578,8 +607,14 @@ function show_replies() {
   
     // append all stock replies
     for (var idx = 0; idx < prefsData.count; idx++) {
+        var left='[';
+        var right=']';
+        if (prefsData['standard'][idx] == "yes") {
+            left='{';
+            right='}';
+        }
         insert_clickable(thisSubmit.parentNode,
-                         injectStockreply(formname, idx), true);
+                         injectStockreply(formname, idx), true, left, right);
     }
 
     // Add preferences "button"
