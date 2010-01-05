@@ -129,9 +129,6 @@ function augment_person(person)
         karmaLink.href = "http://search.gmane.org/?query=&author="
                 + people_cache [person]['person_name'].replace (/[ -]/g, "+")
                 + "&group=gmane.linux.ubuntu.bugs.general&sort=date&DEFAULTOP=and";
-//        karmaLink.href = 'http://www.mail-archive.com/search?l=ubuntu-bugs@lists.ubuntu.com&q=from:"'
-//                          + people_cache [person]['person_name']
-//                          + '"';
         karmaLink.title = "Follow bug trail of this user";
         karmaLink.innerHTML = karmaNode;
         node.parentNode.insertBefore(karmaLink, node.nextSibling);
