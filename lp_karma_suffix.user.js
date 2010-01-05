@@ -124,18 +124,20 @@ function augment_person(person)
         var karmaClose = document.createTextNode(') ');
         node.parentNode.insertBefore(karmaClose, node.nextSibling);
         karmaNode = people_cache[person]['karma'];
-        // Bug Trail Link
-        var karmaLink = document.createElement("a");
-        karmaLink.href = "http://search.gmane.org/?query=&author="
+        if (karmaNode) {
+            // Bug Trail Link
+            var karmaLink = document.createElement("a");
+            karmaLink.href = "http://search.gmane.org/?query=&author="
                 + people_cache [person]['person_name'].replace (/[ -]/g, "+")
                 + "&group=gmane.linux.ubuntu.bugs.general&sort=date&DEFAULTOP=and";
-        karmaLink.title = "Follow bug trail of this user";
-        karmaLink.innerHTML = karmaNode;
-        node.parentNode.insertBefore(karmaLink, node.nextSibling);
-         // add in a colon
-        var karmaColon = document.createTextNode(': ');
-        node.parentNode.insertBefore(karmaColon, node.nextSibling);
-         // add in contact user link
+            karmaLink.title = "Follow bug trail of this user";
+            karmaLink.innerHTML = karmaNode;
+            node.parentNode.insertBefore(karmaLink, node.nextSibling);
+             // add in a colon
+            var karmaColon = document.createTextNode(': ');
+            node.parentNode.insertBefore(karmaColon, node.nextSibling);
+        }
+        // add in contact user link
         var contactLink = document.createElement("a");
         contactLink.href = "https://launchpad.net/~" +person+ "/+contactuser";
         contactLink.title = "Contact this user";
