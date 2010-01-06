@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name           Word highlighter
+// @name           LP_WordHighlighter
 // @namespace      http://murraytwins.com/greasemonkey/
 // @description    Highlight keywords in bug pages
 // @include        https://launchpad.net/*/+bug/*
@@ -14,8 +14,9 @@
 {
     // Regex of words to highlight : color to highlight them (hint don't use black!)
     var color_map = {
-        'DistroRelease:.*|SourcePackage:.*|lucid|karmic|jaunty|intrepid|hardy|dapper': "yellow", 
-        'regression': "red",
+        'DistroRelease:.*|SourcePackage:.*|lucid|karmic|jaunty|intrepid|hardy|dapper': "yellow",  // things that might be helpful
+        'regression': "red", // critical importance
+        'gutsy|feisty|edgy|breezy|hoary|warty': "orange", // unsupported releases
     }; 
 
     for (var key in color_map) {
