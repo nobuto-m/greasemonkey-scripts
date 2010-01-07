@@ -10,6 +10,12 @@
 // ==/UserScript==
 // Based on http://userscripts.org/scripts/show/15637
 
+function xpath(query, context) {
+  context = context ? context : document;
+  return document.evaluate(query, context, null,
+                           XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+}
+
 (function()
 {
     // Regex of words to highlight : color to highlight them (hint don't use black!)
@@ -24,8 +30,13 @@
         regex = new RegExp(search,'gi');
         rn = Math.floor(Math.random()*100);
         rid = 'z' + rn;
-        body = document.body.innerHTML;
-        body = body.replace(regex,'<span name=' + rid + ' id=' + rid + ' style=\'color:#000;background-color:'+ color_map[key] +';\'>$1</span>');
-        void(document.body.innerHTML=body);
+        text = xpath("//text()");
+        for (var i = 0; i < text.snapshotLength; i++) {
+            if ( text.snapshotItem(i).parentNode ) {
+                if ( regex.exec(text.snapshotItem(i).textContent) != null ) {
+                    text.snapshotItem(i).parentNode.innerHTML = text.snapshotItem(i).textContent.replace(regex,'<span name=' + rid + ' id=' + rid + ' style=\'color:#000;background-color:'+ color_map[key] +';\'>$1</span>');
+                }
+            }
+        }
     }
 })();
