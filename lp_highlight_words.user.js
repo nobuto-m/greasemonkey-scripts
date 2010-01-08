@@ -2,6 +2,12 @@
 // @name           LP_WordHighlighter
 // @namespace      http://murraytwins.com/greasemonkey/
 // @description    Highlight keywords in bug pages
+// @exclude        https://launchpad.net/*/+bug/*/+edit
+// @exclude        https://launchpad.net/*/+bug/*/+nominate
+// @exclude        https://*.launchpad.net/*/+bug/*/+edit
+// @exclude        https://*.launchpad.net/*/+bug/*/+nominate
+// @exclude        https://*.edge.launchpad.net/*/+bug/*/+edit
+// @exclude        https://*.edge.launchpad.net/*/+bug/*/+nominate
 // @include        https://launchpad.net/*/+bug/*
 // @include        https://*.launchpad.net/*/+bug/*
 // @include        https://*.edge.launchpad.net/*/+bug/*
