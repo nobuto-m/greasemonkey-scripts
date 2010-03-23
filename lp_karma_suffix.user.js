@@ -21,6 +21,7 @@ var teams = {
 //    'motu-release':'',
 //    'motu-sru':'',
     'bugsquad':'',
+    'ubuntu-reviewers':'',
     'ubuntu-core-dev':'',
     'ubuntu-dev':'',
     'universe-contributors':'',
