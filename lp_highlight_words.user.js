@@ -35,10 +35,9 @@ function xpath(query, context) {
         var search = '(.*?)('+key+')(.*)';
         var regex = new RegExp(search,'i');
         // Get all text nodes below elements with class report or boardComment
-        var text = xpath("//*[@class and (" + 
-        "contains(concat(' ', normalize-space(@class), ' '), ' report ') or " + 
-        "contains(concat(' ', normalize-space(@class), ' '), ' boardComment ')" +
-        ")]//text()");
+        var text = xpath("//*[@id = 'edit-description' or (@class and " +
+            "contains(concat(' ', normalize-space(@class), ' '), ' boardComment ')" +
+            ")]//text()");
 
         for (var i = 0; i < text.snapshotLength; i++) {
             var texti = text.snapshotItem(i);
