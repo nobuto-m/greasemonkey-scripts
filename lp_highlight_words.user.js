@@ -26,23 +26,37 @@ function xpath(query, context) {
 {
     // Regex of words to highlight : color to highlight them (hint don't use black!)
     var color_map = {
-        'DistroRelease:.*|SourcePackage:.*|lucid|karmic|jaunty|intrepid|hardy|dapper': "yellow",  // things that might be helpful
+        'DistroRelease: [^ ]+ [^ ]+|SourcePackage: [^ ]+|lucid|karmic|jaunty|intrepid|hardy|dapper': "yellow",  // things that might be helpful
         'regression': "red", // critical importance
         'gutsy|feisty|edgy|breezy|hoary|warty': "orange", // unsupported releases
     }; 
 
     for (var key in color_map) {
-        search = '('+key+')';
-        regex = new RegExp(search,'gi');
-        rn = Math.floor(Math.random()*100);
-        rid = 'z' + rn;
-        text = xpath("//text()");
+        var search = '(.*?)('+key+')(.*)';
+        var regex = new RegExp(search,'i');
+        // Get all text nodes below elements with class report or boardComment
+        var text = xpath("//*[@id = 'edit-description' or (@class and " +
+            "contains(concat(' ', normalize-space(@class), ' '), ' boardComment ')" +
+            ")]//text()");
+
         for (var i = 0; i < text.snapshotLength; i++) {
-            if ( text.snapshotItem(i).parentNode ) {
-                if ( regex.exec(text.snapshotItem(i).textContent) != null ) {
-                    text.snapshotItem(i).parentNode.innerHTML = text.snapshotItem(i).textContent.replace(regex,'<span name=' + rid + ' id=' + rid + ' style=\'color:#000;background-color:'+ color_map[key] +';\'>$1</span>');
-                }
+            var texti = text.snapshotItem(i);
+            var textiparent = texti.parentNode;
+            while ( (match = regex.exec(texti.textContent)) != null ) {
+                // split texti up into parts
+                span = document.createElement("span");
+                span.style.background = color_map[key];
+                span.style.color = "black";
+                span.textContent = match[2];
+                // Insert the colored match
+                textiparent.insertBefore(span, texti);
+                // Insert the text preceeding the match
+                beforeText = document.createTextNode(match[1]);
+                textiparent.insertBefore(beforeText, span);
+                // The remaining text after the match
+                texti.textContent = match[3];
             }
         }
     }
 })();
+
