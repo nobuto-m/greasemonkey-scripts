@@ -262,14 +262,14 @@ window.addEventListener("load", function(e) {
     var url_clean_matches = new Array();
     var url_messy_matches = new Array();
     for (var idx in prefix) {
-        url_clean_matches.push("(starts-with(@href, '"+prefix[idx]+"/~') and not(contains(substring-after(@href, '"+prefix[idx]+"/~'),'/')))");
+        url_clean_matches.push("(starts-with(@href, '"+prefix[idx]+"/~') and not(contains(substring-after(@href, '"+prefix[idx]+"/~'),'/')) and not(contains(.,'Cancel')))");
         url_messy_matches.push("(starts-with(@href, '"+prefix[idx]+"/~') and contains(substring-after(@href, '"+prefix[idx]+"/~'),'/+'))");
     }
     var a_clean_match = "a["+url_clean_matches.join(" or ")+"]";
     var a_messy_match = "a["+url_messy_matches.join(" or ")+"]";
 
     // All the people links in the main content section (_not_ subscribers!)
-    add_people(xpath("//div[contains(@id,'maincontent')]//"+a_clean_match));
+    add_people(xpath("//div[contains(@id,'maincontent') and not(contains(substring-after(@href, 'contact-user')]//"+a_clean_match));
 
     // Bug reporter
     add_people(xpath("//*[@class='registering']/a[@class='sprite person']"))
