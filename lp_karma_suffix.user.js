@@ -269,7 +269,7 @@ window.addEventListener("load", function(e) {
     var a_messy_match = "a["+url_messy_matches.join(" or ")+"]";
 
     // All the people links in the main content section (_not_ subscribers!)
-    add_people(xpath("//div[contains(@id,'maincontent') and not(contains(substring-after(@href, 'contact-user')]//"+a_clean_match));
+    add_people(xpath("//div[contains(@id,'maincontent')]//"+a_clean_match));
 
     // Bug reporter
     add_people(xpath("//*[@class='registering']/a[@class='sprite person']"))
