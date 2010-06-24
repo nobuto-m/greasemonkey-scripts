@@ -114,13 +114,16 @@ function augment_person(person)
     for (var idx in people_cache[person]['nodes']) {
          var node = people_cache[person]['nodes'][idx];
 
+		//Bug #584218 - adding a span around group images
+        var imageSpan = document.createElement('span');
+        node.parentNode.insertBefore(imageSpan, node.nextSibling);
+
         for (var title in people_cache[person]['team']) {
             var logoNode = document.createElement('img');
             logoNode.title = title;
             logoNode.src = people_cache[person]['team'][title];
-            node.parentNode.insertBefore(logoNode, node.nextSibling);
-        }
-       
+            imageSpan.appendChild(logoNode);
+        }       
         // add in karma value and trail link
         var karmaClose = document.createTextNode(') ');
         node.parentNode.insertBefore(karmaClose, node.nextSibling);
