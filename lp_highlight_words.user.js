@@ -59,4 +59,3 @@ function xpath(query, context) {
         }
     }
 })();
-

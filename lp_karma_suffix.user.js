@@ -31,18 +31,6 @@ var teams = {
 
 // ------- End of User settable data -------
 
-(function () {
-  var SCRIPT = {
-    name: "LP_Karma_Suffix",
-    namespace: "https://code.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu",
-    description: '(Launchpad) Karma Suffixes',
-    source: "http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/files",
-    identifier: "http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/file/lp_karma_suffix.user.js",
-    version: "1.2",
-    date: (new Date(2009, 9 - 1, 21))// update date
-    .valueOf()
-  };
-
 var debug = 0;
 
 function xpath(query, context) {
@@ -256,7 +244,20 @@ function add_people(people)
   }
 }
 
-window.addEventListener("load", function(e) {
+(function()
+{
+
+    var SCRIPT = {
+        name: "LP_Karma_Suffix",
+        namespace: "https://code.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu",
+        description: '(Launchpad) Karma Suffixes',
+        source: "http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/files",
+        identifier: "http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/file/lp_karma_suffix.user.js",
+        version: "1.2",
+        date: (new Date(2009, 9 - 1, 21))// update date
+        .valueOf()
+    }
+
     var prefix = new Array("https://launchpad.net",
                            "https://bugs.launchpad.net",
                            "https://edge.launchpad.net",
@@ -288,7 +289,5 @@ window.addEventListener("load", function(e) {
     for (var person in people_cache) {
         loadData(people_cache[person]['team_link'], team_handler, person);
     }
-
-}, false);
 
 })();

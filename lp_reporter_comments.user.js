@@ -18,8 +18,6 @@ var color = 'lightgrey';
 
 // ------- End of User settable data -------/
 
-(function() {
-
 function xpath(query, context) {
 //    GM_log('xpath running');
     context = context ? context : document;
@@ -27,7 +25,7 @@ function xpath(query, context) {
                             XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
 }
 
-window.addEventListener("load", function(e) {
+(function() {
     var debug = 0;
 
     var reporter = xpath("//*[@class='registering']/a[@class='sprite person']").snapshotItem(0);
@@ -78,5 +76,4 @@ window.addEventListener("load", function(e) {
         }
     }
 
-  }, false);
 })(); 
