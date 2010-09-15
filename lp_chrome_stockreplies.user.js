@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name           LP_StockReplies
+// @name           LP_StockReplies_Chrome
 // @namespace      http://outflux.net/greasemonkey/
 // @description    (Launchpad) Stock replies
 // @include        https://launchpad.net/*
@@ -749,19 +749,15 @@ function show_replies() {
   }
 }
 
-window.addEventListener("load", function(e) {
+loadPreferences();
+// load standard replies if none are already in the preferences, or
+// if the "reloadAt" preference has expired
+//var time = new Date();
+//if (!prefsData.standardSeen ||
+//    time.getUTCMilliseconds() > prefsData.reloadAt) {
+//    loadStandardReplies();
+//}
 
-    loadPreferences();
-    // load standard replies if none are already in the preferences, or
-    // if the "reloadAt" preference has expired
-    //var time = new Date();
-    //if (!prefsData.standardSeen ||
-    //    time.getUTCMilliseconds() > prefsData.reloadAt) {
-    //    loadStandardReplies();
-    //}
-
-    show_replies();
-
-}, false);
+show_replies();
 
 })();

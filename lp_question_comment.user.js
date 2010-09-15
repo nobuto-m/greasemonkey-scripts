@@ -26,10 +26,8 @@ function xpath(query, context) {
                             XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
 }
 
-window.addEventListener("load", function(e) {
+if (xpath('//div[@class="actions"]/input[@value="Convert this Bug into a Question"]').snapshotItem(0)) {
+    xpath('//textarea[@id="field.comment"]').snapshotItem(0).value = comment;
+}
 
-    if (xpath('//div[@class="actions"]/input[@value="Convert this Bug into a Question"]').snapshotItem(0)) {
-        xpath('//textarea[@id="field.comment"]').snapshotItem(0).value = comment;
-    }
-  }, false);
 })(); 
