@@ -27,7 +27,7 @@ function xpath(query, context) {
                             XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
 }
 
-window.addEventListener("load", function(e) {
+function fillit() {
 
     // grab the part after bugs.launchpad.net - pathname looks like /ubuntu/+source/pkgname/+bug/1
     var pathname = window.location.pathname;
@@ -39,5 +39,5 @@ window.addEventListener("load", function(e) {
             xpath('//textarea[@id="field.comment"]').snapshotItem(0).value = description;
         }
     }
-  }, false);
+  }
 })(); 
