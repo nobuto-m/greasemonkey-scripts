@@ -53,6 +53,9 @@ var prefsFields = new Array(
                             "standard"    // "yes" == is from standard XML?
                            );
 
+// GM_setValue, getRecoverableString and GM_getValue functions from
+// http://userscripts.org/scripts/show/68559 
+// Thanks to Vladimir Alexiev for writing them
 
 function GM_setValue( cookieName, cookieValue, lifeTime ) {
     if( !cookieName ) { return; }
