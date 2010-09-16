@@ -5,7 +5,7 @@
 // @include        https://launchpad.net/*
 // @include        https://*.launchpad.net/*
 // @include        https://*.edge.launchpad.net/*
-// @version        1.4
+// @version        1.5
 // @date           2009-12-22
 // @creator        Kees Cook <kees@ubuntu.com>
 // @contributor    Brian Murray <brian@ubuntu.com>
@@ -202,7 +202,7 @@ function injectStockreply(formname, idx) {
     // if the bug has no package this ends up being the bug number
     var bug_package = pathname.split('/')[3];
     var bug_number = pathname.split('/').pop();
-    var bug_reporter = xpath("//*[@class='registering']/*[@class='sprite person']").snapshotItem(0).firstChild.nodeValue;
+    var bug_reporter = xpath("//*[@class='registering']/*[contains(@class,'sprite person')]").snapshotItem(0).firstChild.nodeValue;
     var bug_upstream = xpath("//*[@class='link-external']").snapshotItem(0);
 
     // Set comment
