@@ -10,9 +10,7 @@
 // @creator        Brian Murray <brian@ubuntu.com>
 // ==/UserScript==
 
-
-(function() {
-
+var debug = 0;
 var me = getLoggedInUserLink();
 
 // ------  User settable data  -------------
@@ -42,7 +40,7 @@ function getLoggedInUserLink() {
     var forms = document.getElementsByTagName('form');
     for (var i = 0; i < forms.length; i++) {
         var form = forms[i];
-        if (form.action.match(/[/][+]logout$/)) {
+        if (form.action.match(/[+]logout$/)) {
             href = form.getElementsByTagName('a')[0].href;
             if (debug) {
                 GM_log("User href: "+href);
@@ -52,9 +50,7 @@ function getLoggedInUserLink() {
     }
 }
 
-window.addEventListener("load", function(e) {
-
-    var debug = 1;
+(function() {
 
     var links_table = xpath("//table[contains(@class,'bug-links')]").snapshotItem(0);
     if (debug) {
@@ -77,5 +73,4 @@ window.addEventListener("load", function(e) {
         cell2.innerHTML = extra_links[link];
     };
 
-  }, false);
 })();
