@@ -16,7 +16,7 @@
 // ------  User settable data  -------------
 // Comment to use
 
-var comment = "Thank you for taking the time to report this issue and helping to make Ubuntu better. Examining the information you have given us, this does not appear to be a bug report so we are closing it and converting it to a question in the support tracker. We appreciate the difficulties you are facing, but it would make more sense to raise problems you are having in the support tracker at https://answers.launchpad.net/ubuntu if you are uncertain if they are bugs. For help on reporting bugs, see https://help.ubuntu.com/community/ReportingBugs#When%20not%20to%20file%20a%20bug."
+var comment = "Thank you for taking the time to report this issue and helping to make Ubuntu better. Examining the information you have given us, this does not appear to be a bug report so we are closing it and converting it to a question in the support tracker. We appreciate the difficulties you are facing, but it would make more sense to raise problems you are having in the support tracker at https://answers.launchpad.net/ubuntu if you are uncertain if they are bugs. For help on reporting bugs, see https://help.ubuntu.com/community/ReportingBugs#When%20not%20to%20file%20a%20bug.  There is also a vibrant support community available at http://askubuntu.com and you might consider asking your question there."
 
 // ------- End of User settable data -------
 
