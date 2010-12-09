@@ -17,6 +17,7 @@
 // show developer team logos last, so process them first
 
 var teams = {
+    'motu':'',
     'motu-swat':'',
 //    'motu-release':'',
 //    'motu-sru':'',
