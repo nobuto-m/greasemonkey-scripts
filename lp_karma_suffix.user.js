@@ -276,14 +276,15 @@ function add_people(people)
     // All the people links in the main content section (_not_ subscribers!)
     add_people(xpath("//div[contains(@id,'maincontent')]//"+a_clean_match));
 
+    // 2011-02-10 these became a clean match or messy match somehow
+    // (maybe main content grew) so was getting decorated twice - saving
+    // as xpath notes
     // Bug reporter
-    // 2011-02-10 this became a clean match or messy match somehow so
-    // was getting decorated twice - saving as an xpath note
     //add_people(xpath("//*[@class='registering']/a[@class='sprite person']"))
 
     // Assignees
-    add_people(xpath("//table[contains(@id,'affected-software')]//td/"+a_clean_match));
-    add_people(xpath("//table[contains(@id,'affected-software')]//td/"+a_messy_match));
+    //add_people(xpath("//table[contains(@id,'affected-software')]//td/"+a_clean_match));
+    //add_people(xpath("//table[contains(@id,'affected-software')]//td/"+a_messy_match));
 
     // Everyone!  (this is totally insane for bugs with large dups)
     //add_people(xpath("//"+a_match));
