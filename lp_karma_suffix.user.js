@@ -277,7 +277,9 @@ function add_people(people)
     add_people(xpath("//div[contains(@id,'maincontent')]//"+a_clean_match));
 
     // Bug reporter
-    add_people(xpath("//*[@class='registering']/a[@class='sprite person']"))
+    // 2011-02-10 this became a clean match or messy match somehow so
+    // was getting decorated twice - saving as an xpath note
+    //add_people(xpath("//*[@class='registering']/a[@class='sprite person']"))
 
     // Assignees
     add_people(xpath("//table[contains(@id,'affected-software')]//td/"+a_clean_match));
