@@ -25,7 +25,7 @@ function xpath(query, context) {
 (function() {
 
     var place = xpath("//div[contains(@id,'portlet-map')]").snapshotItem(0);
-    var cache = document.getElementsByTagName('script').item(8).textContent;
+    var cache = xpath("//script[contains(.,'LP.client.cache') and contains(.,'context')]").snapshotItem(0).textContent;
     var lat_start = cache.indexOf('latitude') + 11;
     var latitude = cache.substr(lat_start, 11);
     var long_start = cache.indexOf('longitude') + 12;
