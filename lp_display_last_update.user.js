@@ -20,9 +20,9 @@ function xpath(query, context) {
 (function() {
 
     var reported_on = xpath("//div[contains(@id,'registration')]//span[contains(@title,'20')]").snapshotItem(0);
-    // Can't escape characters in LP.client.cache['bug'] so use and with
+    // Can't escape characters in LP.cache['bug'] so use and with
     // contains
-    var cache = xpath("//script[contains(.,'LP.client.cache') and contains(.,'bug')]").snapshotItem(0).textContent;
+    var cache = xpath("//script[contains(.,'LP.cache') and contains(.,'bug')]").snapshotItem(0).textContent;
     var last_update_start = cache.indexOf('date_last_updated') + 21;
     // this only grabs the date YYYY-mm-dd might want to be more awesome
     // and show X minutes ago
