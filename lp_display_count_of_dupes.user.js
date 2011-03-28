@@ -23,7 +23,7 @@ function xpath(query, context) {
     // Can't escape characters in LP.cache['bug'] so use and with
     // contains
     var cache = xpath("//script[contains(.,'LP.cache') and contains(.,'bug')]").snapshotItem(0).textContent;
-    var pattern = /"number_of_duplicates": \d+/g;
+    var pattern = /"number_of_duplicates": \d+/;
     var number_of_dupes = cache.match(pattern)[0];
     var number_of_dupes = number_of_dupes.split(': ')[1]
 
