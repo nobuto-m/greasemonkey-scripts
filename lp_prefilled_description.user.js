@@ -13,8 +13,6 @@
 // projects
 
 
-(function() {
-
 // ------  User settable data  -------------
 // Description to use
 var description = "Release of Ubuntu:\nPackage Version:\nExpected Results:\nActual Results:\n"
@@ -27,7 +25,7 @@ function xpath(query, context) {
                             XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
 }
 
-function fillit() {
+(function() {
 
     // grab the part after bugs.launchpad.net - pathname looks like /ubuntu/+source/pkgname/+bug/1
     var pathname = window.location.pathname;
@@ -39,5 +37,4 @@ function fillit() {
             xpath('//textarea[@id="field.comment"]').snapshotItem(0).value = description;
         }
     }
-  }
 })(); 
