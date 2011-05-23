@@ -11,8 +11,8 @@
 
 // ------  User settable data  -------------
 // Signature to use
-var signature = "\n---\nUbuntu Bug Squad member\nVolunteer bug triager\nhttp://wiki.ubuntu.com/BugSquad";
-// Debugging enabled
+var signature = "\n---\nUbuntu Bug Squad volunteer triager\nhttp://wiki.ubuntu.com/BugSquad";
+// Enable or disabled debugging
 var debug = 0;
 
 // ------- End of User settable data -------
