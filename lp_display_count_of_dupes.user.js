@@ -22,7 +22,7 @@ function xpath(query, context) {
     var duplicates_of = xpath("//div[contains(@id,'portlet-duplicates')]//h2").snapshotItem(0);
     // Can't escape characters in LP.cache['bug'] so use and with
     // contains
-    var cache = xpath("//script[contains(.,'LP.cache') and contains(.,'bug')]").snapshotItem(0).textContent;
+    var cache = xpath("//script[contains(.,'LP.cache') and contains(.,'http_etag')]").snapshotItem(0).textContent;
     var pattern = /"number_of_duplicates": \d+/;
     var number_of_dupes = cache.match(pattern)[0];
     var number_of_dupes = number_of_dupes.split(': ')[1]
