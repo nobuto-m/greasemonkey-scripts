@@ -116,7 +116,7 @@ function injectStockreply(formname, idx) {
 
     // Set package
     if (prefsData['package'][idx] != "") {
-        xpath('//input[@name="'+  formname + '.sourcepackagename"]').snapshotItem(0).value = prefsData['package'][idx];
+        xpath('//input[@name="'+  formname + '.target.package"]').snapshotItem(0).value = prefsData['package'][idx];
     }
 
     // Set importance
@@ -597,7 +597,8 @@ function show_replies() {
   var allForms = xpath("//form");
   for (var i = 0; i < allForms.snapshotLength; i++) {
     var thisForm = allForms.snapshotItem(i);
-    var thisInput = xpath(".//input[contains(@name, '.sourcepackagename') or contains(@name, '.product')]", thisForm);
+    //var thisInput = xpath(".//input[contains(@name, '.sourcepackagename') or contains(@name, '.product')]", thisForm);
+    var thisInput = xpath(".//input[contains(@name, '.target')]", thisForm);
     if (thisInput.snapshotLength == 0) {
         continue;
     }
