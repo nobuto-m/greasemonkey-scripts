@@ -8,7 +8,7 @@
 var Y = unsafeWindow.LPS;
 
 /*
- * TODO: improve work item parsing
+ * TODO: parse out assignees?
  * TODO: allow adding work items even if none exist.
  */
 
