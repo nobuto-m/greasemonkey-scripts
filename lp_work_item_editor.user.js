@@ -516,7 +516,7 @@ function clickAddWorkItem (e, ul, li, adds) {
     overlay.render();
     overlay.get('srcNode').one('.ov-cancel').on('click', function () { overlay.destroy(); });
     overlay.get('srcNode').one('.ov-add').on(
-        'click', function () {
+       'click', function () {
             var item_text = overlay.get('srcNode').one('input').get('value'),
                 status = overlay.get('srcNode').one('select').get('value'),
                 add_index = adds.length;
@@ -613,27 +613,29 @@ function setUp () {
 
                     div.one('.ov-ok').on(
                         'click', function (e) {
-                            for (var i = 0; i < edits.length; i++) {
-                                var node = work_items[edits[i][0]][2];
-                                var nodeTextPreserve = work_items[edits[i][0]][3];
-                                var newText = node.get('text').slice(0, nodeTextPreserve) + ': ' + edits[i][1];
-                                node.set('text', newText);
+                            if (edits.length || adds.length) {
+                                for (var i = 0; i < edits.length; i++) {
+                                    var node = work_items[edits[i][0]][2];
+                                    var nodeTextPreserve = work_items[edits[i][0]][3];
+                                    var newText = node.get('text').slice(0, nodeTextPreserve) + ': ' + edits[i][1];
+                                    node.set('text', newText);
+                                }
+                                for (var j = 0; j < adds.length; j++) {
+                                    var textNode = document.createTextNode(adds[j][0] + ': ' + adds[j][1]);
+                                    var q = work_items[work_items.length - 1][2].ancestor('p');
+                                    q.appendChild(Y.Node.create('<br/>'));
+                                    q.appendChild(textNode);
+                                }
+                                var editableText = Y.lp.widgets['edit-whiteboard'];
+                                Y.one('#edit-whiteboard .edit').replaceClass('edit', 'loading');
+                                var handle = editableText.editor.on(
+                                    'save', function () {
+                                        handle.detach();
+                                        Y.one('#edit-whiteboard .loading').replaceClass('loading', 'edit');
+                                    });
+                                editableText.editor.setInput(editableText.get('value'));
+                                editableText.editor.save();
                             }
-                            for (var j = 0; j < adds.length; j++) {
-                                var textNode = document.createTextNode(adds[j][0] + ': ' + adds[j][1]);
-                                var q = work_items[work_items.length - 1][2].ancestor('p');
-                                q.appendChild(Y.Node.create('<br/>'));
-                                q.appendChild(textNode);
-                            }
-                            var editableText = Y.lp.widgets['edit-whiteboard'];
-                            Y.one('#edit-whiteboard .edit').replaceClass('edit', 'loading');
-                            var handle = editableText.editor.on(
-                                'save', function () {
-                                    handle.detach();
-                                    Y.one('#edit-whiteboard .loading').replaceClass('loading', 'edit');
-                                });
-                            editableText.editor.setInput(editableText.get('value'));
-                            editableText.editor.save();
                             overlay.destroy();
                         }
                     );
