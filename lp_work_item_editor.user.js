@@ -3,13 +3,16 @@
 // @namespace      https://launchpad.net/~mwhudson
 // @include        https://blueprints.launchpad.net/*
 // @include        https://blueprints.staging.launchpad.net/*
+// @include        https://blueprints.qastaging.launchpad.net/*
 // ==/UserScript==
 
 var Y = unsafeWindow.LPS;
 
 /*
  * TODO: parse out assignees?
- * TODO: allow adding work items even if none exist.
+ * TODO: allow removing work items
+ * TODO: allow reordering work items
+ * TODO: allow editing the text of a work item
  */
 
 /*
@@ -541,105 +544,117 @@ function log (o) { unsafeWindow.console.log(o); }
 function setUp () {
 
     var h3 = Y.one('#edit-whiteboard h3');
+    if (!h3) return;
     h3.appendChild(document.createTextNode(' '));
     var editButton = Y.Node.create('<button>Open workitem editor</button>');
     editButton.on(
         'click', function (e) {
             var p = Y.all('#edit-whiteboard p');
-            if (p.size() > 0) {
-                var children = [];
-                Y.Array.each(
-                    p.get('childNodes'),
-                    function (nodeList) {
-                        nodeList.each(function (n) { children.push(n); } );
-                        children.push(Y.Node.create('<br/>'));
-                    }
-                );
-                var lines = parseWhiteBoardIntoLines(p);
-                var work_items = parseLinesIntoWorkItems(lines);
-                if (work_items.length > 0) {
-                    var div = Y.Node.create('<div/>');
-
-                    var item_container = Y.Node.create('<table style="margin: 1em" />');
-                    var edits = [];
-                    var adds = [];
-                    var widgets = [];
-                    Y.Array.each(
-                        work_items, function (wi, index) {
-                            var widget = createWorkItemItem(
-                              function(li) { item_container.appendChild(li); },
-                              wi[0], wi[1]);
-                            widgets.push(widget);
-                            var node = wi[2];
-                            var nodeTextPreserve = wi[3];
-                            widget.on(
-                                'save', function (e) {
-                                    e.preventDefault();
-                                    edits.push([index, widget.get('value')]);
-                                });
-                        }
-                    );
-                    var add_item_row = Y.Node.create('<tr/>');
-                    var link = Y.Node.create(
-                        '<td style="text-align="right" colspan="2"><a href="#" class="sprite add js-action">Add new work item</a></td>');
-                    link.on('click', clickAddWorkItem, link,
-                            item_container, add_item_row, adds);
-                    add_item_row.appendChild(link);
-                    item_container.appendChild(add_item_row);
-                    div.appendChild(item_container);
-                    div.appendChild(Y.Node.create('<span><button class="ov-ok">OK</button><button class="ov-cancel">Cancel</button></span>'));
-                    var overlay = new Y.lazr.PrettyOverlay(
-                        {
-                            align: {
-                                points: [Y.WidgetPositionAlign.CC, Y.WidgetPositionAlign.CC]
-                            },
-                            headerContent: "<h2>Edit work items</h2>",
-                            bodyContent: div,
-                            visible: false,
-                            zIndex: 1000
-                        }
-                    );
-                    overlay.render();
-                    Y.Array.each(widgets, function (w) { w.render(); });
-
-                    div.one('.ov-ok').on(
-                        'click', function (e) {
-                            if (edits.length || adds.length) {
-                                for (var i = 0; i < edits.length; i++) {
-                                    var node = work_items[edits[i][0]][2];
-                                    var nodeTextPreserve = work_items[edits[i][0]][3];
-                                    var newText = node.get('text').slice(0, nodeTextPreserve) + ': ' + edits[i][1];
-                                    node.set('text', newText);
-                                }
-                                for (var j = 0; j < adds.length; j++) {
-                                    var textNode = document.createTextNode(adds[j][0] + ': ' + adds[j][1]);
-                                    var q = work_items[work_items.length - 1][2].ancestor('p');
-                                    q.appendChild(Y.Node.create('<br/>'));
-                                    q.appendChild(textNode);
-                                }
-                                var editableText = Y.lp.widgets['edit-whiteboard'];
-                                Y.one('#edit-whiteboard .edit').replaceClass('edit', 'loading');
-                                var handle = editableText.editor.on(
-                                    'save', function () {
-                                        handle.detach();
-                                        Y.one('#edit-whiteboard .loading').replaceClass('loading', 'edit');
-                                    });
-                                editableText.editor.setInput(editableText.get('value'));
-                                editableText.editor.save();
-                            }
-                            overlay.destroy();
-                        }
-                    );
-                    div.one('.ov-cancel').on(
-                        'click', function (e) {
-                            overlay.destroy();
-                        }
-                    );
-
-                    overlay.show();
+            var children = [];
+            Y.Array.each(
+                p.get('childNodes'),
+                function (nodeList) {
+                    nodeList.each(function (n) { children.push(n); } );
+                    children.push(Y.Node.create('<br/>'));
                 }
-            }
-        });
+            );
+            var lines = parseWhiteBoardIntoLines(p);
+            var work_items = parseLinesIntoWorkItems(lines);
+            var div = Y.Node.create('<div/>');
+
+            var item_container = Y.Node.create('<table style="margin: 1em" />');
+            var edits = [];
+            var adds = [];
+            var widgets = [];
+            Y.Array.each(
+                work_items, function (wi, index) {
+                    var widget = createWorkItemItem(
+                        function(li) { item_container.appendChild(li); },
+                        wi[0], wi[1]);
+                    widgets.push(widget);
+                    var node = wi[2];
+                    var nodeTextPreserve = wi[3];
+                    widget.on(
+                        'save', function (e) {
+                            e.preventDefault();
+                            edits.push([index, widget.get('value')]);
+                        });
+                }
+            );
+            var add_item_row = Y.Node.create('<tr/>');
+            var link = Y.Node.create(
+                '<td style="text-align="right" colspan="2"><a href="#" class="sprite add js-action">Add new work item</a></td>');
+            link.on(
+                'click', clickAddWorkItem, link, item_container, add_item_row, adds);
+            add_item_row.appendChild(link);
+            item_container.appendChild(add_item_row);
+            div.appendChild(item_container);
+            div.appendChild(
+                Y.Node.create(
+                    '<span><button class="ov-ok">OK</button><button class="ov-cancel">Cancel</button></span>'));
+            var overlay = new Y.lazr.PrettyOverlay(
+                {
+                    align: {
+                        points: [Y.WidgetPositionAlign.CC, Y.WidgetPositionAlign.CC]
+                    },
+                    headerContent: "<h2>Edit work items</h2>",
+                    bodyContent: div,
+                    visible: false,
+                    zIndex: 1000
+                }
+            );
+            overlay.render();
+            Y.Array.each(widgets, function (w) { w.render(); });
+
+            div.one('.ov-ok').on(
+                'click', function (e) {
+                    if (edits.length || adds.length) {
+                        for (var i = 0; i < edits.length; i++) {
+                            var node = work_items[edits[i][0]][2];
+                            var nodeTextPreserve = work_items[edits[i][0]][3];
+                            var newText = node.get('text').slice(0, nodeTextPreserve) + ': ' + edits[i][1];
+                            node.set('text', newText);
+                        }
+                        if (work_items.length > 0) {
+                            for (var j = 0; j < adds.length; j++) {
+                                var textNode = document.createTextNode(adds[j][0] + ': ' + adds[j][1]);
+                                var q = work_items[work_items.length - 1][2].ancestor('p');
+                                q.appendChild(Y.Node.create('<br/>'));
+                                q.appendChild(textNode);
+                            }
+                        } else {
+                            var target = Y.one("#edit-whiteboard div.yui3-editable_text-text");
+                            var pp = Y.Node.create('<p>Work Items:</p>');
+                            for (var j = 0; j < adds.length; j++) {
+                                var textNode = document.createTextNode(adds[j][0] + ': ' + adds[j][1]);
+                                pp.appendChild(Y.Node.create('<br/>'));
+                                pp.appendChild(document.createTextNode('\n'));
+                                pp.appendChild(textNode);
+                            }
+                            target.appendChild(pp);
+                        }
+                        var editableText = Y.lp.widgets['edit-whiteboard'];
+                        Y.one('#edit-whiteboard .edit').replaceClass('edit', 'loading');
+                        var handle = editableText.editor.on(
+                            'save', function () {
+                                handle.detach();
+                                Y.one('#edit-whiteboard .loading').replaceClass('loading', 'edit');
+                            });
+                        editableText.editor.setInput(editableText.get('value'));
+                        editableText.editor.save();
+                    }
+                    overlay.destroy();
+                }
+            );
+            div.one('.ov-cancel').on(
+                'click', function (e) {
+                    overlay.destroy();
+                }
+            );
+
+            overlay.show();
+        }
+    );
     h3.appendChild(editButton);
 }
 
