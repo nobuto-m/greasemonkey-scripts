@@ -364,7 +364,13 @@ Y.extend(ChoiceSource, Y.Widget, {
 });
 
 
-var work_item_statuses = ["TODO", "DONE", "POSTPONED"];
+var work_item_statuses = ["TODO", "DONE", "POSTPONED", "INPROGRESS", "BLOCKED"];
+var work_item_synonyms = {
+    "COMPLETED": "DONE",
+    "POSTPONE": "POSTPONED",
+    "DROP": "POSTPONED",
+    "DROPPED": "POSTPONED"
+};
 
 
 /*
@@ -456,17 +462,19 @@ function parseLinesIntoWorkItems (lines) {
     var work_items = [];
     for (var j = 0; j < lines.length; j++ ) {
         var item = Y.Lang.trim(lines[j][0]);
-        log(item);
         if (in_work_item_block) {
             if (!item.length) {
                 in_work_item_block = false;
             } else {
                 var colon_index = item.lastIndexOf(':');
                 if (colon_index > 0) {
+                    var status = Y.Lang.trim(item.slice(colon_index+1));
+                    status = status.toUpperCase();
+                    status = work_item_synonyms[status] || status;
                     work_items.push(
                         [
                             Y.Lang.trim(item.slice(0, colon_index)),
-                            Y.Lang.trim(item.slice(colon_index+1)),
+                            status,
                             lines[j][1],
                             lines[j][1].get("textContent").lastIndexOf(':')
                         ]
