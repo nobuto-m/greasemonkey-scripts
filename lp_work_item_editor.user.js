@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name           work item editor
+// @name           lp work item editor
 // @namespace      https://launchpad.net/~mwhudson
 // @include        https://blueprints.launchpad.net/*
 // @include        https://blueprints.staging.launchpad.net/*
@@ -428,6 +428,7 @@ function parseWhiteBoardIntoLines (paras) {
         function (nodeList) {
             nodeList.each(function (n) { children.push(n); } );
             children.push(Y.Node.create('<br/>'));
+            children.push(Y.Node.create('<br/>'));
         }
     );
     var lines = [];
@@ -450,25 +451,31 @@ function parseWhiteBoardIntoLines (paras) {
 }
 
 function parseLinesIntoWorkItems (lines) {
-    var seenWorkItems = false;
+    var work_items_re = /^work items(.*)\s*:\s*$/i;
+    var in_work_item_block = false;
     var work_items = [];
     for (var j = 0; j < lines.length; j++ ) {
-        if (seenWorkItems) {
-            var item = lines[j][0];
-            var colon_index = item.lastIndexOf(':');
-            if (colon_index > 0) {
-                work_items.push(
-                    [
-                        Y.Lang.trim(item.slice(0, colon_index)),
-                        Y.Lang.trim(item.slice(colon_index+1)),
-                        lines[j][1],
-                        lines[j][1].get("textContent").lastIndexOf(':')
-                    ]
-                );
+        var item = Y.Lang.trim(lines[j][0]);
+        log(item);
+        if (in_work_item_block) {
+            if (!item.length) {
+                in_work_item_block = false;
+            } else {
+                var colon_index = item.lastIndexOf(':');
+                if (colon_index > 0) {
+                    work_items.push(
+                        [
+                            Y.Lang.trim(item.slice(0, colon_index)),
+                            Y.Lang.trim(item.slice(colon_index+1)),
+                            lines[j][1],
+                            lines[j][1].get("textContent").lastIndexOf(':')
+                        ]
+                    );
+                }
             }
         }
-        else if (lines[j][0] == 'Work items:') {
-            seenWorkItems = true;
+        else if (work_items_re.test(item)) {
+            in_work_item_block = true;
         }
     }
     return work_items;
