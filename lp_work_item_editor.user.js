@@ -377,7 +377,7 @@ var work_item_synonyms = {
 
 
 /*
- * createWorkItemItem
+ * createWorkItemRow
  *
  * This creates a "[work item text][work item status][edit icon]" node
  * and uses the `insert' argument to insert it into the DOM.
@@ -392,11 +392,11 @@ var work_item_synonyms = {
  * `node' is a node within the original representation of the
  * whiteboard in the DOM.
  */
-function createWorkItemItem (insert, item_text, status) {
+function createWorkItemRow (insert, item_text, status) {
     var item = Y.Node.create('<tr style="border: 1px solid lightgrey;" />');
     var td = Y.Node.create('<td style="padding: 0.2em 1em 0.2em 0.2em" />');
     td.appendChild(item_text);
-    item.appendChild(td)
+    item.appendChild(td);
 
     var td = Y.Node.create('<td><span class="value"></span><span>&nbsp;<a href="#" class="editicon sprite edit"></a></span></td>');
     td.one('.value').set('text', status);
@@ -414,7 +414,7 @@ function createWorkItemItem (insert, item_text, status) {
             contentBox: td,
             value: status,
             title: 'Set workitem status',
-            items: items,
+            items: items
         }
     );
     insert(item);
@@ -492,40 +492,41 @@ function parseLinesIntoWorkItems (lines) {
     return work_items;
 }
 
-function clickAddWorkItem (e, ul, li, adds) {
+function clickAddWorkItem (e, item_container, add_item_row, adds) {
     e.preventDefault();
-    var body = Y.Node.create('<span/>');
-    body.appendChild('<input/>');
+    var overlayBody = Y.Node.create('<span/>');
+    overlayBody.appendChild('<input/>');
     var select = Y.Node.create('<select/>');
     for (var i = 0; i < work_item_statuses.length; i++) {
         select.appendChild(
             Y.Node.create('<option/>').setAttribute(
                  'value', work_item_statuses[i]).setContent(work_item_statuses[i]));
     }
-    body.appendChild(select);
-    body.appendChild(Y.Node.create('<button class="ov-add">Add</button>'));
-    body.appendChild(Y.Node.create('<button class="ov-cancel">Cancel</button>'));
+    overlayBody.appendChild(select);
+    overlayBody.appendChild(Y.Node.create('<button class="ov-add">Add</button>'));
+    overlayBody.appendChild(Y.Node.create('<button class="ov-cancel">Cancel</button>'));
     var overlay = new Y.lazr.PrettyOverlay(
         {
             align: {
                 points: [Y.WidgetPositionAlign.CC, Y.WidgetPositionAlign.CC]
             },
             headerContent: "<h2>Add new work item</h2>",
-            bodyContent: body,
+            bodyContent: overlayBody,
             visible: false,
             zIndex: 1001
         }
     );
     overlay.render();
-    body.one('.ov-cancel').on('click', overlay.destroy, overlay);
-    body.one('.ov-add').on(
+    overlayBody.one('.ov-cancel').on('click', overlay.destroy, overlay);
+    overlayBody.one('.ov-add').on(
        'click', function () {
-            var item_text = body.one('input').get('value'),
-                status = body.one('select').get('value'),
+            var item_text = overlayBody.one('input').get('value'),
+                status = overlayBody.one('select').get('value'),
                 add_index = adds.length;
             adds.push([item_text, status]);
-            var widget = createWorkItemItem(
-                function(li2) { ul.insertBefore(li2, li); }, item_text, status);
+            var widget = createWorkItemRow(
+                function (row) { item_container.insertBefore(row, add_item_row); }, 
+                item_text, status);
             widget.render();
             widget.on(
                 'save', function (e) {
@@ -536,7 +537,7 @@ function clickAddWorkItem (e, ul, li, adds) {
         }
     );
     overlay.show();
-    overlay.get('srcNode').one('input').focus();
+    overlayBody.one('input').focus();
 };
 
 function log (o) { unsafeWindow.console.log(o); }
@@ -587,7 +588,7 @@ function clickEdit (e) {
     var widgets = [];
     Y.Array.each(
         work_items, function (wi, index) {
-            var widget = createWorkItemItem(
+            var widget = createWorkItemRow(
                 function(li) { item_container.appendChild(li); },
                 wi[0], wi[1]);
             widgets.push(widget);
