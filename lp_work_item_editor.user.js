@@ -517,15 +517,15 @@ function clickAddWorkItem (e, ul, li, adds) {
         }
     );
     overlay.render();
-    overlay.get('srcNode').one('.ov-cancel').on('click', function () { overlay.destroy(); });
-    overlay.get('srcNode').one('.ov-add').on(
+    body.one('.ov-cancel').on('click', overlay.destroy, overlay);
+    body.one('.ov-add').on(
        'click', function () {
-            var item_text = overlay.get('srcNode').one('input').get('value'),
-                status = overlay.get('srcNode').one('select').get('value'),
+            var item_text = body.one('input').get('value'),
+                status = body.one('select').get('value'),
                 add_index = adds.length;
             adds.push([item_text, status]);
-            var widget = createWorkItemItem(function(li2) {
-                ul.insertBefore(li2, li); }, item_text, status);
+            var widget = createWorkItemItem(
+                function(li2) { ul.insertBefore(li2, li); }, item_text, status);
             widget.render();
             widget.on(
                 'save', function (e) {
@@ -626,10 +626,7 @@ function clickEdit (e) {
     overlayBody.one('.ov-ok').on(
         'click', applyEdits, overlay, work_items, edits, adds);
     overlayBody.one('.ov-cancel').on(
-        'click', function (e) {
-            overlay.destroy();
-        }
-    );
+        'click', overlay.destroy, overlay);
 
     overlay.show();
 }
