@@ -2,6 +2,7 @@
 // @name           lp work item editor
 // @namespace      https://launchpad.net/~mwhudson
 // @include        https://blueprints.launchpad.net/*
+// @include        https://blueprints.launchpad.dev/*
 // @include        https://blueprints.staging.launchpad.net/*
 // @include        https://blueprints.qastaging.launchpad.net/*
 // ==/UserScript==
