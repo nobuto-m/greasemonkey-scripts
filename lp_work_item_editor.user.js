@@ -557,15 +557,6 @@ function setUp () {
                 );
                 var lines = parseWhiteBoardIntoLines(p);
                 var work_items = parseLinesIntoWorkItems(lines);
-                //log(work_items);
-                var dep_header = null;
-                Y.all('h2').each(
-                    function (n) {
-                        if (n.get('text') == 'Dependency tree') {
-                            dep_header = n;
-                        }
-                    }
-                );
                 if (work_items.length > 0) {
                     var div = Y.Node.create('<div/>');
 
