@@ -171,6 +171,10 @@ ChoiceSource.ATTRS = {
 
     clickable_content: {
       value: true
+    },
+
+    zIndex: {
+      value: 1000
     }
 };
 
@@ -271,7 +275,7 @@ Y.extend(ChoiceSource, Y.Widget, {
             items:          this.get("items"),
             value_location: this.get("value_location"),
             progressbar:    false,
-            zIndex:         1001
+            zIndex:         this.get("zIndex")
         });
 
         var that = this;
@@ -415,7 +419,8 @@ function createWorkItemRow (insert, item_text, status) {
             contentBox: td,
             value: status,
             title: 'Set workitem status',
-            items: items
+            items: items,
+            zIndex: 1001
         }
     );
     insert(item);
