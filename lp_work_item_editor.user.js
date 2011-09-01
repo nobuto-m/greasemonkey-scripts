@@ -7,7 +7,9 @@
 // @include        https://blueprints.qastaging.launchpad.net/*
 // ==/UserScript==
 
-var Y = unsafeWindow.LPS;
+unsafeWindow.LPS.use(
+    'lazr.choiceedit', 'lazr.overlay', 'widget-position-align',
+    function (Y) {
 
 /*
  * TODO: parse out assignees?
@@ -648,3 +650,4 @@ function setUp () {
 }
 
 setUp();
+});
