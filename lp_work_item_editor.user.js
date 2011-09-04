@@ -7,6 +7,17 @@
 // @include        https://blueprints.qastaging.launchpad.net/*
 // ==/UserScript==
 
+
+// hack for chrome support from https://gist.github.com/1143845
+window.unsafeWindow || (
+    unsafeWindow = (function() {
+                        var el = document.createElement('p');
+                        el.setAttribute('onclick', 'return window;');
+                        return el.onclick();
+                    }())
+);
+
+
 unsafeWindow.LPS.use(
     'lazr.choiceedit', 'lazr.overlay', 'widget-position-align',
     function (Y) {
@@ -533,7 +544,7 @@ function clickAddWorkItem (e, item_container, add_item_row, adds) {
                 add_index = adds.length;
             adds.push([item_text, status]);
             var widget = createWorkItemRow(
-                function (row) { item_container.insertBefore(row, add_item_row); }, 
+                function (row) { item_container.insertBefore(row, add_item_row); },
                 item_text, status);
             widget.render();
             widget.on(
