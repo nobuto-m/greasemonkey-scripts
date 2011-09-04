@@ -2,11 +2,25 @@
 // @name           lp work item editor
 // @namespace      https://launchpad.net/~mwhudson
 // @include        https://blueprints.launchpad.net/*
+// @include        https://blueprints.launchpad.dev/*
 // @include        https://blueprints.staging.launchpad.net/*
 // @include        https://blueprints.qastaging.launchpad.net/*
 // ==/UserScript==
 
-var Y = unsafeWindow.LPS;
+
+// hack for chrome support from https://gist.github.com/1143845
+window.unsafeWindow || (
+    unsafeWindow = (function() {
+                        var el = document.createElement('p');
+                        el.setAttribute('onclick', 'return window;');
+                        return el.onclick();
+                    }())
+);
+
+
+unsafeWindow.LPS.use(
+    'lazr.choiceedit', 'lazr.overlay', 'widget-position-align',
+    function (Y) {
 
 /*
  * TODO: parse out assignees?
@@ -170,6 +184,10 @@ ChoiceSource.ATTRS = {
 
     clickable_content: {
       value: true
+    },
+
+    zIndex: {
+      value: 1000
     }
 };
 
@@ -270,7 +288,7 @@ Y.extend(ChoiceSource, Y.Widget, {
             items:          this.get("items"),
             value_location: this.get("value_location"),
             progressbar:    false,
-            zIndex:         1001
+            zIndex:         this.get("zIndex")
         });
 
         var that = this;
@@ -414,7 +432,8 @@ function createWorkItemRow (insert, item_text, status) {
             contentBox: td,
             value: status,
             title: 'Set workitem status',
-            items: items
+            items: items,
+            zIndex: 1001
         }
     );
     insert(item);
@@ -525,7 +544,7 @@ function clickAddWorkItem (e, item_container, add_item_row, adds) {
                 add_index = adds.length;
             adds.push([item_text, status]);
             var widget = createWorkItemRow(
-                function (row) { item_container.insertBefore(row, add_item_row); }, 
+                function (row) { item_container.insertBefore(row, add_item_row); },
                 item_text, status);
             widget.render();
             widget.on(
@@ -642,3 +661,4 @@ function setUp () {
 }
 
 setUp();
+});
