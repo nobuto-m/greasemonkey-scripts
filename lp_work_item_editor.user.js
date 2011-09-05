@@ -443,6 +443,25 @@ Y.extend(WorkItem, Y.Base, {
             assignee_td.appendChild('None');
         }
         //assignee_td.appendChild('<a href="#" class="editicon sprite edit"></a>');
+        var new_config = {
+            boundingBox: assignee_td,
+            contentBox: assignee_td,
+//            associated_field_id: associated_field_id,
+            align: {
+                points: [Y.WidgetPositionAlign.CC,
+                         Y.WidgetPositionAlign.CC]
+            },
+            progressbar: true,
+            progress: 100,
+//            headerContent: "<h2>" + header + "</h2>",
+//            steptitle: step_title,
+            zIndex: 1001,
+            visible: false,
+//            filter_options: vocabulary_filters
+        };
+
+        var picker = new Y.lazr.picker.PersonPicker(new_config);
+
         item_row.appendChild(assignee_td);
 
         var text_td = Y.Node.create(TD_TEMPLATE);
@@ -471,6 +490,7 @@ Y.extend(WorkItem, Y.Base, {
             }
         );
         insert(item_row);
+        picker.render();
         return widget;
     }
 });
@@ -613,24 +633,24 @@ function log (o) { unsafeWindow.console.log(o); }
 
 function applyEdits (e, work_items, edits, adds) {
     if (edits.length || adds.length) {
+        var new_work_items_parent = null;
+        if (work_items.length > 0) {
+            new_work_items_parent = work_items[work_items.length - 1].get('statusTextNode').ancestor('p');
+        } else {
+            new_work_items_parent = Y.Node.create('<p>Work Items:</p>');
+            Y.one("#edit-whiteboard div.yui3-editable_text-text").appendChild(new_work_items_parent);
+        }
         for (var i = 0; i < edits.length; i++) {
             var node = work_items[edits[i][0]].get('statusTextNode');
             var nodeTextPreserve = work_items[edits[i][0]].get('statusTextNodeOffset');
             var newText = node.get('text').slice(0, nodeTextPreserve) + ': ' + edits[i][1];
             node.set('text', newText);
         }
-        var q = null;
-        if (work_items.length > 0) {
-            q = work_items[work_items.length - 1].get('statusTextNode').ancestor('p');
-        } else {
-            q = Y.Node.create('<p>Work Items:</p>');
-            Y.one("#edit-whiteboard div.yui3-editable_text-text").appendChild(q);
-        }
         for (var j = 0; j < adds.length; j++) {
             var textNode = document.createTextNode(adds[j].get('text') + ': ' + adds[j].get('status'));
-            q.appendChild(Y.Node.create('<br/>'));
-            q.appendChild(document.createTextNode('\n'));
-            q.appendChild(textNode);
+            new_work_items_parent.appendChild(Y.Node.create('<br/>'));
+            new_work_items_parent.appendChild(document.createTextNode('\n'));
+            new_work_items_parent.appendChild(textNode);
         }
         var editableText = Y.lp.widgets['edit-whiteboard'];
         Y.one('#edit-whiteboard .edit').replaceClass('edit', 'loading');
