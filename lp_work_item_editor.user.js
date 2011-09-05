@@ -589,7 +589,7 @@ function parseLinesIntoWorkItems (lines) {
     return work_items;
 }
 
-function clickAddWorkItem (e, item_container, add_item_row, work_items) {
+function clickAddWorkItem (e, insert_row, work_items) {
     e.preventDefault();
     var overlayBody = Y.Node.create('<span/>');
     overlayBody.appendChild('<input/>');
@@ -628,7 +628,7 @@ function clickAddWorkItem (e, item_container, add_item_row, work_items) {
                     });
             work_items.push(new_work_item);
             var widget = new_work_item.createWorkItemRow(
-                function (row) { item_container.insertBefore(row, add_item_row); });
+                insert_row);
             widget.render();
             widget.on(
                 'save', function (e) {
@@ -690,7 +690,7 @@ function clickEdit (e) {
     var link = Y.Node.create(
         '<td style="text-align="right" colspan="3"><a href="#" class="sprite add js-action">Add new work item</a></td>');
     link.on(
-        'click', clickAddWorkItem, link, item_container, add_item_row, work_items);
+        'click', clickAddWorkItem, link, function (row) { item_container.insertBefore(row, add_item_row); }, work_items);
     add_item_row.appendChild(link);
     item_container.appendChild(add_item_row);
     overlayBody.appendChild(item_container);
