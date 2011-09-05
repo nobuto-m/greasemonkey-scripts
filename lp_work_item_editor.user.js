@@ -7,9 +7,8 @@
 // @include        https://blueprints.qastaging.launchpad.net/*
 // ==/UserScript==
 
-
 // hack for chrome support from https://gist.github.com/1143845
-window.unsafeWindow || (
+unsafeWindow.LPS || (
     unsafeWindow = (function() {
                         var el = document.createElement('p');
                         el.setAttribute('onclick', 'return window;');
