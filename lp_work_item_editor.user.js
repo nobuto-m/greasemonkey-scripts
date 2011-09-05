@@ -490,7 +490,7 @@ Y.extend(WorkItem, Y.Base, {
             }
         );
         insert(item_row);
-        picker.render();
+//        picker.render();
         return widget;
     }
 });
