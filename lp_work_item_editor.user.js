@@ -415,54 +415,48 @@ WorkItem.ATTRS = {
 };
 
 Y.extend(WorkItem, Y.Base, {
-    
+    /**
+     * createWorkItemRow
+     *
+     * This creates a "[work item text][work item status][edit icon]" node
+     * and uses the `insert' argument to insert it into the DOM.
+     *
+     * This `insert' argument is a bit awkward (it would be neater to just
+     * return the node) but it seems the node has to be in the DOM before
+     * the widget that does the editing can be created successfully.
+     */
+    createWorkItemRow: function (insert) {
+        var item_row = Y.Node.create('<tr style="border: 1px solid lightgrey;" />');
+        var text_td = Y.Node.create('<td style="padding: 0.2em 1em 0.2em 0.2em" />');
+        text_td.appendChild(this.get('text'));
+        item_row.appendChild(text_td);
+
+        var status_td = Y.Node.create(
+            '<td><span class="value"></span><span>&nbsp;<a href="#" class="editicon sprite edit"></a></span></td>');
+        status_td.one('.value').set('text', this.get('status'));
+
+        item_row.appendChild(status_td);
+
+        var items = [];
+        Y.Array.each(
+            work_item_statuses, function (s) {
+                items.push({name: s, value:s});
+            });
+        var widget = new ChoiceSource(
+            {
+                boundingBox: status_td,
+                contentBox: status_td,
+                value: status,
+                title: 'Set workitem status',
+                items: items,
+                zIndex: 1001
+            }
+        );
+        insert(item_row);
+        return widget;
+    }
 });
 
-/*
- * createWorkItemRow
- *
- * This creates a "[work item text][work item status][edit icon]" node
- * and uses the `insert' argument to insert it into the DOM.
- *
- * This `insert' argument is a bit awkward (it would be neater to just
- * return the node) but it seems the node has to be in the DOM before
- * the widget that does the editing can be created successfully.
- *
- * The nodeTextPreserve argument is a bit of an odd one too: when
- * editing the status, the textContent from the index position
- * `nodeTextPreserve' of `node' is replaced with the new status.
- * `node' is a node within the original representation of the
- * whiteboard in the DOM.
- */
-function createWorkItemRow (insert, item_text, status) {
-    var item = Y.Node.create('<tr style="border: 1px solid lightgrey;" />');
-    var td = Y.Node.create('<td style="padding: 0.2em 1em 0.2em 0.2em" />');
-    td.appendChild(item_text);
-    item.appendChild(td);
-
-    var td = Y.Node.create('<td><span class="value"></span><span>&nbsp;<a href="#" class="editicon sprite edit"></a></span></td>');
-    td.one('.value').set('text', status);
-
-    item.appendChild(td);
-
-    var items = [];
-    Y.Array.each(
-        work_item_statuses, function (s) {
-            items.push({name: s, value:s});
-        });
-    var widget = new ChoiceSource(
-        {
-            boundingBox: td,
-            contentBox: td,
-            value: status,
-            title: 'Set workitem status',
-            items: items,
-            zIndex: 1001
-        }
-    );
-    insert(item);
-    return widget;
-}
 
 /*
  * Parse the white board into lines.
@@ -566,16 +560,22 @@ function clickAddWorkItem (e, item_container, add_item_row, adds) {
        'click', function () {
             var item_text = overlayBody.one('input').get('value'),
                 status = overlayBody.one('select').get('value'),
-                add_index = adds.length;
-            adds.push([item_text, status]);
-            var widget = createWorkItemRow(
-                function (row) { item_container.insertBefore(row, add_item_row); },
-                item_text, status);
+                add_index = adds.length,
+                new_work_item = new WorkItem(
+                    {
+                        text: item_text,
+                        status: status,
+                        statusTextNode: null,
+                        statusTextNodeOffset: null
+                    });
+            adds.push(new_work_item);
+            var widget = new_work_item.createWorkItemRow(
+                function (row) { item_container.insertBefore(row, add_item_row); });
             widget.render();
             widget.on(
                 'save', function (e) {
                     e.preventDefault();
-                    adds[add_index][1] = widget.get('value');
+                    adds[add_index].set('status', widget.get('value'));
                 });
             overlay.destroy();
         }
@@ -602,7 +602,7 @@ function applyEdits (e, work_items, edits, adds) {
             Y.one("#edit-whiteboard div.yui3-editable_text-text").appendChild(q);
         }
         for (var j = 0; j < adds.length; j++) {
-            var textNode = document.createTextNode(adds[j][0] + ': ' + adds[j][1]);
+            var textNode = document.createTextNode(adds[j].get('text') + ': ' + adds[j].get('status'));
             q.appendChild(Y.Node.create('<br/>'));
             q.appendChild(document.createTextNode('\n'));
             q.appendChild(textNode);
@@ -632,9 +632,7 @@ function clickEdit (e) {
     var widgets = [];
     Y.Array.each(
         work_items, function (wi, index) {
-            var widget = createWorkItemRow(
-                function(li) { item_container.appendChild(li); },
-                wi.get('text'), wi.get('status'));
+            var widget = wi.createWorkItemRow(function(li) { item_container.appendChild(li);});
             widgets.push(widget);
             widget.on(
                 'save', function (e) {
