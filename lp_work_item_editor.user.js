@@ -391,6 +391,9 @@ var work_item_synonyms = {
     "DROP": "POSTPONED",
     "DROPPED": "POSTPONED"
 };
+var TD_TEMPLATE = '<td style="padding: 0.2em 1em 0.2em 0.2em" />';
+var TH_TEMPLATE = '<th style="border: 1px solid lightgrey; padding: 0.2em 1em 0.2em 0.2em; font-weight: bold; text-align: center" />';
+var TR_TEMPLATE = '<tr style="border: 1px solid lightgrey;" />';
 
 function WorkItem (config) {
     WorkItem.superclass.constructor.apply(this, arguments);
@@ -426,8 +429,8 @@ Y.extend(WorkItem, Y.Base, {
      * the widget that does the editing can be created successfully.
      */
     createWorkItemRow: function (insert) {
-        var item_row = Y.Node.create('<tr style="border: 1px solid lightgrey;" />');
-        var text_td = Y.Node.create('<td style="padding: 0.2em 1em 0.2em 0.2em" />');
+        var item_row = Y.Node.create(TR_TEMPLATE);
+        var text_td = Y.Node.create(TD_TEMPLATE);
         text_td.appendChild(this.get('text'));
         item_row.appendChild(text_td);
 
@@ -627,6 +630,13 @@ function clickEdit (e) {
     var overlayBody = Y.Node.create('<div/>');
 
     var item_container = Y.Node.create('<table style="margin: 1em" />');
+    var headings = Y.Node.create(TR_TEMPLATE);
+    Y.Array.each(
+        ['Work item description', 'Status'],
+        function (heading) {
+            headings.appendChild(Y.Node.create(TH_TEMPLATE).set('text', heading));
+        });
+    item_container.appendChild(headings);
     var edits = [];
     var adds = [];
     var widgets = [];
