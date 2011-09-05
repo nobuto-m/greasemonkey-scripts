@@ -492,6 +492,20 @@ Y.extend(WorkItem, Y.Base, {
         insert(item_row);
 //        picker.render();
         return widget;
+    },
+
+    saveToDom: function (new_work_items_parent) {
+        if (this.get('statusTextNode')) {
+            var node = this.get('statusTextNode');
+            var nodeTextPreserve = this.get('statusTextNodeOffset');
+            var newText = node.get('text').slice(0, nodeTextPreserve) + ': ' + this.get('status');
+            node.set('text', newText);
+        } else {
+            var textNode = document.createTextNode(this.get('text') + ': ' + this.get('status'));
+            new_work_items_parent.appendChild(Y.Node.create('<br/>'));
+            new_work_items_parent.appendChild(document.createTextNode('\n'));
+            new_work_items_parent.appendChild(textNode);
+        }
     }
 });
 
@@ -575,7 +589,7 @@ function parseLinesIntoWorkItems (lines) {
     return work_items;
 }
 
-function clickAddWorkItem (e, item_container, add_item_row, adds) {
+function clickAddWorkItem (e, item_container, add_item_row, work_items) {
     e.preventDefault();
     var overlayBody = Y.Node.create('<span/>');
     overlayBody.appendChild('<input/>');
@@ -605,7 +619,6 @@ function clickAddWorkItem (e, item_container, add_item_row, adds) {
        'click', function () {
             var item_text = overlayBody.one('input').get('value'),
                 status = overlayBody.one('select').get('value'),
-                add_index = adds.length,
                 new_work_item = new WorkItem(
                     {
                         text: item_text,
@@ -613,14 +626,14 @@ function clickAddWorkItem (e, item_container, add_item_row, adds) {
                         statusTextNode: null,
                         statusTextNodeOffset: null
                     });
-            adds.push(new_work_item);
+            work_items.push(new_work_item);
             var widget = new_work_item.createWorkItemRow(
                 function (row) { item_container.insertBefore(row, add_item_row); });
             widget.render();
             widget.on(
                 'save', function (e) {
                     e.preventDefault();
-                    adds[add_index].set('status', widget.get('value'));
+                    new_work_item.set('status', widget.get('value'));
                 });
             overlay.destroy();
         }
@@ -631,37 +644,19 @@ function clickAddWorkItem (e, item_container, add_item_row, adds) {
 
 function log (o) { unsafeWindow.console.log(o); }
 
-function applyEdits (e, work_items, edits, adds) {
-    if (edits.length || adds.length) {
-        var new_work_items_parent = null;
-        if (work_items.length > 0) {
-            new_work_items_parent = work_items[work_items.length - 1].get('statusTextNode').ancestor('p');
-        } else {
-            new_work_items_parent = Y.Node.create('<p>Work Items:</p>');
-            Y.one("#edit-whiteboard div.yui3-editable_text-text").appendChild(new_work_items_parent);
-        }
-        for (var i = 0; i < edits.length; i++) {
-            var node = work_items[edits[i][0]].get('statusTextNode');
-            var nodeTextPreserve = work_items[edits[i][0]].get('statusTextNodeOffset');
-            var newText = node.get('text').slice(0, nodeTextPreserve) + ': ' + edits[i][1];
-            node.set('text', newText);
-        }
-        for (var j = 0; j < adds.length; j++) {
-            var textNode = document.createTextNode(adds[j].get('text') + ': ' + adds[j].get('status'));
-            new_work_items_parent.appendChild(Y.Node.create('<br/>'));
-            new_work_items_parent.appendChild(document.createTextNode('\n'));
-            new_work_items_parent.appendChild(textNode);
-        }
-        var editableText = Y.lp.widgets['edit-whiteboard'];
-        Y.one('#edit-whiteboard .edit').replaceClass('edit', 'loading');
-        var handle = editableText.editor.on(
-            'save', function () {
-                handle.detach();
-                Y.one('#edit-whiteboard .loading').replaceClass('loading', 'edit');
-            });
-        editableText.editor.setInput(editableText.get('value'));
-        editableText.editor.save();
+function applyEdits (e, work_items, new_work_items_parent) {
+    for (var i = 0; i < work_items.length; i++) {
+        work_items[i].saveToDom(new_work_items_parent);
     }
+    var editableText = Y.lp.widgets['edit-whiteboard'];
+    Y.one('#edit-whiteboard .edit').replaceClass('edit', 'loading');
+    var handle = editableText.editor.on(
+        'save', function () {
+            handle.detach();
+            Y.one('#edit-whiteboard .loading').replaceClass('loading', 'edit');
+        });
+    editableText.editor.setInput(editableText.get('value'));
+    editableText.editor.save();
     this.destroy();
 }
 
@@ -679,8 +674,6 @@ function clickEdit (e) {
             headings.appendChild(Y.Node.create(TH_TEMPLATE).set('text', heading));
         });
     item_container.appendChild(headings);
-    var edits = [];
-    var adds = [];
     var widgets = [];
     Y.Array.each(
         work_items, function (wi, index) {
@@ -689,7 +682,7 @@ function clickEdit (e) {
             widget.on(
                 'save', function (e) {
                     e.preventDefault();
-                    edits.push([index, widget.get('value')]);
+                    wi.set('status', widget.get('value'));
                 });
         }
     );
@@ -697,7 +690,7 @@ function clickEdit (e) {
     var link = Y.Node.create(
         '<td style="text-align="right" colspan="2"><a href="#" class="sprite add js-action">Add new work item</a></td>');
     link.on(
-        'click', clickAddWorkItem, link, item_container, add_item_row, adds);
+        'click', clickAddWorkItem, link, item_container, add_item_row, work_items);
     add_item_row.appendChild(link);
     item_container.appendChild(add_item_row);
     overlayBody.appendChild(item_container);
@@ -718,8 +711,16 @@ function clickEdit (e) {
     overlay.render();
     Y.Array.each(widgets, function (w) { w.render(); });
 
+    var new_work_items_parent = null;
+    if (work_items.length > 0) {
+        new_work_items_parent = work_items[work_items.length - 1].get('statusTextNode').ancestor('p');
+    } else {
+        new_work_items_parent = Y.Node.create('<p>Work Items:</p>');
+        Y.one("#edit-whiteboard div.yui3-editable_text-text").appendChild(new_work_items_parent);
+    }
+
     overlayBody.one('.ov-ok').on(
-        'click', applyEdits, overlay, work_items, edits, adds);
+        'click', applyEdits, overlay, work_items, new_work_items_parent);
     overlayBody.one('.ov-cancel').on(
         'click', overlay.destroy, overlay);
 
