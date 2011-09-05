@@ -443,24 +443,24 @@ Y.extend(WorkItem, Y.Base, {
             assignee_td.appendChild('None');
         }
         //assignee_td.appendChild('<a href="#" class="editicon sprite edit"></a>');
-        var new_config = {
-            boundingBox: assignee_td,
-            contentBox: assignee_td,
-//            associated_field_id: associated_field_id,
-            align: {
-                points: [Y.WidgetPositionAlign.CC,
-                         Y.WidgetPositionAlign.CC]
-            },
-            progressbar: true,
-            progress: 100,
-//            headerContent: "<h2>" + header + "</h2>",
-//            steptitle: step_title,
-            zIndex: 1001,
-            visible: false,
-//            filter_options: vocabulary_filters
-        };
+//         var new_config = {
+//             boundingBox: assignee_td,
+//             contentBox: assignee_td,
+// //            associated_field_id: associated_field_id,
+//             align: {
+//                 points: [Y.WidgetPositionAlign.CC,
+//                          Y.WidgetPositionAlign.CC]
+//             },
+//             progressbar: true,
+//             progress: 100,
+// //            headerContent: "<h2>" + header + "</h2>",
+// //            steptitle: step_title,
+//             zIndex: 1001,
+//             visible: false,
+// //            filter_options: vocabulary_filters
+//         };
 
-        var picker = new Y.lazr.picker.PersonPicker(new_config);
+//         var picker = new Y.lazr.picker.PersonPicker(new_config);
 
         item_row.appendChild(assignee_td);
 
