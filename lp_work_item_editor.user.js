@@ -688,7 +688,7 @@ function clickEdit (e) {
     );
     var add_item_row = Y.Node.create('<tr/>');
     var link = Y.Node.create(
-        '<td style="text-align="right" colspan="2"><a href="#" class="sprite add js-action">Add new work item</a></td>');
+        '<td style="text-align="right" colspan="3"><a href="#" class="sprite add js-action">Add new work item</a></td>');
     link.on(
         'click', clickAddWorkItem, link, item_container, add_item_row, work_items);
     add_item_row.appendChild(link);
