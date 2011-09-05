@@ -430,6 +430,12 @@ Y.extend(WorkItem, Y.Base, {
      */
     createWorkItemRow: function (insert) {
         var item_row = Y.Node.create(TR_TEMPLATE);
+
+        var assignee_td = Y.Node.create(TD_TEMPLATE);
+        assignee_td.appendChild('None');
+        assignee_td.appendChild('<a href="#" class="editicon sprite edit"></a>');
+        item_row.appendChild(assignee_td);
+
         var text_td = Y.Node.create(TD_TEMPLATE);
         text_td.appendChild(this.get('text'));
         item_row.appendChild(text_td);
@@ -632,7 +638,7 @@ function clickEdit (e) {
     var item_container = Y.Node.create('<table style="margin: 1em" />');
     var headings = Y.Node.create(TR_TEMPLATE);
     Y.Array.each(
-        ['Work item description', 'Status'],
+        ['Assignee', 'Work item description', 'Status'],
         function (heading) {
             headings.appendChild(Y.Node.create(TH_TEMPLATE).set('text', heading));
         });
