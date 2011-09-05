@@ -392,6 +392,31 @@ var work_item_synonyms = {
     "DROPPED": "POSTPONED"
 };
 
+function WorkItem (config) {
+    WorkItem.superclass.constructor.apply(this, arguments);
+}
+
+WorkItem.ATTRS = {
+    text: {
+
+    },
+
+    status: {
+
+    },
+
+    statusTextNode: {
+
+    },
+
+    statusTextNodeOffset: {
+
+    }
+};
+
+Y.extend(WorkItem, Y.Base, {
+    
+});
 
 /*
  * createWorkItemRow
@@ -493,12 +518,13 @@ function parseLinesIntoWorkItems (lines) {
                     status = status.toUpperCase();
                     status = work_item_synonyms[status] || status;
                     work_items.push(
-                        [
-                            Y.Lang.trim(item.slice(0, colon_index)),
-                            status,
-                            lines[j][1],
-                            lines[j][1].get("textContent").lastIndexOf(':')
-                        ]
+                        new WorkItem(
+                            {
+                                text: Y.Lang.trim(item.slice(0, colon_index)),
+                                status: status,
+                                statusTextNode: lines[j][1],
+                                statusTextNodeOffset: lines[j][1].get("textContent").lastIndexOf(':')
+                            })
                     );
                 }
             }
@@ -563,14 +589,14 @@ function log (o) { unsafeWindow.console.log(o); }
 function applyEdits (e, work_items, edits, adds) {
     if (edits.length || adds.length) {
         for (var i = 0; i < edits.length; i++) {
-            var node = work_items[edits[i][0]][2];
-            var nodeTextPreserve = work_items[edits[i][0]][3];
+            var node = work_items[edits[i][0]].get('statusTextNode');
+            var nodeTextPreserve = work_items[edits[i][0]].get('statusTextNodeOffset');
             var newText = node.get('text').slice(0, nodeTextPreserve) + ': ' + edits[i][1];
             node.set('text', newText);
         }
         var q = null;
         if (work_items.length > 0) {
-            q = work_items[work_items.length - 1][2].ancestor('p');
+            q = work_items[work_items.length - 1].get('statusTextNode').ancestor('p');
         } else {
             q = Y.Node.create('<p>Work Items:</p>');
             Y.one("#edit-whiteboard div.yui3-editable_text-text").appendChild(q);
@@ -608,7 +634,7 @@ function clickEdit (e) {
         work_items, function (wi, index) {
             var widget = createWorkItemRow(
                 function(li) { item_container.appendChild(li); },
-                wi[0], wi[1]);
+                wi.get('text'), wi.get('status'));
             widgets.push(widget);
             widget.on(
                 'save', function (e) {
