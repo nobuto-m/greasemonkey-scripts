@@ -400,6 +400,10 @@ function WorkItem (config) {
 }
 
 WorkItem.ATTRS = {
+    assignee: {
+
+    },
+
     text: {
 
     },
@@ -432,8 +436,13 @@ Y.extend(WorkItem, Y.Base, {
         var item_row = Y.Node.create(TR_TEMPLATE);
 
         var assignee_td = Y.Node.create(TD_TEMPLATE);
-        assignee_td.appendChild('None');
-        assignee_td.appendChild('<a href="#" class="editicon sprite edit"></a>');
+        var assignee = this.get('assignee');
+        if (assignee) {
+            assignee_td.appendChild(assignee);
+        } else {
+            assignee_td.appendChild('None');
+        }
+        //assignee_td.appendChild('<a href="#" class="editicon sprite edit"></a>');
         item_row.appendChild(assignee_td);
 
         var text_td = Y.Node.create(TD_TEMPLATE);
@@ -517,13 +526,20 @@ function parseLinesIntoWorkItems (lines) {
             } else {
                 var colon_index = item.lastIndexOf(':');
                 if (colon_index > 0) {
-                    var status = Y.Lang.trim(item.slice(colon_index+1));
+                    var assignee = null,
+                        text = Y.Lang.trim(item.slice(0, colon_index)),
+                        status = Y.Lang.trim(item.slice(colon_index+1));
+                    if (text[0] == '[' && text.indexOf(']') > 0) {
+                        assignee = text.slice(1, text.indexOf(']'));
+                        text = text.slice(text.indexOf(']') + 1);
+                    }
                     status = status.toUpperCase();
                     status = work_item_synonyms[status] || status;
                     work_items.push(
                         new WorkItem(
                             {
-                                text: Y.Lang.trim(item.slice(0, colon_index)),
+                                assignee: assignee,
+                                text: text,
                                 status: status,
                                 statusTextNode: lines[j][1],
                                 statusTextNodeOffset: lines[j][1].get("textContent").lastIndexOf(':')
