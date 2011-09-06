@@ -70,14 +70,9 @@ Y.extend(WorkItem, Y.Base, {
     /**
      * createWorkItemRow
      *
-     * This creates a "[work item text][work item status][edit icon]" node
-     * and uses the `insert' argument to insert it into the DOM.
-     *
-     * This `insert' argument is a bit awkward (it would be neater to just
-     * return the node) but it seems the node has to be in the DOM before
-     * the widget that does the editing can be created successfully.
+     * This creates a "[work item text][work item status][edit icon]" node.
      */
-    createWorkItemRow: function (insert) {
+    createWorkItemRow: function () {
         var item_row = Y.Node.create(TR_TEMPLATE);
 
         var assignee_td = Y.Node.create(TD_TEMPLATE);
@@ -166,9 +161,8 @@ Y.extend(WorkItem, Y.Base, {
                 e.preventDefault();
                 that.set('status', widget.get('value'));
             });
-        insert(item_row);
 //        picker.render();
-        return widget;
+        return item_row;
     },
 
     saveToDom: function (new_work_items_parent) {
@@ -304,7 +298,7 @@ function clickAddWorkItem (e, insert_row, work_items) {
                         statusTextNodeOffset: null
                     });
             work_items.push(new_work_item);
-            new_work_item.createWorkItemRow(insert_row);
+            insert_row(new_work_item.createWorkItemRow());
             overlay.destroy();
         }
     );
@@ -346,7 +340,7 @@ function clickEdit (e) {
     item_container.appendChild(headings);
     Y.Array.each(
         work_items, function (wi) {
-            wi.createWorkItemRow(function(li) { item_container.appendChild(li);});
+            item_container.appendChild(wi.createWorkItemRow());
         }
     );
     var add_item_row = Y.Node.create('<tr/>');
