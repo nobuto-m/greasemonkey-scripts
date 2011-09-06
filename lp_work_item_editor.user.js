@@ -133,7 +133,7 @@ Y.extend(WorkItem, Y.Base, {
         item_row.appendChild(assignee_td);
 
         var text_td = Y.Node.create(TD_TEMPLATE);
-        text_td.appendChild(this.get('text'));
+        text_td.appendChild(document.createTextNode(this.get('text')));
         item_row.appendChild(text_td);
 
         var status_td = Y.Node.create(
