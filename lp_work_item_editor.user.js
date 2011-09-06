@@ -80,13 +80,37 @@ Y.extend(WorkItem, Y.Base, {
         var item_row = Y.Node.create(TR_TEMPLATE);
 
         var assignee_td = Y.Node.create(TD_TEMPLATE);
+        var urlBase = Y.one('base').getAttribute('href').replace(
+                /([a-z]*):\/\/blueprints.([^/]*)\/.*/, '$1://$2/~');
         var assignee = this.get('assignee');
         if (assignee) {
-            assignee_td.appendChild(assignee);
+            assignee_td.appendChild(
+                Y.Node.create('<a/>').set(
+                    'text', assignee).setAttribute(
+                        'href', urlBase + assignee));
         } else {
             assignee_td.appendChild('None');
         }
-        //assignee_td.appendChild('<a href="#" class="editicon sprite edit"></a>');
+        // var editicon = Y.Node.create('<a href="#" class="editicon sprite edit"></a>');
+        // editicon.setStyle('opacity', 0.0);
+        // function fadeToHandler(opacity, duration) {
+        //     function fade (e) {
+        //         Y.log(e.target);
+        //         var a = new Y.Anim(
+        //             {
+        //                 node: editicon,
+        //                 to: {opacity: opacity},
+        //                 duration: duration,
+        //                 easing:   Y.Easing.easeOut
+        //             }
+        //         );
+        //         a.run();
+        //     }
+        //     return fade;
+        // }
+        // assignee_td.on('mouseenter', fadeToHandler(1.0, 0.1));
+        // assignee_td.on('mouseleave', fadeToHandler(0.0, 0.3));
+        // assignee_td.appendChild(editicon);
 //         var new_config = {
 //             boundingBox: assignee_td,
 //             contentBox: assignee_td,
