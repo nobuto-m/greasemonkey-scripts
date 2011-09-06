@@ -38,6 +38,7 @@ var work_item_synonyms = {
 var TD_TEMPLATE = '<td style="padding: 0.2em 1em 0.2em 0.2em" />';
 var TH_TEMPLATE = '<th style="border: 1px solid lightgrey; padding: 0.2em 1em 0.2em 0.2em; font-weight: bold; text-align: center" />';
 var TR_TEMPLATE = '<tr style="border: 1px solid lightgrey;" />';
+var EDITICON_TEMPLATE = '<a href="#" class="editicon sprite edit"></a>';
 
 function WorkItem (config) {
     WorkItem.superclass.constructor.apply(this, arguments);
@@ -137,7 +138,8 @@ Y.extend(WorkItem, Y.Base, {
         item_row.appendChild(text_td);
 
         var status_td = Y.Node.create(
-            '<td><span class="value"></span><span>&nbsp;<a href="#" class="editicon sprite edit"></a></span></td>');
+            '<td><span class="value"></span><span class="button">&nbsp;</span></td>');
+        status_td.one('.button').appendChild(EDITICON_TEMPLATE);
         status_td.one('.value').set('text', this.get('status'));
 
         item_row.appendChild(status_td);
