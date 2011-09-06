@@ -306,8 +306,6 @@ function clickAddWorkItem (e, insert_row, work_items) {
     overlayBody.one('input').focus();
 };
 
-function log (o) { unsafeWindow.console.log(o); }
-
 function applyEdits (e, work_items, new_work_items_parent) {
     for (var i = 0; i < work_items.length; i++) {
         work_items[i].saveToDom(new_work_items_parent);
