@@ -159,6 +159,13 @@ Y.extend(WorkItem, Y.Base, {
                 zIndex: 1001
             }
         );
+        widget.render(item_row);
+        var that = this;
+        widget.on(
+            'save', function (e) {
+                e.preventDefault();
+                that.set('status', widget.get('value'));
+            });
         insert(item_row);
 //        picker.render();
         return widget;
@@ -297,14 +304,7 @@ function clickAddWorkItem (e, insert_row, work_items) {
                         statusTextNodeOffset: null
                     });
             work_items.push(new_work_item);
-            var widget = new_work_item.createWorkItemRow(
-                insert_row);
-            widget.render();
-            widget.on(
-                'save', function (e) {
-                    e.preventDefault();
-                    new_work_item.set('status', widget.get('value'));
-                });
+            new_work_item.createWorkItemRow(insert_row);
             overlay.destroy();
         }
     );
@@ -344,16 +344,9 @@ function clickEdit (e) {
             headings.appendChild(Y.Node.create(TH_TEMPLATE).set('text', heading));
         });
     item_container.appendChild(headings);
-    var widgets = [];
     Y.Array.each(
-        work_items, function (wi, index) {
-            var widget = wi.createWorkItemRow(function(li) { item_container.appendChild(li);});
-            widgets.push(widget);
-            widget.on(
-                'save', function (e) {
-                    e.preventDefault();
-                    wi.set('status', widget.get('value'));
-                });
+        work_items, function (wi) {
+            wi.createWorkItemRow(function(li) { item_container.appendChild(li);});
         }
     );
     var add_item_row = Y.Node.create('<tr/>');
@@ -379,7 +372,6 @@ function clickEdit (e) {
         }
     );
     overlay.render();
-    Y.Array.each(widgets, function (w) { w.render(); });
 
     var new_work_items_parent = null;
     if (work_items.length > 0) {
