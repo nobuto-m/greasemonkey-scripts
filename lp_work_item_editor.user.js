@@ -23,7 +23,6 @@ unsafeWindow.LPS.use(
     function (Y) {
 
 /*
- * TODO: parse out assignees?
  * TODO: allow removing work items
  * TODO: allow reordering work items
  * TODO: allow editing the text of a work item
