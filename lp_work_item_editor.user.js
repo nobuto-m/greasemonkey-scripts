@@ -58,11 +58,7 @@ WorkItem.ATTRS = {
 
     },
 
-    statusTextNode: {
-
-    },
-
-    statusTextNodeOffset: {
+    statusTextNodes: {
 
     }
 };
@@ -167,7 +163,8 @@ Y.extend(WorkItem, Y.Base, {
         var act = e.target;
         var picker = Y.lp.app.picker.create(
             'ValidPersonOrTeam', {
-                picker_type: "person"
+                picker_type: "person",
+                selected_value: this.get('assignee')
             });
         picker.set('zIndex', 1001);
         picker.show();
@@ -178,17 +175,24 @@ Y.extend(WorkItem, Y.Base, {
             }, this);
     },
 
+    toTextNode: function () {
+        var work_item_text = '\n';
+        if (this.get('assignee')) {
+            work_item_text += '[' + this.get('assignee') + '] ';
+        }
+        work_item_text += this.get('text') + ': ' + this.get('status');
+        return document.createTextNode(work_item_text);
+    },
+
     saveToDom: function (new_work_items_parent) {
-        if (this.get('statusTextNode')) {
-            var node = this.get('statusTextNode');
-            var nodeTextPreserve = this.get('statusTextNodeOffset');
-            var newText = node.get('text').slice(0, nodeTextPreserve) + ': ' + this.get('status');
-            node.set('text', newText);
+        if (this.get('statusTextNodes')) {
+            var nodes = this.get('statusTextNodes');
+            var parent = nodes[0].ancestor();
+            parent.insertBefore(this.toTextNode(), nodes[0]);
+            Y.Array.each(nodes, function (n) { n.remove(); });
         } else {
-            var textNode = document.createTextNode(this.get('text') + ': ' + this.get('status'));
             new_work_items_parent.appendChild(Y.Node.create('<br/>'));
-            new_work_items_parent.appendChild(document.createTextNode('\n'));
-            new_work_items_parent.appendChild(textNode);
+            new_work_items_parent.appendChild(this.toTextNode());
         }
     }
 });
@@ -198,9 +202,8 @@ Y.extend(WorkItem, Y.Base, {
  * Parse the white board into lines.
  *
  * parse the whiteboard out of the DOM into an array of lines -- each
- * entry in the array is [<text content of the line>, <node that
- * contains the last bit of the text content>] so that the text can be
- * edited later.
+ * entry in the array is [<text content of the line>, [<nodes that
+ * make up line>] so that the text can be edited later.
  */
 
 function parseWhiteBoardIntoLines (paras) {
@@ -215,19 +218,20 @@ function parseWhiteBoardIntoLines (paras) {
     );
     var lines = [];
     var cur_line = "";
-    var last_text_node = null;
+    var cur_line_nodes = [];
     for (var i = 0; i < children.length; i++ ) {
         var n = children[i];
         if (n.get('nodeName') == 'BR') {
-            lines.push([cur_line, last_text_node]);
+            lines.push([cur_line, cur_line_nodes]);
             cur_line = "";
+            cur_line_nodes = [];
         } else {
             cur_line += n.get('textContent');
-            last_text_node = n;
+            cur_line_nodes.push(n);
         }
     }
     if (cur_line) {
-        lines.push([cur_line, last_text_node]);
+        lines.push([cur_line, cur_line_nodes]);
     }
     return lines;
 }
@@ -259,8 +263,7 @@ function parseLinesIntoWorkItems (lines) {
                                 assignee: assignee,
                                 text: text,
                                 status: status,
-                                statusTextNode: lines[j][1],
-                                statusTextNodeOffset: lines[j][1].get("textContent").lastIndexOf(':')
+                                statusTextNodes: lines[j][1]
                             })
                     );
                 }
@@ -307,8 +310,7 @@ function clickAddWorkItem (e, insert_row, work_items) {
                     {
                         text: item_text,
                         status: status,
-                        statusTextNode: null,
-                        statusTextNodeOffset: null
+                        statusTextNodes: null
                     });
             work_items.push(new_work_item);
             insert_row(new_work_item.createWorkItemRow());
@@ -380,7 +382,7 @@ function clickEdit (e) {
 
     var new_work_items_parent = null;
     if (work_items.length > 0) {
-        new_work_items_parent = work_items[work_items.length - 1].get('statusTextNode').ancestor('p');
+        new_work_items_parent = work_items[work_items.length - 1].get('statusTextNodes')[0].ancestor('p');
     } else {
         new_work_items_parent = Y.Node.create('<p>Work Items:</p>');
         Y.one("#edit-whiteboard div.yui3-editable_text-text").appendChild(new_work_items_parent);
