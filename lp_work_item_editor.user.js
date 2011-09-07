@@ -107,9 +107,11 @@ Y.extend(WorkItem, Y.Base, {
         activator.render(item_row);
         var editicon = assignee_td.one('.yui3-activator-act');
         editicon.setStyle('opacity', 0.0);
+        var anim = null;
         function fadeToHandler(opacity, duration) {
             function fade (e) {
-                var a = new Y.Anim(
+                if (anim) { anim.stop(); }
+                anim = new Y.Anim(
                     {
                         node: editicon,
                         to: {opacity: opacity},
@@ -117,7 +119,7 @@ Y.extend(WorkItem, Y.Base, {
                         easing:   Y.Easing.easeOut
                     }
                 );
-                a.run();
+                anim.run();
             }
             return fade;
         }
