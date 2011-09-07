@@ -165,7 +165,10 @@ Y.extend(WorkItem, Y.Base, {
 
     showPersonPicker: function (e) {
         var act = e.target;
-        var picker = Y.lp.app.picker.create('ValidPersonOrTeam');
+        var picker = Y.lp.app.picker.create(
+            'ValidPersonOrTeam', {
+                picker_type: "person"
+            });
         picker.set('zIndex', 1001);
         picker.show();
         picker.on(
