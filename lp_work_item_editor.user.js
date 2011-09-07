@@ -18,7 +18,8 @@ unsafeWindow.LPS || (
 
 
 unsafeWindow.LPS.use(
-    'lazr.choiceedit', 'lazr.overlay', 'widget-position-align',
+    'lazr.choiceedit', 'lazr.overlay', 'widget-position-align', 'lp.app.picker',
+    'lazr.activator',
     function (Y) {
 
 /*
@@ -76,57 +77,49 @@ Y.extend(WorkItem, Y.Base, {
         var item_row = Y.Node.create(TR_TEMPLATE);
 
         var assignee_td = Y.Node.create(TD_TEMPLATE);
+        var container = Y.Node.create('<span class="yui3-activator-data-box"></span>');
+
+
         var urlBase = Y.one('base').getAttribute('href').replace(
                 /([a-z]*):\/\/blueprints.([^/]*)\/.*/, '$1://$2/~');
         var assignee = this.get('assignee');
         if (assignee) {
-            assignee_td.appendChild(
+            container.appendChild(
                 Y.Node.create('<a/>').set(
                     'text', assignee).setAttribute(
                         'href', urlBase + assignee));
         } else {
-            assignee_td.appendChild('None');
+            container.appendChild('None');
         }
-        // var editicon = Y.Node.create('<a href="#" class="editicon sprite edit"></a>');
-        // editicon.setStyle('opacity', 0.0);
-        // function fadeToHandler(opacity, duration) {
-        //     function fade (e) {
-        //         Y.log(e.target);
-        //         var a = new Y.Anim(
-        //             {
-        //                 node: editicon,
-        //                 to: {opacity: opacity},
-        //                 duration: duration,
-        //                 easing:   Y.Easing.easeOut
-        //             }
-        //         );
-        //         a.run();
-        //     }
-        //     return fade;
-        // }
-        // assignee_td.on('mouseenter', fadeToHandler(1.0, 0.1));
-        // assignee_td.on('mouseleave', fadeToHandler(0.0, 0.3));
-        // assignee_td.appendChild(editicon);
-//         var new_config = {
-//             boundingBox: assignee_td,
-//             contentBox: assignee_td,
-// //            associated_field_id: associated_field_id,
-//             align: {
-//                 points: [Y.WidgetPositionAlign.CC,
-//                          Y.WidgetPositionAlign.CC]
-//             },
-//             progressbar: true,
-//             progress: 100,
-// //            headerContent: "<h2>" + header + "</h2>",
-// //            steptitle: step_title,
-//             zIndex: 1001,
-//             visible: false,
-// //            filter_options: vocabulary_filters
-//         };
-
-//         var picker = new Y.lazr.picker.PersonPicker(new_config);
+        assignee_td.appendChild(container);
+        assignee_td.appendChild('<div class="yui3-activator-message-box yui3-activator-hidden"></div>');
+        assignee_td.appendChild('<button class="lazr-btn yui3-activator-act yui3-activator-hidden">Edit</button>');
+        var activator = new Y.lazr.activator.Activator(
+            {
+                contentBox: assignee_td
+            });
 
         item_row.appendChild(assignee_td);
+        activator.render(item_row);
+        var editicon = assignee_td.one('.yui3-activator-act');
+        editicon.setStyle('opacity', 0.0);
+        function fadeToHandler(opacity, duration) {
+            function fade (e) {
+                var a = new Y.Anim(
+                    {
+                        node: editicon,
+                        to: {opacity: opacity},
+                        duration: duration,
+                        easing:   Y.Easing.easeOut
+                    }
+                );
+                a.run();
+            }
+            return fade;
+        }
+        activator.on('act', this.showPersonPicker, this);
+        assignee_td.on('mouseenter', fadeToHandler(1.0, 0.1));
+        assignee_td.on('mouseleave', fadeToHandler(0.0, 0.3));
 
         var text_td = Y.Node.create(TD_TEMPLATE);
         text_td.appendChild(document.createTextNode(this.get('text')));
@@ -161,8 +154,13 @@ Y.extend(WorkItem, Y.Base, {
                 e.preventDefault();
                 that.set('status', widget.get('value'));
             });
-//        picker.render();
         return item_row;
+    },
+
+    showPersonPicker: function (e) {
+        var picker = Y.lp.app.picker.create('ValidPersonOrTeam');
+        picker.set('zIndex', 1001);
+        picker.on('save', function (e) { Y.log(picker.get('value')); });
     },
 
     saveToDom: function (new_work_items_parent) {
