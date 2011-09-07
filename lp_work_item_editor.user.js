@@ -67,6 +67,21 @@ WorkItem.ATTRS = {
     }
 };
 
+function personLink (name) {
+    if (name) {
+        var loc = null;
+        if (Y.one('base')) {
+            loc = Y.one('base').getAttribute('href');
+        } else {
+            loc = window.location.toString();
+        }
+        var urlBase = loc.replace(/([a-z]*):\/\/blueprints.([^/]*)\/.*/, '$1://$2/~');
+        return Y.Node.create('<a/>').set('text', name).setAttribute('href', urlBase + name);
+    } else {
+        return 'None';
+    }
+}
+
 Y.extend(WorkItem, Y.Base, {
     /**
      * createWorkItemRow
@@ -79,18 +94,7 @@ Y.extend(WorkItem, Y.Base, {
         var assignee_td = Y.Node.create(TD_TEMPLATE);
         var container = Y.Node.create('<span class="yui3-activator-data-box"></span>');
 
-
-        var urlBase = Y.one('base').getAttribute('href').replace(
-                /([a-z]*):\/\/blueprints.([^/]*)\/.*/, '$1://$2/~');
-        var assignee = this.get('assignee');
-        if (assignee) {
-            container.appendChild(
-                Y.Node.create('<a/>').set(
-                    'text', assignee).setAttribute(
-                        'href', urlBase + assignee));
-        } else {
-            container.appendChild('None');
-        }
+        container.appendChild(personLink(this.get('assignee')));
         assignee_td.appendChild(container);
         assignee_td.appendChild('<div class="yui3-activator-message-box yui3-activator-hidden"></div>');
         assignee_td.appendChild('<button class="lazr-btn yui3-activator-act yui3-activator-hidden">Edit</button>');
@@ -158,9 +162,15 @@ Y.extend(WorkItem, Y.Base, {
     },
 
     showPersonPicker: function (e) {
+        var act = e.target;
         var picker = Y.lp.app.picker.create('ValidPersonOrTeam');
         picker.set('zIndex', 1001);
-        picker.on('save', function (e) { Y.log(picker.get('value')); });
+        picker.show();
+        picker.on(
+            'save', function (e) {
+                this.set('assignee', e.value);
+                act.renderSuccess(personLink(e.value));
+            }, this);
     },
 
     saveToDom: function (new_work_items_parent) {
