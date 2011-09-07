@@ -18,7 +18,8 @@ unsafeWindow.LPS || (
 
 
 unsafeWindow.LPS.use(
-    'lazr.choiceedit', 'lazr.overlay', 'widget-position-align',
+    'lazr.choiceedit', 'lazr.overlay', 'widget-position-align', 'lp.app.picker',
+    'lazr.activator',
     function (Y) {
 
 /*
@@ -38,6 +39,7 @@ var work_item_synonyms = {
 var TD_TEMPLATE = '<td style="padding: 0.2em 1em 0.2em 0.2em" />';
 var TH_TEMPLATE = '<th style="border: 1px solid lightgrey; padding: 0.2em 1em 0.2em 0.2em; font-weight: bold; text-align: center" />';
 var TR_TEMPLATE = '<tr style="border: 1px solid lightgrey;" />';
+var EDITICON_TEMPLATE = '<a href="#" class="editicon sprite edit"></a>';
 
 function WorkItem (config) {
     WorkItem.superclass.constructor.apply(this, arguments);
@@ -56,64 +58,78 @@ WorkItem.ATTRS = {
 
     },
 
-    statusTextNode: {
-
-    },
-
-    statusTextNodeOffset: {
+    statusTextNodes: {
 
     }
 };
+
+function personLink (name) {
+    if (name) {
+        var loc = null;
+        if (Y.one('base')) {
+            loc = Y.one('base').getAttribute('href');
+        } else {
+            loc = window.location.toString();
+        }
+        var urlBase = loc.replace(/([a-z]*):\/\/blueprints.([^/]*)\/.*/, '$1://$2/~');
+        return Y.Node.create('<a/>').set('text', name).setAttribute('href', urlBase + name);
+    } else {
+        return 'None';
+    }
+}
 
 Y.extend(WorkItem, Y.Base, {
     /**
      * createWorkItemRow
      *
-     * This creates a "[work item text][work item status][edit icon]" node
-     * and uses the `insert' argument to insert it into the DOM.
-     *
-     * This `insert' argument is a bit awkward (it would be neater to just
-     * return the node) but it seems the node has to be in the DOM before
-     * the widget that does the editing can be created successfully.
+     * This creates a "[work item text][work item status][edit icon]" node.
      */
-    createWorkItemRow: function (insert) {
+    createWorkItemRow: function () {
         var item_row = Y.Node.create(TR_TEMPLATE);
 
         var assignee_td = Y.Node.create(TD_TEMPLATE);
-        var assignee = this.get('assignee');
-        if (assignee) {
-            assignee_td.appendChild(assignee);
-        } else {
-            assignee_td.appendChild('None');
-        }
-        //assignee_td.appendChild('<a href="#" class="editicon sprite edit"></a>');
-//         var new_config = {
-//             boundingBox: assignee_td,
-//             contentBox: assignee_td,
-// //            associated_field_id: associated_field_id,
-//             align: {
-//                 points: [Y.WidgetPositionAlign.CC,
-//                          Y.WidgetPositionAlign.CC]
-//             },
-//             progressbar: true,
-//             progress: 100,
-// //            headerContent: "<h2>" + header + "</h2>",
-// //            steptitle: step_title,
-//             zIndex: 1001,
-//             visible: false,
-// //            filter_options: vocabulary_filters
-//         };
+        var container = Y.Node.create('<span class="yui3-activator-data-box"></span>');
 
-//         var picker = new Y.lazr.picker.PersonPicker(new_config);
+        container.appendChild(personLink(this.get('assignee')));
+        assignee_td.appendChild(container);
+        assignee_td.appendChild('<div class="yui3-activator-message-box yui3-activator-hidden"></div>');
+        assignee_td.appendChild('<button class="lazr-btn yui3-activator-act yui3-activator-hidden">Edit</button>');
+        var activator = new Y.lazr.activator.Activator(
+            {
+                contentBox: assignee_td
+            });
 
         item_row.appendChild(assignee_td);
+        activator.render(item_row);
+        var editicon = assignee_td.one('.yui3-activator-act');
+        editicon.setStyle('opacity', 0.0);
+        var anim = null;
+        function fadeToHandler(opacity, duration) {
+            function fade (e) {
+                if (anim) { anim.stop(); }
+                anim = new Y.Anim(
+                    {
+                        node: editicon,
+                        to: {opacity: opacity},
+                        duration: duration,
+                        easing:   Y.Easing.easeOut
+                    }
+                );
+                anim.run();
+            }
+            return fade;
+        }
+        activator.on('act', this.showPersonPicker, this);
+        assignee_td.on('mouseenter', fadeToHandler(1.0, 0.1));
+        assignee_td.on('mouseleave', fadeToHandler(0.0, 0.3));
 
         var text_td = Y.Node.create(TD_TEMPLATE);
-        text_td.appendChild(this.get('text'));
+        text_td.appendChild(document.createTextNode(this.get('text')));
         item_row.appendChild(text_td);
 
         var status_td = Y.Node.create(
-            '<td><span class="value"></span><span>&nbsp;<a href="#" class="editicon sprite edit"></a></span></td>');
+            '<td><span class="value"></span><span class="button">&nbsp;</span></td>');
+        status_td.one('.button').appendChild(EDITICON_TEMPLATE);
         status_td.one('.value').set('text', this.get('status'));
 
         item_row.appendChild(status_td);
@@ -133,22 +149,50 @@ Y.extend(WorkItem, Y.Base, {
                 zIndex: 1001
             }
         );
-        insert(item_row);
-//        picker.render();
-        return widget;
+        widget.render(item_row);
+        var that = this;
+        widget.on(
+            'save', function (e) {
+                e.preventDefault();
+                that.set('status', widget.get('value'));
+            });
+        return item_row;
+    },
+
+    showPersonPicker: function (e) {
+        var act = e.target;
+        var picker = Y.lp.app.picker.create(
+            'ValidPersonOrTeam', {
+                picker_type: "person",
+                selected_value: this.get('assignee')
+            });
+        picker.set('zIndex', 1001);
+        picker.show();
+        picker.on(
+            'save', function (e) {
+                this.set('assignee', e.value);
+                act.renderSuccess(personLink(e.value));
+            }, this);
+    },
+
+    toTextNode: function () {
+        var work_item_text = '\n';
+        if (this.get('assignee')) {
+            work_item_text += '[' + this.get('assignee') + '] ';
+        }
+        work_item_text += this.get('text') + ': ' + this.get('status');
+        return document.createTextNode(work_item_text);
     },
 
     saveToDom: function (new_work_items_parent) {
-        if (this.get('statusTextNode')) {
-            var node = this.get('statusTextNode');
-            var nodeTextPreserve = this.get('statusTextNodeOffset');
-            var newText = node.get('text').slice(0, nodeTextPreserve) + ': ' + this.get('status');
-            node.set('text', newText);
+        if (this.get('statusTextNodes')) {
+            var nodes = this.get('statusTextNodes');
+            var parent = nodes[0].ancestor();
+            parent.insertBefore(this.toTextNode(), nodes[0]);
+            Y.Array.each(nodes, function (n) { n.remove(); });
         } else {
-            var textNode = document.createTextNode(this.get('text') + ': ' + this.get('status'));
             new_work_items_parent.appendChild(Y.Node.create('<br/>'));
-            new_work_items_parent.appendChild(document.createTextNode('\n'));
-            new_work_items_parent.appendChild(textNode);
+            new_work_items_parent.appendChild(this.toTextNode());
         }
     }
 });
@@ -158,9 +202,8 @@ Y.extend(WorkItem, Y.Base, {
  * Parse the white board into lines.
  *
  * parse the whiteboard out of the DOM into an array of lines -- each
- * entry in the array is [<text content of the line>, <node that
- * contains the last bit of the text content>] so that the text can be
- * edited later.
+ * entry in the array is [<text content of the line>, [<nodes that
+ * make up line>] so that the text can be edited later.
  */
 
 function parseWhiteBoardIntoLines (paras) {
@@ -175,19 +218,20 @@ function parseWhiteBoardIntoLines (paras) {
     );
     var lines = [];
     var cur_line = "";
-    var last_text_node = null;
+    var cur_line_nodes = [];
     for (var i = 0; i < children.length; i++ ) {
         var n = children[i];
         if (n.get('nodeName') == 'BR') {
-            lines.push([cur_line, last_text_node]);
+            lines.push([cur_line, cur_line_nodes]);
             cur_line = "";
+            cur_line_nodes = [];
         } else {
             cur_line += n.get('textContent');
-            last_text_node = n;
+            cur_line_nodes.push(n);
         }
     }
     if (cur_line) {
-        lines.push([cur_line, last_text_node]);
+        lines.push([cur_line, cur_line_nodes]);
     }
     return lines;
 }
@@ -219,8 +263,7 @@ function parseLinesIntoWorkItems (lines) {
                                 assignee: assignee,
                                 text: text,
                                 status: status,
-                                statusTextNode: lines[j][1],
-                                statusTextNodeOffset: lines[j][1].get("textContent").lastIndexOf(':')
+                                statusTextNodes: lines[j][1]
                             })
                     );
                 }
@@ -267,26 +310,16 @@ function clickAddWorkItem (e, insert_row, work_items) {
                     {
                         text: item_text,
                         status: status,
-                        statusTextNode: null,
-                        statusTextNodeOffset: null
+                        statusTextNodes: null
                     });
             work_items.push(new_work_item);
-            var widget = new_work_item.createWorkItemRow(
-                insert_row);
-            widget.render();
-            widget.on(
-                'save', function (e) {
-                    e.preventDefault();
-                    new_work_item.set('status', widget.get('value'));
-                });
+            insert_row(new_work_item.createWorkItemRow());
             overlay.destroy();
         }
     );
     overlay.show();
     overlayBody.one('input').focus();
 };
-
-function log (o) { unsafeWindow.console.log(o); }
 
 function applyEdits (e, work_items, new_work_items_parent) {
     for (var i = 0; i < work_items.length; i++) {
@@ -318,16 +351,9 @@ function clickEdit (e) {
             headings.appendChild(Y.Node.create(TH_TEMPLATE).set('text', heading));
         });
     item_container.appendChild(headings);
-    var widgets = [];
     Y.Array.each(
-        work_items, function (wi, index) {
-            var widget = wi.createWorkItemRow(function(li) { item_container.appendChild(li);});
-            widgets.push(widget);
-            widget.on(
-                'save', function (e) {
-                    e.preventDefault();
-                    wi.set('status', widget.get('value'));
-                });
+        work_items, function (wi) {
+            item_container.appendChild(wi.createWorkItemRow());
         }
     );
     var add_item_row = Y.Node.create('<tr/>');
@@ -353,11 +379,10 @@ function clickEdit (e) {
         }
     );
     overlay.render();
-    Y.Array.each(widgets, function (w) { w.render(); });
 
     var new_work_items_parent = null;
     if (work_items.length > 0) {
-        new_work_items_parent = work_items[work_items.length - 1].get('statusTextNode').ancestor('p');
+        new_work_items_parent = work_items[work_items.length - 1].get('statusTextNodes')[0].ancestor('p');
     } else {
         new_work_items_parent = Y.Node.create('<p>Work Items:</p>');
         Y.one("#edit-whiteboard div.yui3-editable_text-text").appendChild(new_work_items_parent);
