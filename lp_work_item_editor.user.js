@@ -23,6 +23,7 @@ unsafeWindow.LPS.use(
     function (Y) {
 
 /*
+ * TODO: track milestones
  * TODO: allow removing work items
  * TODO: allow reordering work items
  * TODO: allow editing the text of a work item
