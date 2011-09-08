@@ -223,6 +223,12 @@ function add_people(people)
 
     var person  = link.substr(link.lastIndexOf("~")+1);
 
+    // Don't get confused by links that look like people but really are PPA files
+    var re = new RegExp(".*\\+files.*");
+    if (re.test(link)) {
+        return;
+    }
+
     // Detect and drop sub directory matches
     var slash = person.indexOf("/");
     if (slash != -1) {
