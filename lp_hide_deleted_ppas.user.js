@@ -8,7 +8,7 @@
 // @creator        Bryce Harrington <bryce@canonical.com>
 // ==/UserScript==
 
-var debug = 1;
+var debug = 0;
 
 // ------  User settable data  -------------
 // ------- End of User settable data -------
