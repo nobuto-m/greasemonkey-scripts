@@ -78,6 +78,28 @@ function personLink (name) {
     }
 }
 
+function setUpAnims (icon, parent) {
+    icon.setStyle('opacity', 0.0);
+    var anim = null;
+    function fadeToHandler(opacity, duration) {
+        function fade (e) {
+            if (anim) { anim.stop(); }
+            anim = new Y.Anim(
+                {
+                    node: icon,
+                    to: {opacity: opacity},
+                    duration: duration,
+                    easing:   Y.Easing.easeOut
+                }
+            );
+            anim.run();
+        }
+        return fade;
+    }
+    parent.on('mouseenter', fadeToHandler(1.0, 0.1));
+    parent.on('mouseleave', fadeToHandler(0.0, 0.3));
+}
+
 Y.extend(WorkItem, Y.Base, {
     /**
      * createWorkItemRow
@@ -101,27 +123,8 @@ Y.extend(WorkItem, Y.Base, {
 
         item_row.appendChild(assignee_td);
         activator.render(item_row);
-        var editicon = assignee_td.one('.yui3-activator-act');
-        editicon.setStyle('opacity', 0.0);
-        var anim = null;
-        function fadeToHandler(opacity, duration) {
-            function fade (e) {
-                if (anim) { anim.stop(); }
-                anim = new Y.Anim(
-                    {
-                        node: editicon,
-                        to: {opacity: opacity},
-                        duration: duration,
-                        easing:   Y.Easing.easeOut
-                    }
-                );
-                anim.run();
-            }
-            return fade;
-        }
+        setUpAnims(assignee_td.one('.yui3-activator-act'), assignee_td);
         activator.on('act', this.showPersonPicker, this);
-        assignee_td.on('mouseenter', fadeToHandler(1.0, 0.1));
-        assignee_td.on('mouseleave', fadeToHandler(0.0, 0.3));
 
         var text_td = Y.Node.create(TD_TEMPLATE);
         text_td.appendChild(document.createTextNode(this.get('text')));
@@ -129,11 +132,11 @@ Y.extend(WorkItem, Y.Base, {
 
         var status_td = Y.Node.create(
             '<td><span class="value"></span><span class="button">&nbsp;</span></td>');
-        status_td.one('.button').appendChild(EDITICON_TEMPLATE);
+        var status_editicon = Y.Node.create(EDITICON_TEMPLATE);
+        setUpAnims(status_editicon, status_td);
+        status_td.one('.button').appendChild(status_editicon);
         status_td.one('.value').set('text', this.get('status'));
-
         item_row.appendChild(status_td);
-
         var items = [];
         Y.Array.each(
             work_item_statuses, function (s) {
@@ -150,12 +153,12 @@ Y.extend(WorkItem, Y.Base, {
             }
         );
         widget.render(item_row);
-        var that = this;
         widget.on(
             'save', function (e) {
                 e.preventDefault();
-                that.set('status', widget.get('value'));
-            });
+                this.set('status', widget.get('value'));
+            }, this);
+
         return item_row;
     },
 
