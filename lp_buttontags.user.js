@@ -2,23 +2,17 @@
 // @name           LP_ButtonTags
 // @namespace      http://bryceharrington.org/greasemonkey/
 // @description    (Launchpad) Buttons for adding tags
-// @include        https://bugs.launchpad.net/*
-// @include        https://bugs.edge.launchpad.net/*
-// @include        https://bugs.staging.launchpad.net/*
+// @include        https://bugs.launchpad.net/*/+bug/*
+// @include        https://bugs.staging.launchpad.net/*/+bug/*
 // ==/UserScript==
 
 // Feature Wishlist:
 //   * Clean up the code (needs some functions broken out)
-//   * Reliable way for users to add new tags, rather than editing the code above
 //   * Select tags from the N most popular for the project
 //   * Display error messages in-page instead of with alerts()
 //   * Use onreadystatechange() to show the processing progress
 //   * Don't display 'Add tag' unless there are actually tags to be added
 //   * Some sort of mechanism to delete tags
-//   * Having to pull the description from the +edit page makes the process
-//     rather slow.  However, the description in the main bug page is full
-//     of HTML markup tags.  Perhaps it could be parsed to remove the markup
-//     so that it's equivalent to what would have been in +edit's textarea?
 
 var LPS = unsafeWindow.LPS;
 var LP = unsafeWindow.LP;
@@ -30,8 +24,8 @@ var LP = unsafeWindow.LP;
     description: '(Launchpad) Buttons for adding tags',
     source: "http://bryceharrington.org/greasemonkey/",
     identifier: "http://bryceharrington.org/greasemonkey/lp_buttontags.user.js",
-    version: "0.9.0",
-    date: (new Date(2009, 6 - 1, 29))// update date
+    version: "0.9.1",
+    date: (new Date(2011, 9 - 14, 29))// update date
     .valueOf()
   };
 
