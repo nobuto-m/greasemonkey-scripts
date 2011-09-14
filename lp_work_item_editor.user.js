@@ -19,14 +19,13 @@ unsafeWindow.LPS || (
 
 unsafeWindow.LPS.use(
     'lazr.choiceedit', 'lazr.overlay', 'widget-position-align', 'lp.app.picker',
-    'lazr.activator',
+    'lazr.activator', 'stylesheet',
     function (Y) {
 
 /*
  * TODO: track milestones
  * TODO: allow removing work items
  * TODO: allow reordering work items
- * TODO: allow editing the text of a work item
  */
 
 var work_item_statuses = ["TODO", "DONE", "POSTPONED", "INPROGRESS", "BLOCKED"];
@@ -127,8 +126,25 @@ Y.extend(WorkItem, Y.Base, {
         activator.on('act', this.showPersonPicker, this);
 
         var text_td = Y.Node.create(TD_TEMPLATE);
-        text_td.appendChild(document.createTextNode(this.get('text')));
+        var text_node = Y.Node.create(
+            '<span class="status-edit"><span class="yui3-editable_text-trigger"><span class="yui3-editable_text-text"></span></span></span>');
+        text_node.one('.yui3-editable_text-text').setContent(this.get('text'));
+        text_node.one('.yui3-editable_text-trigger').appendChild(EDITICON_TEMPLATE);
+
+        text_td.appendChild(text_node);
         item_row.appendChild(text_td);
+        setUpAnims(text_node.one('a'), text_td);
+        var text_editor = new Y.EditableText(
+            {
+                contentBox: text_node,
+                boundingBox: text_node,
+                accept_empty: false
+            });
+        text_editor.render(text_td);
+        text_editor.editor.on(
+            'save', function (e) {
+                this.set('text', e.target.get('value'));
+            }, this);
 
         var status_td = Y.Node.create(
             '<td><span class="value"></span><span class="button">&nbsp;</span></td>');
@@ -256,7 +272,7 @@ function parseLinesIntoWorkItems (lines) {
                         status = Y.Lang.trim(item.slice(colon_index+1));
                     if (text[0] == '[' && text.indexOf(']') > 0) {
                         assignee = text.slice(1, text.indexOf(']'));
-                        text = text.slice(text.indexOf(']') + 1);
+                        text = Y.Lang.trim(text.slice(text.indexOf(']') + 1));
                     }
                     status = status.toUpperCase();
                     status = work_item_synonyms[status] || status;
@@ -402,6 +418,7 @@ function clickEdit (e) {
 function setUp () {
     var h3 = Y.one('#edit-whiteboard h3');
     if (!h3) return;
+    new Y.StyleSheet('.status-edit .yui3-editable_text-text:hover { cursor: pointer; text-decoration: underline; }');
     h3.appendChild(document.createTextNode(' '));
     var editButton = Y.Node.create('<button>Open workitem editor</button>');
     editButton.on('click', clickEdit);
