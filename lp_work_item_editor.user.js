@@ -24,7 +24,6 @@ unsafeWindow.LPS.use(
 
 /*
  * TODO: track milestones
- * TODO: allow removing work items
  * TODO: allow reordering work items
  */
 
@@ -35,10 +34,13 @@ var work_item_synonyms = {
     "DROP": "POSTPONED",
     "DROPPED": "POSTPONED"
 };
-var TD_TEMPLATE = '<td style="padding: 0.2em 1em 0.2em 0.2em" />';
-var TH_TEMPLATE = '<th style="border: 1px solid lightgrey; padding: 0.2em 1em 0.2em 0.2em; font-weight: bold; text-align: center" />';
-var TR_TEMPLATE = '<tr style="border: 1px solid lightgrey;" />';
+var TD_TEMPLATE =       '<td style="padding: 0.2em 1em 0.2em 0.2em; border-bottom: 1px solid lightgrey;" />';
+var TD_TEMPLATE_LEFT  = '<td style="padding: 0.2em 1em 0.2em 0.2em; border-bottom: 1px solid lightgrey; border-left: 1px solid lightgrey" />';
+var TD_TEMPLATE_RIGHT = '<td style="padding: 0.2em 1em 0.2em 0.2em; border-bottom: 1px solid lightgrey;border-right: 1px solid lightgrey" />';
+var TH_TEMPLATE       = '<th style="padding: 0.2em 1em 0.2em 0.2em; border: 1px solid lightgrey; font-weight: bold; text-align: center" />';
+var TR_TEMPLATE = '<tr />';
 var EDITICON_TEMPLATE = '<a href="#" class="editicon sprite edit"></a>';
+var DELETEICON_TEMPLATE = '<a href="#" class="editicon sprite trash-icon"></a>';
 
 function WorkItem (config) {
     WorkItem.superclass.constructor.apply(this, arguments);
@@ -59,6 +61,10 @@ WorkItem.ATTRS = {
 
     statusTextNodes: {
 
+    },
+
+    deleted: {
+        value: false
     }
 };
 
@@ -108,7 +114,7 @@ Y.extend(WorkItem, Y.Base, {
     createWorkItemRow: function () {
         var item_row = Y.Node.create(TR_TEMPLATE);
 
-        var assignee_td = Y.Node.create(TD_TEMPLATE);
+        var assignee_td = Y.Node.create(TD_TEMPLATE_LEFT);
         var container = Y.Node.create('<span class="yui3-activator-data-box"></span>');
 
         container.appendChild(personLink(this.get('assignee')));
@@ -117,7 +123,8 @@ Y.extend(WorkItem, Y.Base, {
         assignee_td.appendChild('<button class="lazr-btn yui3-activator-act yui3-activator-hidden">Edit</button>');
         var activator = new Y.lazr.activator.Activator(
             {
-                contentBox: assignee_td
+                contentBox: assignee_td,
+                boundingBox: assignee_td
             });
 
         item_row.appendChild(assignee_td);
@@ -146,8 +153,8 @@ Y.extend(WorkItem, Y.Base, {
                 this.set('text', e.target.get('value'));
             }, this);
 
-        var status_td = Y.Node.create(
-            '<td><span class="value"></span><span class="button">&nbsp;</span></td>');
+        var status_td = Y.Node.create(TD_TEMPLATE_RIGHT);
+        status_td.appendChild('<span class="value"></span><span class="button">&nbsp;</span>');
         var status_editicon = Y.Node.create(EDITICON_TEMPLATE);
         setUpAnims(status_editicon, status_td);
         status_td.one('.button').appendChild(status_editicon);
@@ -173,6 +180,17 @@ Y.extend(WorkItem, Y.Base, {
             'save', function (e) {
                 e.preventDefault();
                 this.set('status', widget.get('value'));
+            }, this);
+
+        var delete_icon = Y.Node.create(DELETEICON_TEMPLATE);
+        item_row.appendChild(
+            Y.Node.create(
+                '<td style="padding: 0.2em 1em 0.2em 0.2em"/>').appendChild(delete_icon));
+        delete_icon.on(
+            'click', function (e) {
+                e.preventDefault();
+                item_row.remove();
+                this.set('deleted', true);
             }, this);
 
         return item_row;
@@ -206,12 +224,16 @@ Y.extend(WorkItem, Y.Base, {
     saveToDom: function (new_work_items_parent) {
         if (this.get('statusTextNodes')) {
             var nodes = this.get('statusTextNodes');
-            var parent = nodes[0].ancestor();
-            parent.insertBefore(this.toTextNode(), nodes[0]);
+            if (!this.get('deleted')) {
+                var parent = nodes[0].ancestor();
+                parent.insertBefore(this.toTextNode(), nodes[0]);
+            }
             Y.Array.each(nodes, function (n) { n.remove(); });
         } else {
-            new_work_items_parent.appendChild(Y.Node.create('<br/>'));
-            new_work_items_parent.appendChild(this.toTextNode());
+            if (!this.get('deleted')) {
+                new_work_items_parent.appendChild(Y.Node.create('<br/>'));
+                new_work_items_parent.appendChild(this.toTextNode());
+            }
         }
     }
 });
@@ -369,6 +391,7 @@ function clickEdit (e) {
         function (heading) {
             headings.appendChild(Y.Node.create(TH_TEMPLATE).set('text', heading));
         });
+    headings.append('<th/>');
     item_container.appendChild(headings);
     Y.Array.each(
         work_items, function (wi) {
