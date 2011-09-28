@@ -45,7 +45,9 @@ function post(data) {
     var lp_client = new LPS.lp.client.Launchpad();
     var bug = new LPS.lp.client.Entry(lp_client, LP.cache.bug, LP.cache.bug.self_link);
     bug.set('tags', data);
-    bug.lp_save({on:{}});
+    bug.lp_save({on:{success:
+        window.setTimeout(function() { window.location.reload() }, 3000)
+        }});
 }
 
 // Retrieves url using HTTP GET, then calls the function cb with the response text as its single argument.
@@ -239,7 +241,7 @@ function displayTags()
 		tags_current_list[tags_current_list.length] = this.id;
                 post(tags_current_list);
                 // don't reload right away because the tag update post needs to finish
-                window.setTimeout(function() { window.location.reload() }, 1000);
+                //window.setTimeout(function() { window.location.reload() }, 1200);
 
 	}, false);
 
