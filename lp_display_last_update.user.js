@@ -2,8 +2,8 @@
 // @name           LP_DisplayLastUpdated
 // @namespace      http://murraytwins.com/greasemonkey/
 // @description    (Launchpad) Display when the bug was last updated
-// @include        https://bugs.launchpad.net/*
-// @include        https://bugs.staging.launchpad.net/*
+// @include        https://bugs.launchpad.net/*/+bug/*
+// @include        https://bugs.staging.launchpad.net/*/+bug/*
 // @date           2011-02-14
 // @creator        Brian Murray <brian@ubuntu.com>
 // ==/UserScript==

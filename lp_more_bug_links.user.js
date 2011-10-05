@@ -2,10 +2,10 @@
 // @name           LP_MoreBugLinks
 // @namespace      http://murraytwins.com/greasemonkey/
 // @description    (Launchpad) Add in more bug links
-// @include        https://launchpad.net/*
-// @include        https://*.launchpad.net/*
-// @include        https://*.edge.launchpad.net/*
-// @include        https://launchpad.net/*
+// @include        https://launchpad.net/*/+bugs
+// @include        https://*.launchpad.net/*/+bugs
+// @include        https://launchpad.net/*/+bugs*
+// @include        https://*.launchpad.net/*/+bugs*
 // @date           2010-10-26
 // @creator        Brian Murray <brian@ubuntu.com>
 // ==/UserScript==

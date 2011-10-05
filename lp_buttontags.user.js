@@ -2,25 +2,20 @@
 // @name           LP_ButtonTags
 // @namespace      http://bryceharrington.org/greasemonkey/
 // @description    (Launchpad) Buttons for adding tags
-// @include        https://bugs.launchpad.net/*
-// @include        https://bugs.edge.launchpad.net/*
-// @include        https://bugs.staging.launchpad.net/*
+// @include        https://bugs.launchpad.net/*/+bug/*
+// @include        https://bugs.staging.launchpad.net/*/+bug/*
 // ==/UserScript==
 
 // Feature Wishlist:
 //   * Clean up the code (needs some functions broken out)
-//   * Reliable way for users to add new tags, rather than editing the code above
 //   * Select tags from the N most popular for the project
 //   * Display error messages in-page instead of with alerts()
 //   * Use onreadystatechange() to show the processing progress
 //   * Don't display 'Add tag' unless there are actually tags to be added
 //   * Some sort of mechanism to delete tags
-//   * Having to pull the description from the +edit page makes the process
-//     rather slow.  However, the description in the main bug page is full
-//     of HTML markup tags.  Perhaps it could be parsed to remove the markup
-//     so that it's equivalent to what would have been in +edit's textarea?
 
-
+var LPS = unsafeWindow.LPS;
+var LP = unsafeWindow.LP;
 
 (function () {
   var SCRIPT = {
@@ -29,8 +24,8 @@
     description: '(Launchpad) Buttons for adding tags',
     source: "http://bryceharrington.org/greasemonkey/",
     identifier: "http://bryceharrington.org/greasemonkey/lp_buttontags.user.js",
-    version: "0.9.0",
-    date: (new Date(2009, 6 - 1, 29))// update date
+    version: "0.9.1",
+    date: (new Date(2011, 9 - 14, 29))// update date
     .valueOf()
   };
 
@@ -45,22 +40,14 @@ var tagFields = new Array(
                             "package"     // required -- the package the tag should be displayed for
                           );
 
-// Sends data to url using HTTP POST, then calls the function cb with the response text as its single argument.
-function post(url, data, cb) {
-  GM_xmlhttpRequest({
-    method: "POST",
-    url: url,
-    headers: {'Content-type':'application/x-www-form-urlencoded'},
-//    data: encodeURIComponent(data),
-//    data: encodeURI(data),
-    data: data,
-    onload: function(xhr) { cb(xhr.responseText); },
-    onerror: function(responseDetails) {
-	alert('Failed to set tags ' + responseDetails.status +
-		' ' + responseDetails.statusText + '\n\n');
-    },
-    // onreadystatechange: function(responseDetails) { },
-  });
+// uses Launchpad javascript client to add data to bug tags
+function post(data) {
+    var lp_client = new LPS.lp.client.Launchpad();
+    var bug = new LPS.lp.client.Entry(lp_client, LP.cache.bug, LP.cache.bug.self_link);
+    bug.set('tags', data);
+    bug.lp_save({on:{success:
+        window.setTimeout(function() { window.location.reload() }, 3000)
+        }});
 }
 
 // Retrieves url using HTTP GET, then calls the function cb with the response text as its single argument.
@@ -252,48 +239,9 @@ function displayTags()
 		}
 
 		tags_current_list[tags_current_list.length] = this.id;
-		var tags_new = tags_current_list.join(" ");
-
-		get(document.location + "/+edit", function(responseText) {
-			//alert("Received responseText");
-
-		        // Get the old details
-			var xmlobject = (new DOMParser()).parseFromString(responseText, "text/xml");
-
-			var bug_description = xmlobject.getElementById('field.description').textContent;
-			var bug_nickname = xmlobject.getElementById('field.name').value;
-			var bug_title = xmlobject.getElementById('field.title').value;
-
-			if (! bug_description || bug_description == "undefined") {
-				alert("Error:  No bug description defined");
-				return;
-			}
-
-			var form_tag_data = 'field.actions.change=Change&' +
-				'field.name=' + encodeURIComponent(bug_nickname) + '&' +
-				'field.tags=' + encodeURIComponent(tags_new) + '&' +
-				'field.title=' + encodeURIComponent(bug_title) + '&' +
-				'field.description=' + encodeURIComponent(bug_description) + '&' +
-				'field.actions.confirm_tag=' + encodeURIComponent("Yes, define new tag");
-
-			//alert("Data: " + form_tag_data);
-
-			post(document.location + "/+edit", form_tag_data, function(responseText) {
-				// TODO:  Need better parsing of error messages in output
-				// for debugging errors:
-				//var outputElement = document.createElement('div');
-				//outputElement.innerHTML = responseText;
-				//document.body.appendChild(outputElement);
-				if (responseText.length > 6) {
-					//alert("Saved tags: " + tags_new );
-					// Either reload the page, or append tags to the Tags: list
-					window.location.reload()
-				} else {
-					alert("Failed to save tags " + tags_new);
-				}
-			});
-
-		});
+                post(tags_current_list);
+                // don't reload right away because the tag update post needs to finish
+                //window.setTimeout(function() { window.location.reload() }, 1200);
 
 	}, false);
 
