@@ -28,4 +28,8 @@
 		<Include>https://*.edge.launchpad.net/*</Include>
 		<Include>https://launchpad.net/*</Include>
 	</Script>
+	<Script filename="lp_hide_deleted_ppas.user.js" name="LP_HideDeletedPpas" namespace="http://bryceharrington.org/greasemonkey/" description="(Launchpad) Don't show links to PPAs that hav ebeen deleted" enabled="true" basedir="lp_hideppas">
+		<Include>https://launchpad.net/~*</Include>
+		<Include>https://edge.launchpad.net/~*</Include>
+	</Script>
 </UserScriptConfig>

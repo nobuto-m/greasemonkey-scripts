@@ -91,3 +91,15 @@ G.  lp_hide_tags.user.js
     
 2.  Elements in the tags portlet should be ordered by appearence and
     the list should be significantly shorter (depending on the settings)
+
+H.  lp_hide_deleted_ppas.user.js
+================================
+1.  Navigate to your userpage:
+    http://launchpad.net/~<your-name>
+
+2.  Add a PPA
+
+3.  Delete the PPA
+
+4.  Normally you'd see a grey link to the deleted PPA.  With this
+    greasemonkey script there should be no such link.

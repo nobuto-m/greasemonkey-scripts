@@ -2,8 +2,8 @@
 // @name           LP_DisplayCountOfDupes
 // @namespace      http://murraytwins.com/greasemonkey/
 // @description    (Launchpad) Display the quantity of duplicates
-// @include        https://bugs.launchpad.net/*
-// @include        https://bugs.staging.launchpad.net/*
+// @include        https://bugs.launchpad.net/*/+bug/*
+// @include        https://bugs.staging.launchpad.net/*/+bug/*
 // @date           2011-03-28
 // @creator        Brian Murray <brian@ubuntu.com>
 // ==/UserScript==

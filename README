@@ -27,6 +27,7 @@ Then to install these scripts, run:
   * firefox lp_hide_tags.user.js
   * firefox lp_question_comment.user.js
   * firefox lp_reporter_comments.user.js 
+  * firefox lp_hide_deleted_ppas.user.js
 
 Or click on the individual scripts from your file browser.
 
@@ -200,6 +201,15 @@ Expected Results:
 Actual Results:
 
 To help you to remember to include this critical information.
+
+lp_hide_deleted_ppas.user.js: Don't display deleted PPAs
+========================================================
+This script hides PPAs on your userpage that you've deleted.
+If you use PPAs heavily and typically delete them when you're done with
+them, the page can get cluttery.  Or, if you change your LP username
+you'll have had to delete all your old PPAs.  There's basically nothing
+you can do with a PPA once it's deleted, so it's pointless clutter to
+have them be displayed.
 
 Deprecated scripts
 ==================

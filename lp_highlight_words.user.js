@@ -26,9 +26,9 @@ function xpath(query, context) {
 {
     // Regex of words to highlight : color to highlight them (hint don't use black!)
     var color_map = {
-        'DistroRelease: [^ ]+ [^ ]+|SourcePackage: [^ ]+|natty|maverick|lucid|karmic|hardy|dapper': "yellow",  // things that might be helpful
+        'DistroRelease: [^ ]+ [^ ]+|SourcePackage: [^ ]+|LiveMediaBuild:|oneiric|natty|maverick|lucid|hardy|dapper': "yellow",  // things that might be helpful
         'regression': "red", // critical importance
-        'jaunty|intrepid|gutsy|feisty|edgy|breezy|hoary|warty': "orange", // unsupported releases
+        'karmic|jaunty|intrepid|gutsy|feisty|edgy|breezy|hoary|warty': "orange", // unsupported releases
     }; 
 
     for (var key in color_map) {

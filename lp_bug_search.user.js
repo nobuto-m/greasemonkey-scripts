@@ -21,11 +21,23 @@ var shrinkImport = true;        // shrink the "Importance" column header
 
 // Specify which tags you do *not* want to see in the tags column:
 var uninterestingTags = [];
+uninterestingTags["amd64"] = true;
 uninterestingTags["i386"] = true;
 uninterestingTags["checkbox-bug"] = true;
 uninterestingTags["apport-bug"] = true;
+uninterestingTags["apport-crash"] = true;
+uninterestingTags["apport-collected"] = true;
 uninterestingTags["cqa-verified"] = true;
+uninterestingTags["patch"] = true;
+uninterestingTags["ubuntu"] = true;
+uninterestingTags["jaunty"] = true;
 uninterestingTags["karmic"] = true;
+uninterestingTags["maverick"] = true;
+uninterestingTags["natty"] = true;
+
+uninterestingTags["compiz-0.9"] = true;
+uninterestingTags["running-unity"] = true;
+
 
 // tweak display sizes:
 var assigneeFontSize = "1.0em";
