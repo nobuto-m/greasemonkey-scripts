@@ -19,14 +19,12 @@ unsafeWindow.LPS || (
 
 unsafeWindow.LPS.use(
     'lazr.choiceedit', 'lazr.overlay', 'widget-position-align', 'lp.app.picker',
-    'lazr.activator',
+    'lazr.activator', 'stylesheet',
     function (Y) {
 
 /*
- * TODO: parse out assignees?
- * TODO: allow removing work items
+ * TODO: track milestones
  * TODO: allow reordering work items
- * TODO: allow editing the text of a work item
  */
 
 var work_item_statuses = ["TODO", "DONE", "POSTPONED", "INPROGRESS", "BLOCKED"];
@@ -36,10 +34,13 @@ var work_item_synonyms = {
     "DROP": "POSTPONED",
     "DROPPED": "POSTPONED"
 };
-var TD_TEMPLATE = '<td style="padding: 0.2em 1em 0.2em 0.2em" />';
-var TH_TEMPLATE = '<th style="border: 1px solid lightgrey; padding: 0.2em 1em 0.2em 0.2em; font-weight: bold; text-align: center" />';
-var TR_TEMPLATE = '<tr style="border: 1px solid lightgrey;" />';
+var TD_TEMPLATE =       '<td style="padding: 0.2em 1em 0.2em 0.2em; border-bottom: 1px solid lightgrey;" />';
+var TD_TEMPLATE_LEFT  = '<td style="padding: 0.2em 1em 0.2em 0.2em; border-bottom: 1px solid lightgrey; border-left: 1px solid lightgrey" />';
+var TD_TEMPLATE_RIGHT = '<td style="padding: 0.2em 1em 0.2em 0.2em; border-bottom: 1px solid lightgrey;border-right: 1px solid lightgrey" />';
+var TH_TEMPLATE       = '<th style="padding: 0.2em 1em 0.2em 0.2em; border: 1px solid lightgrey; font-weight: bold; text-align: center" />';
+var TR_TEMPLATE = '<tr />';
 var EDITICON_TEMPLATE = '<a href="#" class="editicon sprite edit"></a>';
+var DELETEICON_TEMPLATE = '<a href="#" class="editicon sprite trash-icon"></a>';
 
 function WorkItem (config) {
     WorkItem.superclass.constructor.apply(this, arguments);
@@ -60,6 +61,10 @@ WorkItem.ATTRS = {
 
     statusTextNodes: {
 
+    },
+
+    deleted: {
+        value: false
     }
 };
 
@@ -78,6 +83,28 @@ function personLink (name) {
     }
 }
 
+function setUpAnims (icon, parent) {
+    icon.setStyle('opacity', 0.0);
+    var anim = null;
+    function fadeToHandler(opacity, duration) {
+        function fade (e) {
+            if (anim) { anim.stop(); }
+            anim = new Y.Anim(
+                {
+                    node: icon,
+                    to: {opacity: opacity},
+                    duration: duration,
+                    easing:   Y.Easing.easeOut
+                }
+            );
+            anim.run();
+        }
+        return fade;
+    }
+    parent.on('mouseenter', fadeToHandler(1.0, 0.1));
+    parent.on('mouseleave', fadeToHandler(0.0, 0.3));
+}
+
 Y.extend(WorkItem, Y.Base, {
     /**
      * createWorkItemRow
@@ -87,7 +114,7 @@ Y.extend(WorkItem, Y.Base, {
     createWorkItemRow: function () {
         var item_row = Y.Node.create(TR_TEMPLATE);
 
-        var assignee_td = Y.Node.create(TD_TEMPLATE);
+        var assignee_td = Y.Node.create(TD_TEMPLATE_LEFT);
         var container = Y.Node.create('<span class="yui3-activator-data-box"></span>');
 
         container.appendChild(personLink(this.get('assignee')));
@@ -96,44 +123,43 @@ Y.extend(WorkItem, Y.Base, {
         assignee_td.appendChild('<button class="lazr-btn yui3-activator-act yui3-activator-hidden">Edit</button>');
         var activator = new Y.lazr.activator.Activator(
             {
-                contentBox: assignee_td
+                contentBox: assignee_td,
+                boundingBox: assignee_td
             });
 
         item_row.appendChild(assignee_td);
         activator.render(item_row);
-        var editicon = assignee_td.one('.yui3-activator-act');
-        editicon.setStyle('opacity', 0.0);
-        var anim = null;
-        function fadeToHandler(opacity, duration) {
-            function fade (e) {
-                if (anim) { anim.stop(); }
-                anim = new Y.Anim(
-                    {
-                        node: editicon,
-                        to: {opacity: opacity},
-                        duration: duration,
-                        easing:   Y.Easing.easeOut
-                    }
-                );
-                anim.run();
-            }
-            return fade;
-        }
+        setUpAnims(assignee_td.one('.yui3-activator-act'), assignee_td);
         activator.on('act', this.showPersonPicker, this);
-        assignee_td.on('mouseenter', fadeToHandler(1.0, 0.1));
-        assignee_td.on('mouseleave', fadeToHandler(0.0, 0.3));
 
         var text_td = Y.Node.create(TD_TEMPLATE);
-        text_td.appendChild(document.createTextNode(this.get('text')));
+        var text_node = Y.Node.create(
+            '<span class="status-edit"><span class="yui3-editable_text-trigger"><span class="yui3-editable_text-text"></span></span></span>');
+        text_node.one('.yui3-editable_text-text').setContent(this.get('text'));
+        text_node.one('.yui3-editable_text-trigger').appendChild(EDITICON_TEMPLATE);
+
+        text_td.appendChild(text_node);
         item_row.appendChild(text_td);
+        setUpAnims(text_node.one('a'), text_td);
+        var text_editor = new Y.EditableText(
+            {
+                contentBox: text_node,
+                boundingBox: text_node,
+                accept_empty: false
+            });
+        text_editor.render(text_td);
+        text_editor.editor.on(
+            'save', function (e) {
+                this.set('text', e.target.get('value'));
+            }, this);
 
-        var status_td = Y.Node.create(
-            '<td><span class="value"></span><span class="button">&nbsp;</span></td>');
-        status_td.one('.button').appendChild(EDITICON_TEMPLATE);
+        var status_td = Y.Node.create(TD_TEMPLATE_RIGHT);
+        status_td.appendChild('<span class="value"></span><span class="button">&nbsp;</span>');
+        var status_editicon = Y.Node.create(EDITICON_TEMPLATE);
+        setUpAnims(status_editicon, status_td);
+        status_td.one('.button').appendChild(status_editicon);
         status_td.one('.value').set('text', this.get('status'));
-
         item_row.appendChild(status_td);
-
         var items = [];
         Y.Array.each(
             work_item_statuses, function (s) {
@@ -150,12 +176,23 @@ Y.extend(WorkItem, Y.Base, {
             }
         );
         widget.render(item_row);
-        var that = this;
         widget.on(
             'save', function (e) {
                 e.preventDefault();
-                that.set('status', widget.get('value'));
-            });
+                this.set('status', widget.get('value'));
+            }, this);
+
+        var delete_icon = Y.Node.create(DELETEICON_TEMPLATE);
+        item_row.appendChild(
+            Y.Node.create(
+                '<td style="padding: 0.2em 1em 0.2em 0.2em"/>').appendChild(delete_icon));
+        delete_icon.on(
+            'click', function (e) {
+                e.preventDefault();
+                item_row.remove();
+                this.set('deleted', true);
+            }, this);
+
         return item_row;
     },
 
@@ -187,12 +224,16 @@ Y.extend(WorkItem, Y.Base, {
     saveToDom: function (new_work_items_parent) {
         if (this.get('statusTextNodes')) {
             var nodes = this.get('statusTextNodes');
-            var parent = nodes[0].ancestor();
-            parent.insertBefore(this.toTextNode(), nodes[0]);
+            if (!this.get('deleted')) {
+                var parent = nodes[0].ancestor();
+                parent.insertBefore(this.toTextNode(), nodes[0]);
+            }
             Y.Array.each(nodes, function (n) { n.remove(); });
         } else {
-            new_work_items_parent.appendChild(Y.Node.create('<br/>'));
-            new_work_items_parent.appendChild(this.toTextNode());
+            if (!this.get('deleted')) {
+                new_work_items_parent.appendChild(Y.Node.create('<br/>'));
+                new_work_items_parent.appendChild(this.toTextNode());
+            }
         }
     }
 });
@@ -253,7 +294,7 @@ function parseLinesIntoWorkItems (lines) {
                         status = Y.Lang.trim(item.slice(colon_index+1));
                     if (text[0] == '[' && text.indexOf(']') > 0) {
                         assignee = text.slice(1, text.indexOf(']'));
-                        text = text.slice(text.indexOf(']') + 1);
+                        text = Y.Lang.trim(text.slice(text.indexOf(']') + 1));
                     }
                     status = status.toUpperCase();
                     status = work_item_synonyms[status] || status;
@@ -350,6 +391,7 @@ function clickEdit (e) {
         function (heading) {
             headings.appendChild(Y.Node.create(TH_TEMPLATE).set('text', heading));
         });
+    headings.append('<th/>');
     item_container.appendChild(headings);
     Y.Array.each(
         work_items, function (wi) {
@@ -399,6 +441,7 @@ function clickEdit (e) {
 function setUp () {
     var h3 = Y.one('#edit-whiteboard h3');
     if (!h3) return;
+    new Y.StyleSheet('.status-edit .yui3-editable_text-text:hover { cursor: pointer; text-decoration: underline; }');
     h3.appendChild(document.createTextNode(' '));
     var editButton = Y.Node.create('<button>Open workitem editor</button>');
     editButton.on('click', clickEdit);
