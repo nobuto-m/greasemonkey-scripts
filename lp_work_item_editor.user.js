@@ -8,7 +8,7 @@
 // ==/UserScript==
 
 // hack for chrome support from https://gist.github.com/1143845
-unsafeWindow.LPS || (
+unsafeWindow.YUI || (
     unsafeWindow = (function() {
                         var el = document.createElement('p');
                         el.setAttribute('onclick', 'return window;');
@@ -17,9 +17,9 @@ unsafeWindow.LPS || (
 );
 
 
-unsafeWindow.LPS.use(
+unsafeWindow.YUI().use(
     'lazr.choiceedit', 'lazr.overlay', 'widget-position-align', 'lp.app.picker',
-    'lazr.activator', 'stylesheet',
+    'lazr.activator', 'stylesheet', 'lazr.editor',
     function (Y) {
 
 /*
