@@ -14,7 +14,7 @@
 //   * Don't display 'Add tag' unless there are actually tags to be added
 //   * Some sort of mechanism to delete tags
 
-var LPS = unsafeWindow.LPS;
+var LPJS = unsafeWindow.LPJS;
 var LP = unsafeWindow.LP;
 
 (function () {
@@ -42,8 +42,8 @@ var tagFields = new Array(
 
 // uses Launchpad javascript client to add data to bug tags
 function post(data) {
-    var lp_client = new LPS.lp.client.Launchpad();
-    var bug = new LPS.lp.client.Entry(lp_client, LP.cache.bug, LP.cache.bug.self_link);
+    var lp_client = new LPJS.lp.client.Launchpad();
+    var bug = new LPJS.lp.client.Entry(lp_client, LP.cache.bug, LP.cache.bug.self_link);
     bug.set('tags', data);
     bug.lp_save({on:{success:
         window.setTimeout(function() { window.location.reload() }, 3000)
