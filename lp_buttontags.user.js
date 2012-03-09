@@ -232,7 +232,7 @@ function displayTags()
     	tag_button.addEventListener('click', function(event) {
     		event.preventDefault();
       		//event.stopPropagation(); // not sure if this is needed
-
+                document.body.style.cursor = 'wait';
 		if (!GM_xmlhttpRequest) {
 			alert('This functionality requires a newer version of Greasemonkey - please upgrade!');
 			return;

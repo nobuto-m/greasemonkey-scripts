@@ -120,8 +120,9 @@ function augment_person(person)
         if (karmaNode) {
             // Bug Trail Link
             var karmaLink = document.createElement("a");
+            //alert(people_cache[person]['person_name'].replace(/\(.*\)/, ''));
             karmaLink.href = "http://search.gmane.org/?query=&author="
-                + people_cache [person]['person_name'].replace (/[ -]/g, "+")
+                + people_cache[person]['person_name'].replace(/\(.*\)/, '')
                 + "&group=gmane.linux.ubuntu.bugs.general&sort=date&DEFAULTOP=and";
             karmaLink.title = "Follow bug trail of this user";
             karmaLink.innerHTML = karmaNode;
