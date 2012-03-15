@@ -366,12 +366,12 @@ function applyEdits (e, work_items, new_work_items_parent) {
     for (var i = 0; i < work_items.length; i++) {
         work_items[i].saveToDom(new_work_items_parent);
     }
-    var editableText = Y.lp.widgets['edit-whiteboard'];
-    Y.one('#edit-whiteboard .edit').replaceClass('edit', 'loading');
+    var editableText = Y.lp.widgets['edit-workitems_text'];
+    Y.one('#edit-workitems_text .edit').replaceClass('edit', 'loading');
     var handle = editableText.editor.on(
         'save', function () {
             handle.detach();
-            Y.one('#edit-whiteboard .loading').replaceClass('loading', 'edit');
+            Y.one('#edit-workitems_text .loading').replaceClass('loading', 'edit');
         });
     editableText.editor.setInput(editableText.get('value'));
     editableText.editor.save();
@@ -379,7 +379,7 @@ function applyEdits (e, work_items, new_work_items_parent) {
 }
 
 function clickEdit (e) {
-    var p = Y.all('#edit-whiteboard p');
+    var p = Y.all('#edit-workitems_text p');
     var lines = parseWhiteBoardIntoLines(p);
     var work_items = parseLinesIntoWorkItems(lines);
     var overlayBody = Y.Node.create('<div/>');
@@ -427,7 +427,7 @@ function clickEdit (e) {
         new_work_items_parent = work_items[work_items.length - 1].get('statusTextNodes')[0].ancestor('p');
     } else {
         new_work_items_parent = Y.Node.create('<p>Work Items:</p>');
-        Y.one("#edit-whiteboard div.yui3-editable_text-text").appendChild(new_work_items_parent);
+        Y.one("#edit-workitems_text div.yui3-editable_text-text").appendChild(new_work_items_parent);
     }
 
     overlayBody.one('.ov-ok').on(
@@ -439,7 +439,7 @@ function clickEdit (e) {
 }
 
 function setUp () {
-    var h3 = Y.one('#edit-whiteboard h3');
+    var h3 = Y.one('#edit-workitems_text h3');
     if (!h3) return;
     new Y.StyleSheet('.status-edit .yui3-editable_text-text:hover { cursor: pointer; text-decoration: underline; }');
     h3.appendChild(document.createTextNode(' '));
