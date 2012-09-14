@@ -5,6 +5,7 @@
 // @include        https://blueprints.launchpad.dev/*
 // @include        https://blueprints.staging.launchpad.net/*
 // @include        https://blueprints.qastaging.launchpad.net/*
+// @grant          none
 // ==/UserScript==
 
 // hack for chrome support from https://gist.github.com/1143845
@@ -18,8 +19,7 @@ unsafeWindow.LPJS || (
 
 
 unsafeWindow.LPJS.use(
-    'lazr.choiceedit', 'lazr.overlay', 'widget-position-align', 'lp.app.picker',
-    'lazr.activator', 'stylesheet', 'lazr.editor',
+    'stylesheet',
     function (Y) {
 
 /*
@@ -109,7 +109,7 @@ Y.extend(WorkItem, Y.Base, {
     /**
      * createWorkItemRow
      *
-     * This creates a "[work item text][work item status][edit icon]" node.
+     * This creates a "[assignee][work item text][work item status]" node.
      */
     createWorkItemRow: function () {
         var item_row = Y.Node.create(TR_TEMPLATE);
@@ -121,7 +121,7 @@ Y.extend(WorkItem, Y.Base, {
         assignee_td.appendChild(container);
         assignee_td.appendChild('<div class="yui3-activator-message-box yui3-activator-hidden"></div>');
         assignee_td.appendChild('<button class="lazr-btn yui3-activator-act yui3-activator-hidden">Edit</button>');
-        var activator = new Y.lazr.activator.Activator(
+        var activator = new Y.lp.ui.activator.Activator(
             {
                 contentBox: assignee_td,
                 boundingBox: assignee_td
@@ -330,7 +330,7 @@ function clickAddWorkItem (e, insert_row, work_items) {
     overlayBody.appendChild(select);
     overlayBody.appendChild(Y.Node.create('<button class="ov-add">Add</button>'));
     overlayBody.appendChild(Y.Node.create('<button class="ov-cancel">Cancel</button>'));
-    var overlay = new Y.lazr.PrettyOverlay(
+    var overlay = new Y.lp.ui.PrettyOverlay(
         {
             align: {
                 points: [Y.WidgetPositionAlign.CC, Y.WidgetPositionAlign.CC]
@@ -409,7 +409,7 @@ function clickEdit (e) {
     overlayBody.appendChild(
         Y.Node.create(
             '<span><button class="ov-ok">OK</button><button class="ov-cancel">Cancel</button></span>'));
-    var overlay = new Y.lazr.PrettyOverlay(
+    var overlay = new Y.lp.ui.PrettyOverlay(
         {
             align: {
                 points: [Y.WidgetPositionAlign.CC, Y.WidgetPositionAlign.CC]
