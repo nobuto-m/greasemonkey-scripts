@@ -22,8 +22,8 @@
     description: '(Launchpad) Stock replies',
     source: "http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/files",
     identifier: "http://codebrowse.launchpad.net/~ubuntu-dev/ubuntu-gm-scripts/ubuntu/file/lp_stockreplies.user.js",
-    version: "1.5",
-    date: (new Date(2009, 12 - 1, 22))// update date
+    version: "1.6",
+    date: (new Date(2013, 05, 13))// update date
     .valueOf()
   };
 
@@ -215,7 +215,7 @@ function loadStandardReplies() {
         (
           {
             method: 'GET',
-            url:    'http://people.ubuntu.com/~brian/greasemonkey/bugsquad-replies.xml',
+            url:    'http://people.canonical.com/~brian/greasemonkey/bugsquad-replies.xml',
             headers: {
                 'Accept': 'application/atom+xml,application/xml,text/xml',
             },

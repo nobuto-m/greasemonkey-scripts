@@ -24,8 +24,8 @@ var LP = unsafeWindow.LP;
     description: '(Launchpad) Buttons for adding tags',
     source: "http://bryceharrington.org/greasemonkey/",
     identifier: "http://bryceharrington.org/greasemonkey/lp_buttontags.user.js",
-    version: "0.9.1",
-    date: (new Date(2011, 9 - 14, 29))// update date
+    version: "0.9.2",
+    date: (new Date(2013, 5, 13))// update date
     .valueOf()
   };
 
@@ -82,7 +82,7 @@ function loadStandardTags() {
         (
           {
             method: 'GET',
-            url:    'http://people.ubuntu.com/~brian/greasemonkey/bugsquad-tags.xml',
+            url:    'http://people.canonical.com/~brian/greasemonkey/bugsquad-tags.xml',
             headers: {
                 'Accept': 'application/atom+xml,application/xml,text/xml',
             },
