@@ -2,7 +2,7 @@
 // @name        Hide/Dim private comments
 // @namespace   hideDimPrivateComments
 // @include     https://eu1.salesforce.com/*
-// @version     1
+// @version     2
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js
