@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name        Hide/Dim private comments
-// @namespace   hideDimPrivateComments
+// @namespace   https://github.com/nobuto-m/greasemonkey-scripts/tree/master/salesforce
+// @updateURL   https://github.com/nobuto-m/greasemonkey-scripts/raw/master/salesforce/hideDimPrivateComments.user.js
 // @include     https://eu1.salesforce.com/*
-// @version     2
+// @version     2.1
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js
-// @updateURL   https://github.com/nobuto-m/greasemonkey-scripts/raw/master/salesforce/hideDimPrivateComments.user.js
 // ==/UserScript==
 
 // TODO: handle dymamic status change of public/private
