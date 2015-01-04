@@ -1,4 +1,4 @@
 # libs
 
-## autolink-js
-https://github.com/bryanwoods/autolink-js
+## jQuery-linkify
+https://github.com/SoapBox/jQuery-linkify
