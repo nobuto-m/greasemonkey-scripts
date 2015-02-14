@@ -1,0 +1,222 @@
+                     Launchpad Greasemonkey Scripts
+                   --=============[o]==============--
+
+The launchpad-gm-scripts project collects useful Firefox GreaseMonkey
+scripts that assist Launchpad bug triagers in working more effectively
+and efficiently.
+
+Installation
+============
+GreaseMonkey is a Firefox extension for adding macro-like capabilities
+to do javascript-ish things on top of certain web pages.  To install
+GreaseMonkey, follow these steps:
+
+  * Go to Firefox->Tools->AddOns
+  * Click Get Extensions (or Get Ubuntu AddOns if on Ubuntu)
+  * Select GreaseMonkey, and install
+  * Restart Firefox
+
+Then to install these scripts, run:
+
+  * firefox lp_karma_suffix.user.js
+  * firefox lp_stockreplies.user.js
+  * firefox lp_patches.user.js
+  * firefox lp_buttontags.user.js
+  * firefox lp_highlight_me.user.js
+  * firefox lp_workflowreports.user.js
+  * firefox lp_hide_tags.user.js
+  * firefox lp_question_comment.user.js
+  * firefox lp_reporter_comments.user.js 
+  * firefox lp_hide_deleted_ppas.user.js
+
+Or click on the individual scripts from your file browser.
+
+Here's a way to install from the command line:
+  * Copy *.js to ~/.mozilla/firefox/<your-profile>/gm_scripts/
+  * Modify your ~/.mozilla/firefox/<your-profile>/gm_scripts/config.xml
+    like in the included example.
+
+For the latest updates to the scripts, go to the following link and
+click 'download' for each of them:
+
+  http://bazaar.launchpad.net/~gm-dev-launchpad/launchpad-gm-scripts/master/files
+
+
+lp_karma_suffix.user.js:  Launchpad Karma Suffix
+================================================
+When triaging bugs, it helps to have some way to gauge the relative
+experience of the person reporting or commenting on a given bug.  This
+tool helps by appending the person's karma score after their name.
+
+As well, team membership can denote experience/involved-ness, so this
+tool also appends icons indicating for some teams that the person is
+in.  This is helpful for flagging comments/flags from the bug triaging
+team, core developers, and so on.
+
+As there are a LOT of teams in launchpad, most of which you may not care
+about, only a select number of teams are included by default.  You can
+customize the list by editing the Javascript as follows:
+
+  * In Firefox go to Tools->Greasemonkey->Manage User Scripts
+  * Select LP_Karma_Suffix
+  * Click the Edit button at the bottom, and type in the name of your
+    preferred text editor.  E.g. "/usr/bin/gedit" or
+    "C:\windows\notepad.exe"
+  * Scroll down to the 'team_handler' function and find where the teams
+    variable is defined, then add a line with your new team.  For
+    instance, to add the Inkscape Bug Team to your list, modify teams to
+    look like this:
+
+    var teams = {
+        'inkscape.bugs':'',
+        'motu-swat':'',
+        'bugsquad':'',
+        'ubuntu-core-dev':'',
+        'ubuntu-dev':'',
+        'ubuntu-bugcontrol':'',
+        'ubuntumembers':''
+    };
+
+   * [Note that the team must have a 14x14 icon defined with it in order
+     to see anything.  This can be set by a team admin via the 'Change
+     branding' link on the Launchpad team overview page.]
+   * Save and exit the text editor, then go back to the Manage User
+     Scripts dialog and click OK.
+   * Reload some pages to see the icon.  :-)
+
+
+lp_stockreplies.user.js:  Launchpad Stock Replies
+=================================================
+When processing through a lot of bugs, often you wish to make
+essentially the same comment over and over again, such as, "Thanks for
+reporting this blah blah...  Please attach foo.log, so we can..."
+
+This script helps avoid a lot of retyping or manual cut-n-pastes by
+providing a way to store your own canned comments in Firefox itself.  It
+then adds links for each of your canned comments right above the
+"Comment on this change" field, making it convenient to select a stock
+reply to send.
+
+The current version of Launchpad Stock Replies also pulls standard respones
+used by the Ubuntu Bug Squad from an xml file at 
+http://people.ubuntu.com/~brian/greasemonkey/bugsquad-replies.xml.  The xml
+file was populated with respones found at http://wiki.ubuntu.com/Bugs/Respones.
+These respones are checked for updates every 36 hours.
+
+To add new stock reply of your own, click the [+] link, which will bring up
+options to add or save stock replies.
+
+Add New Stock Reply:
+  name        A tag id for the reply.  (Avoid punctuation)
+  comment     Sets the comment field to this value.
+  status      Sets the status dropdown to this text key (if present).
+  assign      Assigns the bug to this launchpad username (if present).
+              Special names:
+                -me      To assign to yourself
+                -nobody  To unassign
+  importance  Sets the importance dropdown to this text key (if present).
+  package     Sets the package field to this text (if present).
+
+In the 'comment' field, the following words will be automatically
+substituted with the appropriate value:
+
+  PROJECTNAME   - The launchpad project (e.g., Ubuntu; taken from URL)
+  PKGNAME       - The source package (e.g., "xorg-server"; taken from URL)
+  BUGNUMBER     - The bug id number (e.g., "123456"; taken from URL)
+  REPORTER      - The bug reporter's name (e.g., "Bryce Harrington")
+  UPSTREAMBUG   - The URL of the remote bug watch (if any; 
+                  e.g. https://bugs.freedesktop.org/show_bug.cgi?id=20477)
+
+Save Stock Replies:
+  After making additions or changes to any of the replies, click this to
+  save the changes.
+
+BUG:  Permanently Saving Greasemonkey Settings:
+  It seems that Firefox or Greasemonkey does not atomically save
+  settings to disk.  As a result, it is best to close Firefox completely
+  after making large changes to the stock replies so that they are saved
+  to disk for sure.  In the event of a Firefox crash, many people have
+  had issues with stock replies disappearing.
+
+
+lp_patches.user.js: Launchpad Patches
+=====================================
+It is possible to flag an attachment as a patch in Launchpad.  However, from
+the bug's main page one has to click on the "edit" link next to an attachment
+to determine if it is flagged as a patch.  This script removes that extra step
+by identifying which attachments have been marked as patches.
+
+Attachments are normally identified by a green downward pointing arrow, now
+ones flagged as patches will be identified as a star.  Patches will be
+identified in both the attachments portlet and in comments.
+
+
+lp_buttontags.user.js: Launchpad Button Tags
+============================================
+This script adds several clickable links to the bug report page,
+allowing you to easily add one of a set of stock tags to the bug.
+By default, the standard Ubuntu tags are provided, but these can be
+modified by editing the script's XML file.
+
+
+lp_highlight_me.user.js: Launchpad Highlight Me
+===============================================
+This adds a visual highlight to things belonging/assigned to the logged-in
+user. Currently this only highlights rows in +milestone pages, so you can
+quickly see specs and bugs assigned to yourself. No configuration needed.
+
+
+lp_workflowreports.user.js:  Workflow Reports
+=============================================
+TBD
+
+
+lp_hide_tags.user.js:  Hide and sort tags in tags portlet
+=========================================================
+This script reduces the number of tags shown in the tags portlet on the
+bugs landing pages for projects. It also orders the shown tags by count 
+instead of alphabetically.
+
+lp_question_comment.user.js: Prefill comment field
+==================================================
+This script will prefill the comment field with Ubuntu's stock reply when
+converting a bug to a question.  One could change the comment variable
+for other project's. 
+
+lp_reporter_comments.user.js: Identiy comments from bug reporter
+================================================================
+Sometimes bug reports can have multiple people commenting on the bug
+and lots of comments.  This script will modify the comment header color,
+to a user defined color, making the original reporter's comments easier
+to identify in a long bug report.
+
+lp_prefilled_description.js: Prefill bug description
+====================================================
+This script will prefill a bug's description when you reporting a bug 
+about Ubuntu with the following reminders:
+
+Release of Ubuntu:
+Package Version:
+Expected Results:
+Actual Results:
+
+To help you to remember to include this critical information.
+
+lp_hide_deleted_ppas.user.js: Don't display deleted PPAs
+========================================================
+This script hides PPAs on your userpage that you've deleted.
+If you use PPAs heavily and typically delete them when you're done with
+them, the page can get cluttery.  Or, if you change your LP username
+you'll have had to delete all your old PPAs.  There's basically nothing
+you can do with a PPA once it's deleted, so it's pointless clutter to
+have them be displayed.
+
+Deprecated scripts
+==================
+Some scripts are not maintained anymore because they are known to be
+broken or their functionality has been implemented in Launchpad itself.
+These scripts have been moved to the 'deprecated' directory.
+
+Also See
+========
+* Firefox Launchpad Plugin

@@ -1,0 +1,35 @@
+<UserScriptConfig>
+	<Script filename="lp_buttontags.user.js" name="LP_ButtonTags" namespace="http://bryceharrington.org/greasemonkey/" description="(Launchpad) Buttons for adding tags" enabled="true" basedir="lp_buttontags">
+		<Include>https://*.launchpad.net/*</Include>
+		<Include>https://*.edge.launchpad.net/*</Include>
+		<Include>https://launchpad.net/*</Include>
+	</Script>
+	<Script filename="lp_karma_suffix.user.js" name="LP_Karma_Suffix" namespace="http://outflux.net/greasemonkey/" description="(Launchpad) Karma Suffixes" enabled="true" basedir="lp_karma_suffix">
+		<Include>https://launchpad.net/*</Include>
+		<Include>https://*.launchpad.net/*</Include>
+		<Include>https://*.edge.launchpad.net/*</Include>
+	</Script>
+	<Script filename="lp_patches.user.js" name="LP_Patches" namespace="http://murraytwins.com/greasemonkey/" description="Identify attachments flagged as patches" enabled="true" basedir="lp_patches">
+		<Include>https://*.launchpad.net/*</Include>
+		<Include>https://*.edge.launchpad.net/*</Include>
+		<Include>https://launchpad.net/*</Include>
+	</Script>
+	<Script filename="lp_stockreplies.user.js" name="LP_StockReplies" namespace="http://outflux.net/greasemonkey/" description="(Launchpad) Stock replies" enabled="true" basedir="lp_stockreplies">
+		<Include>https://*.launchpad.net/*</Include>
+		<Include>https://launchpad.net/*</Include>
+	</Script>
+	<Script filename="lp_workflow.user.js" name="LP_Workflow" namespace="http://murraytwins.com/greasemonkey/" description="(Launchpad) Identify workflow reports" enabled="true" basedir="lp_workflow">
+		<Include>https://*.launchpad.net/*</Include>
+		<Include>https://*.edge.launchpad.net/*</Include>
+		<Include>https://launchpad.net/*</Include>
+	</Script>
+	<Script filename="lp_hide_tags.user.js" name="LP_HideTags" namespace="http://thekorn.com/greasemonkey/" description="(Launchpad) Hide and sort elements in tags portlet" enabled="true" basedir="lp_hidetags">
+		<Include>https://*.launchpad.net/*</Include>
+		<Include>https://*.edge.launchpad.net/*</Include>
+		<Include>https://launchpad.net/*</Include>
+	</Script>
+	<Script filename="lp_hide_deleted_ppas.user.js" name="LP_HideDeletedPpas" namespace="http://bryceharrington.org/greasemonkey/" description="(Launchpad) Don't show links to PPAs that hav ebeen deleted" enabled="true" basedir="lp_hideppas">
+		<Include>https://launchpad.net/~*</Include>
+		<Include>https://edge.launchpad.net/~*</Include>
+	</Script>
+</UserScriptConfig>
