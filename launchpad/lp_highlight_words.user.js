@@ -29,6 +29,10 @@ function xpath(query, context) {
         'DistroRelease: [^ ]+ [^ ]+|SourcePackage: [^ ]+|LiveMediaBuild:|vivid|utopic|trusty|precise|lucid': "yellow",  // things that might be helpful
         'regression': "red", // critical importance
         'saucy|raring|quantal|oneiric|natty|maverick|karmic|jaunty|intrepid|hardy|gutsy|feisty|edgy|dapper|breezy|hoary|warty': "orange", // unsupported releases
+        // SRU verification tags
+        'verification-needed': "yellow",
+        'verification-done': "lime",
+        'verification-failed': "red",
     }; 
 
     for (var key in color_map) {
