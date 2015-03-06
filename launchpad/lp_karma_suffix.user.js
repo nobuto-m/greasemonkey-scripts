@@ -18,14 +18,11 @@
 
 var teams = {
     'motu':'',
-    'motu-swat':'',
-//    'motu-release':'',
-//    'motu-sru':'',
+    'ubuntu-release':'',
+    'ubuntu-sru':'',
     'bugsquad':'',
-    'ubuntu-reviewers':'',
     'ubuntu-core-dev':'',
     'ubuntu-dev':'',
-    'universe-contributors':'',
     'ubuntu-bugcontrol':'',
     'ubuntumembers':''
 };
