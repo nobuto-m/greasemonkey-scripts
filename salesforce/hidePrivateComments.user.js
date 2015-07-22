@@ -20,7 +20,7 @@ var buttonTitleShow = '(gm) Show private comments';
 var commentsListTitleElement = $('h3[id$=\'_RelatedCommentsList_title\']');
 $(commentsListTitleElement).css('margin', '5px 0');
 $(commentsListTitleElement).after(
-  '<input value="' + buttonTitleHide + '" id="gm_hide_private_comments" class="btn gm_button" type="button">',
+  '<input value="' + buttonTitleHide + '" id="gm_hide_private_comments" class="btn gm_button" type="button">'
 );
 $('.gm_button').css({
   'margin': '3px',
