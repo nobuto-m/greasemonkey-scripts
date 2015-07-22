@@ -4,7 +4,7 @@
 // @namespace   https://github.com/nobuto-m/greasemonkey-scripts/tree/master/salesforce
 // @updateURL   https://github.com/nobuto-m/greasemonkey-scripts/raw/master/salesforce/hidePrivateComments.user.js
 // @match       https://eu1.salesforce.com/*
-// @version     2.5
+// @version     2.6
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // ==/UserScript==
