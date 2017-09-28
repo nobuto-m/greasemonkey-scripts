@@ -1,3 +1,0 @@
-[submodule "libs/linkify-shim"]
-	path = libs/linkify-shim
-	url = https://github.com/nfrasser/linkify-shim.git
