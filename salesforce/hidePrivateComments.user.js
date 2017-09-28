@@ -6,7 +6,7 @@
 // @match       https://*.salesforce.com/*
 // @version     2.7
 // @grant       none
-// @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
+// @require     https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js
 // ==/UserScript==
 
 // default
