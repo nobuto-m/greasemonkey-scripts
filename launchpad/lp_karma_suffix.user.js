@@ -25,7 +25,7 @@ var teams = {
     'ubuntu-dev':'',
     'ubuntu-bugcontrol':'',
     'ubuntumembers':'',
-    'canonical'
+    'canonical':''
 };
 
 // ------- End of User settable data -------
