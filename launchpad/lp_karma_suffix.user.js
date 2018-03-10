@@ -117,24 +117,10 @@ function augment_person(person)
         karmaNode = people_cache[person]['karma'];
         if (karmaNode) {
             // Bug Trail Link
-            var karmaLink = document.createElement("a");
-            //alert(people_cache[person]['person_name'].replace(/\(.*\)/, ''));
-            karmaLink.href = "http://search.gmane.org/?query=&author="
-                + people_cache[person]['person_name'].replace(/\(.*\)/, '')
-                + "&group=gmane.linux.ubuntu.bugs.general&sort=date&DEFAULTOP=and";
-            karmaLink.title = "Follow bug trail of this user";
+            var karmaLink = document.createElement("span");
             karmaLink.innerHTML = karmaNode;
             node.parentNode.insertBefore(karmaLink, node.nextSibling);
-             // add in a colon
-            var karmaColon = document.createTextNode(': ');
-            node.parentNode.insertBefore(karmaColon, node.nextSibling);
         }
-        // add in contact user link
-        var contactLink = document.createElement("a");
-        contactLink.href = "https://launchpad.net/~" +person+ "/+contactuser";
-        contactLink.title = "Contact this user";
-        contactLink.innerHTML = person;
-        node.parentNode.insertBefore(contactLink, node.nextSibling);
         // add in a 1st paren
         var firstNode = document.createTextNode(' (');
         node.parentNode.insertBefore(firstNode, node.nextSibling);
