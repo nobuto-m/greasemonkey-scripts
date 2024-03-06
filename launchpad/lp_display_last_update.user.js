@@ -19,7 +19,7 @@ function xpath(query, context) {
 
 (function() {
 
-    var reported_on = xpath("//div[contains(@id,'registration')]//span[contains(@title,'20')]").snapshotItem(0);
+    var reported_on = xpath("//div[contains(@id,'registration')]//time[contains(@title,'20')]").snapshotItem(0);
     // Can't escape characters in LP.cache['bug'] so use and with
     // contains
     var cache = xpath("//script[contains(.,'LP.cache') and contains(.,'http_etag')]").snapshotItem(0).textContent;
