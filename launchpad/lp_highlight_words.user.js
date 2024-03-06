@@ -30,9 +30,9 @@ function xpath(query, context) {
         'regression': "red", // critical importance
         'warty|hoary|breezy|dapper|edgy|feisty|gutsy|hardy|intrepid|jaunty|karmic|lucid|maverick|natty|oneiric|precise|quantal|raring|saucy|trusty|utopic|vivid|wily|xenial|yakkety|zesty|artful|cosmic|disco|eoan|groovy|hirsute': "orange", // unsupported releases
         // SRU verification tags
-        'verification-needed': "yellow",
-        'verification-done': "lime",
-        'verification-failed': "red",
+        'verification-[a-z-]*needed': "yellow",
+        'verification-[a-z-]*done': "lime",
+        'verification-[a-z-]*failed': "red",
     }; 
 
     for (var key in color_map) {
