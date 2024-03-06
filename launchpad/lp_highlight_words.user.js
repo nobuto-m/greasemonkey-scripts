@@ -27,10 +27,10 @@ function xpath(query, context) {
     // Regex of words to highlight : color to highlight them (hint don't use black!)
     var color_map = {
         'DistroRelease: [^ ]+ [^ ]+|SourcePackage: [^ ]+|LiveMediaBuild:|InstallationMedia:': "yellow",  // things that might be helpful
-        'focal|jammy|mantic|noble': "yellow",  // ubuntu-distro-info --supported
         'regression': "red", // critical importance
         'warty|hoary|breezy|dapper|edgy|feisty|gutsy|hardy|intrepid|jaunty|karmic|lucid|maverick|natty|oneiric|precise|quantal|raring|saucy|trusty|utopic|vivid|wily|xenial|yakkety|zesty|artful|bionic|cosmic|disco|eoan|groovy|hirsute|impish|kinetic|lunar': "orange", // ubuntu-distro-info --unsupported
         'trusty|xenial|bionic|focal|jammy|noble': "plum", // ubuntu-distro-info --supported-esm
+        'focal|jammy|mantic|noble': "yellow",  // ubuntu-distro-info --supported
         // SRU verification tags
         'verification-[a-z-]*needed': "yellow",
         'verification-[a-z-]*done': "lime",
