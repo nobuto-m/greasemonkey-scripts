@@ -1,6 +1,6 @@
 greasemonkey-scripts
 ====================
 
-You need to install:
- * [Greasemonkey](https://addons.mozilla.org/firefox/addon/greasemonkey/) with Firefox
- * [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) with Chrome/Chromium
+You need to install Tampermonkey for:
+ * [Firefox](https://addons.mozilla.org/firefox/addon/tampermonkey/)
+ * [Chrome/Chromium](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
