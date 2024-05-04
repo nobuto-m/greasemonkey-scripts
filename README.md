@@ -1,5 +1,5 @@
-greasemonkey-scripts
-====================
+Greasemonkey / Tampermonkey scripts
+===================================
 
 You need to install Tampermonkey for:
  * [Firefox](https://addons.mozilla.org/firefox/addon/tampermonkey/)
