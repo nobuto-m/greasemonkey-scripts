@@ -28,9 +28,9 @@ function xpath(query, context) {
     var color_map = {
         'DistroRelease: [^ ]+ [^ ]+|SourcePackage: [^ ]+|LiveMediaBuild:|InstallationMedia:': "yellow",  // things that might be helpful
         'regression': "red", // critical importance
-        'warty|hoary|breezy|dapper|edgy|feisty|gutsy|hardy|intrepid|jaunty|karmic|lucid|maverick|natty|oneiric|precise|quantal|raring|saucy|trusty|utopic|vivid|wily|xenial|yakkety|zesty|artful|bionic|cosmic|disco|eoan|groovy|hirsute|impish|kinetic|lunar': "orange", // ubuntu-distro-info --unsupported
-        'trusty|xenial|bionic|focal|jammy|noble': "plum", // ubuntu-distro-info --supported-esm
-        'focal|jammy|mantic|noble': "yellow",  // ubuntu-distro-info --supported
+        'xenial|yakkety|zesty|artful|bionic|cosmic|disco|eoan|focal|groovy|hirsute|impish|kinetic|lunar|mantic|oracular|plucky': "orange", // ubuntu-distro-info --unsupported
+        'bionic|focal|jammy|noble|resolute': "plum", // ubuntu-distro-info --supported-esm
+        'jammy|noble|questing|resolute|stonking': "yellow",  // ubuntu-distro-info --supported
         // SRU verification tags
         'verification-[a-z-]*needed': "yellow",
         'verification-[a-z-]*done': "lime",
